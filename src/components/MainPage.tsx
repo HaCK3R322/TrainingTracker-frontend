@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {CSSProperties, useEffect, useState} from 'react';
 import Header from "./Header";
 import Training from "../api/entities/Training";
 
@@ -24,6 +24,8 @@ let testAction = () => {
 
 }
 
+let idd = 100;
+
 const MainPage: React.FC = () => {
     const [trainings, setTrainings] = useState<Training[]>(getTrainings);
 
@@ -31,12 +33,34 @@ const MainPage: React.FC = () => {
         return {text: training.name, action: testAction}
     })
 
+    const addRandomShit = () => {
+        console.log('Yeah')
+
+        const nextTrainings = [...trainings, {id: ++idd, name: "test", }]
+
+        setTrainings(nextTrainings)
+    }
+
     return (
             <div>
                 <Header/>
                 <TrainingsButtonsComposer buttonsProps={bp}/>
+                <button style={newTrainingButtonStyle} onClick={addRandomShit}>
+                    +
+                </button>
             </div>
     );
+}
+
+const newTrainingButtonStyle: CSSProperties = {
+    position: 'absolute',
+    fontSize: '40px',
+    width: '50px',
+    height: '50px',
+    borderRadius: '50%',
+    left: '50%',
+    transform: 'translate(-50%, 0)',
+    bottom: '15px'
 }
 
 export default MainPage;

@@ -16,6 +16,8 @@ const TrainingsButtonsComposer: React.FC<TrainingsButtonsComposerProps> = (props
                         let H: number = trainingsButtonsComposerElement.offsetHeight;
                         let h: number = props.buttonsProps.length * buttonHeightPixels;
                         topOffsetPixels = (H - h) / 2;
+
+                        if(topOffsetPixels < 50) topOffsetPixels = 50;
                     }
 
                     let buttonOffsetPixels: number = buttonHeightPixels * index + topOffsetPixels;
@@ -46,11 +48,13 @@ const TrainingsButtonsComposerStyle: CSSProperties = {
     margin: '0',
     padding: '0px',
     width: '100%',
-    height: 'calc(100% - 50px)',
+    height: 'calc(100% - 130px)',
 
     left: '50%',
     transform: 'translate(-50%, 0%)',
-    top: '50px'
+    top: '50px',
+
+    overflow: 'scroll'
 }
 
 export interface ButtonProps {
