@@ -1,8 +1,11 @@
 import React, {CSSProperties} from 'react';
 
 import './../css/TrainingsButtonsComposer.css'
+import {Link, useNavigate} from "react-router-dom";
 
 const TrainingsButtonsComposer: React.FC<TrainingsButtonsComposerProps> = (props) => {
+    const navigate = useNavigate();
+
     return (
         <div style={TrainingsButtonsComposerStyle} id={'TrainingsButtonsComposer'}>
             {props.buttonsProps.map((buttonProps, index) =>
@@ -22,8 +25,12 @@ const TrainingsButtonsComposer: React.FC<TrainingsButtonsComposerProps> = (props
 
                     let buttonOffsetPixels: number = buttonHeightPixels * index + topOffsetPixels;
 
+                    const navigateToTraining = () => {
+                        navigate('training/' + buttonProps.id)
+                    }
+
                     return(
-                        <button key={index} onClick={buttonProps.action} style={{
+                        <button key={buttonProps.id} onClick={navigateToTraining} style={{
                             position: 'absolute',
                             width: '75%',
                             height: '100px',
@@ -57,13 +64,13 @@ const TrainingsButtonsComposerStyle: CSSProperties = {
     overflow: 'scroll'
 }
 
-export interface ButtonProps {
-    text: string,
-    action: () => void
+export interface TrainingButtonProps {
+    id: number
+    text: string
 }
 
 export interface TrainingsButtonsComposerProps {
-    buttonsProps: Array<ButtonProps>
+    buttonsProps: Array<TrainingButtonProps>
 }
 
 export default TrainingsButtonsComposer;

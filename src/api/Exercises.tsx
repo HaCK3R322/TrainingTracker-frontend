@@ -10,7 +10,7 @@ function fetchCreateExercise(name: string, units: string, trainingId: number): P
     requestHeaders.set('Authorization', key);
     requestHeaders.set('Content-type', 'application/json');
 
-    return fetch(backendUrls.trainings, {
+    return fetch(backendUrls.exercises, {
         headers: requestHeaders,
         method: "POST",
         body: JSON.stringify({
@@ -31,4 +31,29 @@ function fetchCreateExercise(name: string, units: string, trainingId: number): P
     })
 }
 
-export default fetchCreateExercise;
+function fetchGetAllExercisesByTrainingId(trainingId: number): Promise<Exercise[]> {
+    let key = getAuthorizationKey();
+
+    const requestHeaders: HeadersInit = new Headers();
+    requestHeaders.set('Authorization', key);
+    requestHeaders.set('Content-type', 'application/json');
+
+    let url = backendUrls.exercises + "?trainingId=" + trainingId;
+
+    return fetch(url, {
+        headers: requestHeaders,
+        method: "GET",
+        mode: 'cors'
+    }).then(res => {
+        if(res.status !== 200) {
+            return res.json()
+                .then(data => {
+                    let errorMessage: string = (data as BackendExceptionResponse).message
+                    throw new Error(errorMessage)
+                })
+        }
+        return res.json()
+    })
+}
+
+export {fetchCreateExercise, fetchGetAllExercisesByTrainingId};

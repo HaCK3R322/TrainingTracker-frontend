@@ -1,51 +1,36 @@
-import React, {CSSProperties, useEffect, useState} from 'react';
+import React, {CSSProperties, useCallback, useEffect, useState} from 'react';
 import Header from "./Header";
 import Training from "../api/entities/Training";
 
-import TrainingsButtonsComposer, {TrainingsButtonsComposerProps, ButtonProps} from "./TrainingsButtonsComposer";
+import TrainingsButtonsComposer, {TrainingsButtonsComposerProps, TrainingButtonProps} from "./TrainingsButtonsComposer";
 import {getTrainings} from "../api/mocks";
 import training from "../api/entities/Training";
+import {Link, useLoaderData, useNavigate} from "react-router-dom";
 
-
-let testAction = () => {
-    let color = (document.querySelector("body") as HTMLBodyElement)
-        .style.backgroundColor;
-
-    if(color === "blue") {
-        (document.querySelector("body") as HTMLBodyElement)
-            .style.backgroundColor = "red"
-    } else if(color == "red") {
-        (document.querySelector("body") as HTMLBodyElement)
-            .style.backgroundColor = "black"
-    } else {
-        (document.querySelector("body") as HTMLBodyElement)
-            .style.backgroundColor = "blue"
-    }
-
-}
-
-let idd = 100;
 
 const MainPage: React.FC = () => {
-    const [trainings, setTrainings] = useState<Training[]>(getTrainings);
 
-    let bp: ButtonProps[] = trainings.map(training => {
-        return {text: training.name, action: testAction}
-    })
+    const [trainings, setTrainings] = useState<Training[]>(useLoaderData() as Training[]);
 
-    const addRandomShit = () => {
-        console.log('Yeah')
+    let buttonsProps: TrainingButtonProps[] = trainings.map(training => {
+            return {
+                id: training.id,
+                text: training.name
+            }
+        }
+    )
 
-        const nextTrainings = [...trainings, {id: ++idd, name: "test", }]
-
-        setTrainings(nextTrainings)
+    const addTrainingMock = () => {
+        alert('Hehe')
     }
 
     return (
             <div>
                 <Header/>
-                <TrainingsButtonsComposer buttonsProps={bp}/>
-                <button style={newTrainingButtonStyle} onClick={addRandomShit}>
+
+                <TrainingsButtonsComposer buttonsProps={buttonsProps}/>
+
+                <button style={newTrainingButtonStyle} onClick={addTrainingMock}>
                     +
                 </button>
             </div>
@@ -60,7 +45,9 @@ const newTrainingButtonStyle: CSSProperties = {
     borderRadius: '50%',
     left: '50%',
     transform: 'translate(-50%, 0)',
-    bottom: '15px'
+    bottom: '15px',
+
+    backgroundColor: 'white'
 }
 
 export default MainPage;
