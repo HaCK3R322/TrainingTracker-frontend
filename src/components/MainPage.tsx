@@ -7,6 +7,8 @@ import {getTrainings} from "../api/mocks";
 import training from "../api/entities/Training";
 import {Link, useLoaderData, useNavigate} from "react-router-dom";
 
+import {motion} from "framer-motion";
+
 
 const MainPage: React.FC = () => {
 
@@ -21,11 +23,18 @@ const MainPage: React.FC = () => {
     )
 
     const addTrainingMock = () => {
-        alert('Hehe')
+        const nextTrainings = [...trainings, {id: Math.ceil(Math.random() * 100000), name: "test", }]
+
+        setTrainings(nextTrainings)
     }
 
     return (
-            <div>
+            <motion.div
+                initial={{x: -window.innerWidth}}
+                animate={{x: 0}}
+                exit={{x: -window.innerWidth}}
+                transition={{ duration: 0.3, ease: 'easeInOut' }}
+            >
                 <Header/>
 
                 <TrainingsButtonsComposer buttonsProps={buttonsProps}/>
@@ -33,7 +42,7 @@ const MainPage: React.FC = () => {
                 <button style={newTrainingButtonStyle} onClick={addTrainingMock}>
                     +
                 </button>
-            </div>
+            </motion.div>
     );
 }
 

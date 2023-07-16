@@ -1,20 +1,11 @@
 import React from 'react';
 import MainPage from "./components/MainPage";
 import './css/app.css'
-import {
-    BrowserRouter,
-    Route,
-    Routes,
-    createBrowserRouter,
-    RouterProvider,
-    createRoutesFromElements, Params
-} from "react-router-dom";
 import TrainingPage from "./components/TrainingPage";
 import {fetchGetAllExercisesByTrainingId} from "./api/Exercises";
 import {fetchGetAllTrainings} from "./api/Trainings";
-import {PageTransition} from "@steveeeie/react-page-transition";
-import {LoaderFunction} from "react-router";
-import mainPage from "./components/MainPage";
+import {AnimatePresence} from "framer-motion";
+import {createBrowserRouter, RouterProvider} from "react-router-dom";
 
 
 const router = createBrowserRouter([
@@ -23,7 +14,7 @@ const router = createBrowserRouter([
         path: "/",
         loader:  async () => {
             return fetchGetAllTrainings()
-        }
+        },
     },
     {
         element: <TrainingPage/>,
@@ -40,7 +31,6 @@ const router = createBrowserRouter([
 ])
 
 const App: React.FC = () => {
-
   return (
     <div className="App" id='App'>
         <RouterProvider router={router}/>
