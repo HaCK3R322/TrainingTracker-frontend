@@ -1,5 +1,5 @@
-// let host: string = "http://localhost:8080"
-let host: string = "http://ivanandrosovv.ru:8080"
+let host: string = "http://localhost:8080"
+// let host: string = "http://ivanandrosovv.ru:8080"
 
 let urls = {
     register: host + "/register",

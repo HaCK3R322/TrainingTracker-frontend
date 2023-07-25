@@ -1,41 +1,37 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import MainPage from "./components/MainPage";
 import './css/app.css'
 import TrainingPage from "./components/TrainingPage";
 import {fetchGetAllExercisesByTrainingId} from "./api/Exercises";
 import {fetchGetAllTrainings} from "./api/Trainings";
 import {AnimatePresence} from "framer-motion";
-import {createBrowserRouter, RouterProvider} from "react-router-dom";
+import {createBrowserRouter, Routes, useLocation, Route} from "react-router-dom";
+import Training from "./api/entities/Training";
+import training from "./api/entities/Training";
 
-
-const router = createBrowserRouter([
-    {
-        element: <MainPage/>,
-        path: "/",
-        loader:  async () => {
-            return fetchGetAllTrainings()
-        },
-    },
-    {
-        element: <TrainingPage/>,
-        path: "/training/:trainingId",
-        loader: async (args) => {
-            if(args.params.trainingId !== undefined) {
-                let trainingId: number = parseInt(args.params.trainingId);
-                return fetchGetAllExercisesByTrainingId(trainingId)
-            } else {
-                throw new Error('params.trainingId in router loader is undefined!')
-            }
-        }
-    }
-])
 
 const App: React.FC = () => {
-  return (
-    <div className="App" id='App'>
-        <RouterProvider router={router}/>
-    </div>
-  );
+    const location = useLocation();
+
+    const [trainings, setTrainings] = useState<Training[]>([])
+
+    useEffect(() => {
+        fetchGetAllTrainings()
+            .then(data => {
+                setTrainings(data as Training[])
+            })
+    }, [])
+
+    return (
+        <div className="App" id='App'>
+            <AnimatePresence mode={"sync"}>
+                <Routes location={location} key={location.pathname}>
+                    <Route index element={<MainPage trainings={trainings}/>} />
+                    <Route path={"/training/:trainingId"} element={<TrainingPage/>}/>
+                </Routes>
+            </AnimatePresence>
+        </div>
+    );
 }
 
 export default App;

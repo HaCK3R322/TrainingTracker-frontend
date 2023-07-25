@@ -4,9 +4,11 @@ import Header from "./Header";
 import './../css/app.css'
 import styled from "styled-components";
 import Exercise from "../api/entities/Exercise";
-import {useLoaderData} from "react-router-dom";
+import {useLoaderData, useParams} from "react-router-dom";
 
 import {motion} from "framer-motion";
+import {fetchGetAllExercisesByTrainingId} from "../api/Exercises";
+import training from "../api/entities/Training";
 
 const Somediv = styled.div`
   font-size: xx-large;
@@ -15,7 +17,7 @@ const Somediv = styled.div`
 `
 
 const TrainingPage = () => {
-    const exercises: Exercise[] = useLoaderData() as Exercise[]
+    let {trainingId} = useParams();
 
     return (
         <motion.div
@@ -26,9 +28,9 @@ const TrainingPage = () => {
         >
             <Header/>
             <div style={someDivStyle}>
-                {exercises.map(exercise => (
-                    exercise.name
-                ))}
+                {/*{exercises.map(exercise => (*/}
+                {/*    exercise.name*/}
+                {/*))}*/}
             </div>
         </motion.div>
     );
