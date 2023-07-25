@@ -23,11 +23,11 @@ const App: React.FC = () => {
     }, [])
 
     return (
-        <div className="App" id='App'>
+        <div className="App" id='App' style={{position: "absolute", width: '100%', height: '100%'}}>
             <AnimatePresence mode={"sync"}>
                 <Routes location={location} key={location.pathname}>
                     <Route index element={<MainPage trainings={trainings}/>} />
-                    <Route path={"/training/:trainingId"} element={<TrainingPage/>}/>
+                    <Route index path={"/training/:trainingId"} element={<TrainingPage/>}/>
                 </Routes>
             </AnimatePresence>
         </div>

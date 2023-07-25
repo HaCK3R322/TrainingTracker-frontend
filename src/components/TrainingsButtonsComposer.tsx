@@ -63,7 +63,7 @@ const TrainingsButtonsComposerStyle: CSSProperties = {
 
     overflow: 'scroll',
 
-    backgroundColor: 'green'
+    backgroundColor: 'black'
 }
 
 export interface TrainingButtonProps {

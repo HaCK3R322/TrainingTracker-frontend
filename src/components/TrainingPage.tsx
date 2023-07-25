@@ -10,27 +10,33 @@ import {motion} from "framer-motion";
 import {fetchGetAllExercisesByTrainingId} from "../api/Exercises";
 import training from "../api/entities/Training";
 
-const Somediv = styled.div`
-  font-size: xx-large;
-  position: absolute;
-  top: 500px;
-`
 
 const TrainingPage = () => {
     let {trainingId} = useParams();
 
     return (
         <motion.div
+            layoutId={"otherShit"}
+
             initial={{x: window.innerWidth}}
             animate={{x: 0}}
             exit={{x: window.innerWidth}}
-            transition={{ duration: 0.3, ease: 'easeInOut' }}
+            transition={{ duration: 0.3}}
+
+            key={'TrainingPage-content'}
         >
-            <Header/>
-            <div style={someDivStyle}>
-                {/*{exercises.map(exercise => (*/}
-                {/*    exercise.name*/}
-                {/*))}*/}
+            <div style={{
+                position: 'relative',
+                width: 390 + 'px',
+                height: 844 + 'px'
+            }}
+                 key="TrainingPage-Wrapper"
+            >
+                <Header key={'TrainingPage-header'}/>
+
+                <div style={someDivStyle}>
+                    aksdoasnfdijadnia
+                </div>
             </div>
         </motion.div>
     );
@@ -40,7 +46,7 @@ const someDivStyle: CSSProperties = {
     fontSize: '20px',
     position: 'absolute',
     top: '200px',
-    backgroundColor: 'red'
+    backgroundColor: 'gray'
 }
 
 export default TrainingPage;

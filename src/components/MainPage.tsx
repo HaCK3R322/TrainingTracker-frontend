@@ -26,22 +26,30 @@ const MainPage: React.FC<MainPageProps> = (props) => {
 
     return (
         <motion.div
+            layoutId={"someshit"}
+
             initial={{x: -window.innerWidth}}
             animate={{x: 0}}
             exit={{x: -window.innerWidth}}
-            transition={{ duration: 0.3, ease: 'easeInOut' }}
+            transition={{ duration: 0.3}}
 
             key={'MainPage-content'}
-
-            style={{height: '100%'}}
         >
-            <Header key={'Header'}/>
+            <div style={{
+                position: 'relative',
+                width: 390 + 'px',
+                height: 844 + 'px'
+            }}
+                 key="MainPage-Wrapper"
+            >
+                <Header key={'Header'}/>
 
-            <TrainingsButtonsComposer key={'TrainingsButtonsComposer'} buttonsProps={buttonsProps}/>
+                <TrainingsButtonsComposer key={'TrainingsButtonsComposer'} buttonsProps={buttonsProps}/>
 
-            <button key={'add-button'} style={newTrainingButtonStyle} onClick={addTrainingMock}>
-                +
-            </button>
+                <button key={'add-button'} style={newTrainingButtonStyle} onClick={addTrainingMock}>
+                    +
+                </button>
+            </div>
         </motion.div>
     );
 }
