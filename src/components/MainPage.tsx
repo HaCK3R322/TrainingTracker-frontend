@@ -26,14 +26,18 @@ const MainPage: React.FC<MainPageProps> = (props) => {
 
     return (
         <motion.div
-            layoutId={"someshit"}
-
             initial={{x: -window.innerWidth}}
             animate={{x: 0}}
             exit={{x: -window.innerWidth}}
-            transition={{ duration: 0.3}}
+            transition={{ duration: 0.5}}
 
             key={'MainPage-content'}
+
+            style={{
+                position: 'absolute',
+                top: 0,
+                left: 0
+            }}
         >
             <div style={{
                 position: 'relative',

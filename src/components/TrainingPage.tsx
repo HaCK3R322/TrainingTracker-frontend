@@ -16,14 +16,18 @@ const TrainingPage = () => {
 
     return (
         <motion.div
-            layoutId={"otherShit"}
-
             initial={{x: window.innerWidth}}
             animate={{x: 0}}
             exit={{x: window.innerWidth}}
-            transition={{ duration: 0.3}}
+            transition={{ duration: 0.5}}
 
             key={'TrainingPage-content'}
+
+            style={{
+                position: 'absolute',
+                top: 0,
+                left: 0
+            }}
         >
             <div style={{
                 position: 'relative',

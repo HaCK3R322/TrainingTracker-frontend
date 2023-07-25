@@ -4,7 +4,7 @@ import './css/app.css'
 import TrainingPage from "./components/TrainingPage";
 import {fetchGetAllExercisesByTrainingId} from "./api/Exercises";
 import {fetchGetAllTrainings} from "./api/Trainings";
-import {AnimatePresence} from "framer-motion";
+import {AnimatePresence, LayoutGroup} from "framer-motion";
 import {createBrowserRouter, Routes, useLocation, Route} from "react-router-dom";
 import Training from "./api/entities/Training";
 import training from "./api/entities/Training";
@@ -23,11 +23,11 @@ const App: React.FC = () => {
     }, [])
 
     return (
-        <div className="App" id='App' style={{position: "absolute", width: '100%', height: '100%'}}>
-            <AnimatePresence mode={"sync"}>
+        <div className="App" id='App' style={{position: "relative", width: '100%', height: '100%'}}>
+            <AnimatePresence mode={"sync"} initial={false}>
                 <Routes location={location} key={location.pathname}>
-                    <Route index element={<MainPage trainings={trainings}/>} />
-                    <Route index path={"/training/:trainingId"} element={<TrainingPage/>}/>
+                    <Route path={"/*"} element={<MainPage trainings={trainings}/>} />
+                    <Route path={"/training/:trainingId"} element={<TrainingPage/>}/>
                 </Routes>
             </AnimatePresence>
         </div>
