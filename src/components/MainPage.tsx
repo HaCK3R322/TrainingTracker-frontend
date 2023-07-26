@@ -41,12 +41,16 @@ const MainPage: React.FC<MainPageProps> = (props) => {
         >
             <div style={{
                 position: 'relative',
-                width: 390 + 'px',
-                height: 844 + 'px'
+                width: window.innerWidth + 'px',
+                height: window.innerHeight + 'px'
             }}
                  key="MainPage-Wrapper"
             >
                 <Header key={'Header'}/>
+
+                <div style={headerTextStyle}>
+                    TrainingTracker
+                </div>
 
                 <TrainingsButtonsComposer key={'TrainingsButtonsComposer'} buttonsProps={buttonsProps}/>
 
@@ -69,6 +73,24 @@ const newTrainingButtonStyle: CSSProperties = {
     bottom: '15px',
 
     backgroundColor: 'white'
+}
+
+const headerTextStyle: CSSProperties = {
+    position: 'absolute',
+
+    color: 'white',
+    fontSize: '12px',
+    fontFamily: 'Sans-Serif',
+
+    filter: 'drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.5))',
+
+    textShadow: '1px 0 0 black,0 1px 0 black,-1px 0 0 black,0 -1px 0 black',
+
+    top: '15px',
+    left: '15px',
+    height: '20px',
+    margin: '0',
+    padding: '0',
 }
 
 export default MainPage;
