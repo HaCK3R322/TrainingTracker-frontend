@@ -72,7 +72,7 @@ const newTrainingButtonStyle: CSSProperties = {
     transform: 'translate(-50%, 0)',
     bottom: '15px',
 
-    backgroundColor: 'white'
+    backgroundColor: '#D9D9D9'
 }
 
 const headerTextStyle: CSSProperties = {

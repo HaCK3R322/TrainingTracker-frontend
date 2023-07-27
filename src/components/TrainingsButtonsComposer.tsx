@@ -38,7 +38,8 @@ const TrainingsButtonsComposer: React.FC<TrainingsButtonsComposerProps> = (props
                             transform: 'translate(-50%, 0)',
                             font: 'Sans-Serif',
                             fontSize: '16px',
-                            color: 'black'
+                            color: 'black',
+                            backgroundColor: '#D9D9D9'
                         }}>
                             {buttonProps.text}
                         </button>

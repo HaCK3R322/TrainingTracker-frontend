@@ -9,6 +9,9 @@ import {useLoaderData, useNavigate, useNavigation, useParams} from "react-router
 import {motion} from "framer-motion";
 import {fetchGetAllExercisesByTrainingId} from "../api/Exercises";
 import training from "../api/entities/Training";
+import ExerciseForm from "./ExerciseForm";
+
+
 
 
 const TrainingPage = () => {
@@ -44,13 +47,21 @@ const TrainingPage = () => {
                     ←
                 </button>
 
-                <div style={someDivStyle}>
-                    aksdoasnfdijadnia
-                </div>
+                <ExerciseForm name={'Platform press'} units={'kg'} sets={Sets}/>
+
+                <button key={'toStatsButton'} style={toStatsButton} onClick={() => {alert('soon...')}}>
+                    ↓
+                </button>
             </div>
         </motion.div>
     );
 };
+
+const Sets = [
+    {id: 1, reps: 10, amount: 70},
+    {id: 1, reps: 12, amount: 70},
+    {id: 1, reps: 11, amount: 70}
+]
 
 const someDivStyle: CSSProperties = {
     fontSize: '20px',
@@ -70,12 +81,25 @@ const backToMainPageButton: CSSProperties = {
     borderRadius: '50%',
     bottom: '15px',
 
-    backgroundColor: 'white',
+    backgroundColor: '#D9D9D9',
 
     top: '0px',
     left: '0px',
     margin: '0',
     padding: '0',
+}
+
+const toStatsButton: CSSProperties = {
+    position: 'absolute',
+    fontSize: '40px',
+    width: '50px',
+    height: '50px',
+    borderRadius: '50%',
+    left: '50%',
+    transform: 'translate(-50%, 0)',
+    bottom: '15px',
+
+    backgroundColor: '#D9D9D9'
 }
 
 export default TrainingPage;
