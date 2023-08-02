@@ -1,4 +1,4 @@
-import React, {CSSProperties} from 'react';
+import React, {CSSProperties, useEffect} from 'react';
 import Header from "./Header";
 
 import './../css/app.css'
@@ -8,16 +8,65 @@ import {useLoaderData, useNavigate, useNavigation, useParams} from "react-router
 
 import {motion} from "framer-motion";
 import {fetchGetAllExercisesByTrainingId} from "../api/Exercises";
-import training from "../api/entities/Training";
 import ExerciseCard from "./ExerciseCard";
+import Set from "../api/entities/Set";
+import {fetchGetAllSetsByExerciseId} from "../api/Sets";
 
 
-
+type ExerciseCardProps = {
+    exercise: Exercise,
+    sets: Set[]
+}
 
 const TrainingPage = () => {
     const navigate = useNavigate();
 
     let {trainingId} = useParams();
+    let [exercises, setExercises] = React.useState<Exercise[]>([]);
+    let [exerciseCards, setExerciseCards] = React.useState<ExerciseCardProps[]>([]);
+
+    let [loadedExercisesNumber, setLoadedExercisesNumber] = React.useState<number>(0);
+    let [allLoaded, setAllLoaded] = React.useState<boolean>(false);
+
+    useEffect(() => {
+        if (trainingId === undefined) {
+            return;
+        }
+
+        fetchGetAllExercisesByTrainingId(parseInt(trainingId))
+            .then(data => {
+                setExercises(data as Exercise[]);
+                console.log("loaded exercises: ")
+                console.log(data)
+            })
+    }, [])
+
+    useEffect(() => {
+
+        exercises.forEach(exercise => {
+            fetchGetAllSetsByExerciseId(exercise.id)
+                .then(data => {
+                    console.log(data)
+                    let sets: Set[] = data as Set[];
+                    let exerciseCardProps: ExerciseCardProps = {
+                        exercise: exercise,
+                        sets: sets
+                    }
+                    setExerciseCards(prevState => [...prevState, exerciseCardProps])
+                    setLoadedExercisesNumber(prevState => prevState + 1);
+                })
+        })
+    }, [exercises])
+
+    useEffect(() => {
+        console.log(loadedExercisesNumber)
+        if (loadedExercisesNumber === exercises.length && loadedExercisesNumber !== 0) {
+            console.log('all loaded')
+            setAllLoaded(true);
+        } else {
+            console.log('not all loaded: ' + loadedExercisesNumber + ' / ' + exercises.length)
+        }
+    }, [loadedExercisesNumber])
 
     return (
         <motion.div
@@ -47,7 +96,13 @@ const TrainingPage = () => {
                     ←
                 </button>
 
-                <ExerciseCard name={'Platform press'} units={'kg'} sets={Sets}/>
+                {!allLoaded ? <div>loading...</div> :
+                    <ExerciseCard
+                        name={exerciseCards[0].exercise.name}
+                        units={exerciseCards[0].exercise.units}
+                        sets={exerciseCards[0].sets}
+                    />
+                }
 
                 <button key={'toStatsButton'} style={toStatsButton} onClick={() => {alert('soon...')}}>
                     ↓
@@ -56,23 +111,6 @@ const TrainingPage = () => {
         </motion.div>
     );
 };
-
-const Sets = [
-    {id: 1, reps: 10, amount: 70},
-    {id: 2, reps: 12, amount: 70},
-    {id: 3, reps: 11, amount: 70},
-    {id: 1, reps: 11, amount: 70}
-]
-
-const someDivStyle: CSSProperties = {
-    fontSize: '20px',
-    position: 'absolute',
-    top: '200px',
-    backgroundColor: 'gray',
-
-    left: '50%',
-    transform: 'translate(-50%, 0)'
-}
 
 const backToMainPageButton: CSSProperties = {
     position: 'absolute',

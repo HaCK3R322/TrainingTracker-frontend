@@ -21,7 +21,7 @@ const MainPage: React.FC<MainPageProps> = (props) => {
     )
 
     const addTrainingMock = () => {
-
+        alert("soon...")
     }
 
     return (
