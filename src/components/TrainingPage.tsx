@@ -9,7 +9,7 @@ import {useLoaderData, useNavigate, useNavigation, useParams} from "react-router
 import {motion} from "framer-motion";
 import {fetchGetAllExercisesByTrainingId} from "../api/Exercises";
 import training from "../api/entities/Training";
-import ExerciseForm from "./ExerciseForm";
+import ExerciseCard from "./ExerciseCard";
 
 
 
@@ -47,7 +47,7 @@ const TrainingPage = () => {
                     ←
                 </button>
 
-                <ExerciseForm name={'Platform press'} units={'kg'} sets={Sets}/>
+                <ExerciseCard name={'Platform press'} units={'kg'} sets={Sets}/>
 
                 <button key={'toStatsButton'} style={toStatsButton} onClick={() => {alert('soon...')}}>
                     ↓
@@ -59,7 +59,8 @@ const TrainingPage = () => {
 
 const Sets = [
     {id: 1, reps: 10, amount: 70},
-    {id: 1, reps: 12, amount: 70},
+    {id: 2, reps: 12, amount: 70},
+    {id: 3, reps: 11, amount: 70},
     {id: 1, reps: 11, amount: 70}
 ]
 
