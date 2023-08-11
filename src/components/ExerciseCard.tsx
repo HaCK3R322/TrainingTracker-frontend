@@ -1,4 +1,7 @@
-import React, {CSSProperties} from 'react';
+import React, {CSSProperties, useEffect, useState} from 'react';
+import {isNumber, isString} from "util";
+import {fetchUpdateSet} from "../api/Sets";
+import '../api/entities/Set'
 
 type ExerciseFormProps = {
     units: string
@@ -17,29 +20,99 @@ type SetRowProps = {
     reps: number
     amount: number
     units: string
+    id: number
+}
+
+const validateNumber = (inputStr: string) => {
+    let parsedInteger: number = parseInt(inputStr);
+
+    if(Number.isNaN(parsedInteger)) {
+        return false;
+    }
+
+    if(parsedInteger.toString().length !== inputStr.length) {
+        return false;
+    }
+
+    return true;
 }
 
 const SetRow: React.FC<SetRowProps> = (props) => {
+    let [reps, setReps] = useState(props.reps);
+    let [amount, setAmount] = useState(props.amount)
+
+    useEffect(() => {
+        fetchUpdateSet({
+            id: props.id,
+            reps: reps,
+            amount: amount,
+            timestamp: "1999-01-01T23:23:23.003",
+            exerciseId: NaN
+        })
+    }, [reps, amount])
+
     return(
         <div style={{...SetRowStyle, top: (props.num - 1) * 50 + 30 + 'px'}}>
             <div style={CommonSetRowTextStyle}>
                 {props.num} set:
             </div>
-            <div style={{...CommonSetRowTextStyle, left: "20%",
+
+            <input style={{...CommonSetRowTextStyle, left: "20%",
                 borderWidth: "2px",
-                borderStyle: "solid",
-            }}>
-                {props.reps}
-            </div>
+                borderStyle: 'solid',
+                borderColor: 'black',
+                backgroundColor: 'transparent',
+                textAlign: 'center',
+                fontSize: '20px',
+                height: '25px'
+            }}
+                   id={"repsInput" + props.num}
+
+                   defaultValue={reps}
+                   onChange={() => {
+                       let thisElement = document.getElementById("repsInput" + props.num);
+                       if(thisElement instanceof HTMLInputElement) {
+                           if (validateNumber(thisElement.value)) {
+                               let newReps: number = parseInt(thisElement.value)
+                               setReps(newReps)
+                               thisElement.style.backgroundColor = 'transparent';
+                           } else {
+                               thisElement.style.backgroundColor = 'red';
+                           }
+                       }
+                   }}
+            />
+
             <div style={{...CommonSetRowTextStyle, left: "40%"}}>
                 reps
             </div>
-            <div style={{...CommonSetRowTextStyle, left: "60%",
+
+            <input style={{...CommonSetRowTextStyle, left: "60%",
                 borderWidth: "2px",
-                borderStyle: "solid",
-            }}>
-                {props.amount}
-            </div>
+                borderStyle: 'solid',
+                borderColor: 'black',
+                backgroundColor: 'transparent',
+                textAlign: 'center',
+                fontSize: '20px',
+                height: '25px'
+            }}
+                   id={"amountInput" + props.num}
+
+                   defaultValue={amount}
+                   onChange={() => {
+                       let thisElement = document.getElementById("amountInput" + props.num);
+                       if(thisElement instanceof HTMLInputElement) {
+                           if (validateNumber(thisElement.value)) {
+                               let newAmount: number = parseInt(thisElement.value)
+                               setAmount(newAmount)
+                               thisElement.style.backgroundColor = 'transparent';
+                           } else {
+                               thisElement.style.backgroundColor = 'red';
+                           }
+                       }
+                   }}
+            />
+
             <div style={{...CommonSetRowTextStyle, left: "80%"}}>
                 {props.units}
             </div>
@@ -63,7 +136,16 @@ const ExerciseCard: React.FC<ExerciseFormProps> = (props) => {
             {
                 props.sets.map((set, index) => {
                     return(
-                        <SetRow num={index + 1} reps={set.reps} amount={set.amount} units={props.units} key={props.sets[index].id}/>
+                        <SetRow
+                            num={index + 1}
+
+                            reps={set.reps}
+                            amount={set.amount}
+                            units={props.units}
+                            id={props.sets[index].id}
+
+                            key={props.sets[index].id}
+                        />
                     )
                 })
             }

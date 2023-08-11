@@ -11,6 +11,7 @@ import {fetchGetAllExercisesByTrainingId} from "../api/Exercises";
 import ExerciseCard from "./ExerciseCard";
 import Set from "../api/entities/Set";
 import {fetchGetAllSetsByExerciseId} from "../api/Sets";
+import exerciseCard from "./ExerciseCard";
 
 
 type ExerciseCardProps = {
@@ -46,12 +47,15 @@ const TrainingPage = () => {
         exercises.forEach(exercise => {
             fetchGetAllSetsByExerciseId(exercise.id)
                 .then(data => {
-                    console.log(data)
                     let sets: Set[] = data as Set[];
                     let exerciseCardProps: ExerciseCardProps = {
                         exercise: exercise,
                         sets: sets
                     }
+
+                    console.log('For exercise \'' + exercise.name + '\' loaded sets:')
+                    console.log(sets)
+
                     setExerciseCards(prevState => [...prevState, exerciseCardProps])
                     setLoadedExercisesNumber(prevState => prevState + 1);
                 })
@@ -59,14 +63,38 @@ const TrainingPage = () => {
     }, [exercises])
 
     useEffect(() => {
-        console.log(loadedExercisesNumber)
         if (loadedExercisesNumber === exercises.length && loadedExercisesNumber !== 0) {
             console.log('all loaded')
+
+            exerciseCards.forEach(card => {
+                card.sets.sort((a,b) => {
+                    if (a.id > b.id) {
+                        return 1;
+                    } else if(a.id < b.id) {
+                        return -1;
+                    } else {
+                        return 0;
+                    }
+                })
+            })
+
             setAllLoaded(true);
         } else {
-            console.log('not all loaded: ' + loadedExercisesNumber + ' / ' + exercises.length)
+            if (loadedExercisesNumber !== 0) {
+                console.log('loading exercises sets: ' + loadedExercisesNumber + ' / ' + exercises.length);
+            }
         }
     }, [loadedExercisesNumber])
+
+    const getLegExtentionCardIndex = () => {
+        for(let i = 0; i < exerciseCards.length; i++ ) {
+            if(exerciseCards[i].exercise.name === 'Leg extention') {
+                return i;
+            }
+        }
+
+        return 0;
+    }
 
     return (
         <motion.div
@@ -96,11 +124,14 @@ const TrainingPage = () => {
                     ←
                 </button>
 
-                {!allLoaded ? <div>loading...</div> :
+                {!allLoaded
+                    ?
+                        <div>loading...</div>
+                    :
                     <ExerciseCard
-                        name={exerciseCards[0].exercise.name}
-                        units={exerciseCards[0].exercise.units}
-                        sets={exerciseCards[0].sets}
+                        name={exerciseCards[getLegExtentionCardIndex()].exercise.name}
+                        units={exerciseCards[getLegExtentionCardIndex()].exercise.units}
+                        sets={exerciseCards[getLegExtentionCardIndex()].sets}
                     />
                 }
 

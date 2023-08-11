@@ -62,4 +62,30 @@ function fetchGetAllSetsByExerciseId(exerciseId: number): Promise<Set[]> {
     })
 }
 
-export {fetchCreateSet, fetchGetAllSetsByExerciseId};
+function fetchUpdateSet(newSet: Set): Promise<Set> {
+    let key = getAuthorizationKey();
+
+    const requestHeaders: HeadersInit = new Headers();
+    requestHeaders.set('Authorization', key);
+    requestHeaders.set('Content-type', 'application/json');
+
+    let url = backendUrls.sets;
+
+    return fetch(url, {
+        headers: requestHeaders,
+        method: "PATCH",
+        mode: 'cors',
+        body: JSON.stringify(newSet)
+    }).then(res => {
+        if(res.status !== 200) {
+            return res.json()
+                .then(data => {
+                    let errorMessage: string = (data as BackendExceptionResponse).message
+                    throw new Error(errorMessage)
+                })
+        }
+        return res.json()
+    })
+}
+
+export {fetchCreateSet, fetchGetAllSetsByExerciseId, fetchUpdateSet};
