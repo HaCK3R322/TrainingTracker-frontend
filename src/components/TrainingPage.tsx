@@ -47,7 +47,6 @@ const TrainingPage = () => {
     }, [])
 
     useEffect(() => {
-        console.log('inside exercises.forEach: ' + window.innerWidth)
         exercises.forEach(exercise => {
             fetchGetAllSetsByExerciseId(exercise.id)
                 .then(data => {
@@ -83,8 +82,6 @@ const TrainingPage = () => {
             })
 
             setAllLoaded(true);
-
-            console.log('after all loaded' + window.innerWidth)
         } else {
             if (loadedExercisesNumber !== 0) {
                 console.log('loading exercises sets: ' + loadedExercisesNumber + ' / ' + exercises.length);

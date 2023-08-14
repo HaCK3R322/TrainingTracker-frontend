@@ -1,4 +1,4 @@
-import React, {CSSProperties} from 'react';
+import React, {CSSProperties, useState} from 'react';
 import Header from "./Header";
 import Training from "../api/entities/Training";
 
@@ -11,6 +11,10 @@ type MainPageProps = {
 }
 
 const MainPage: React.FC<MainPageProps> = (props) => {
+
+    // костыль чтоб зафискить непонятный ресайз окна на каждый ререндер
+    let [innerWidth, setInnerWidth] = useState(window.innerWidth)
+    let [innerHeight, setInnerHeight] = useState(window.innerHeight)
 
     let buttonsProps: TrainingButtonProps[] = props.trainings.map(training => {
             return {
@@ -41,8 +45,8 @@ const MainPage: React.FC<MainPageProps> = (props) => {
         >
             <div style={{
                 position: 'relative',
-                width: window.innerWidth + 'px',
-                height: window.innerHeight + 'px'
+                width: innerWidth + 'px',
+                height: innerHeight + 'px'
             }}
                  key="MainPage-Wrapper"
             >
