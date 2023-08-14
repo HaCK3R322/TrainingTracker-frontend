@@ -1,4 +1,4 @@
-import React, {CSSProperties, useEffect} from 'react';
+import React, {CSSProperties, useEffect, useState} from 'react';
 import Header from "./Header";
 
 import './../css/app.css'
@@ -22,6 +22,10 @@ type ExerciseCardProps = {
 const TrainingPage = () => {
     const navigate = useNavigate();
 
+    // костыль чтоб зафискить непонятный ресайз окна на каждый ререндер
+    let [innerWidth, setInnerWidth] = useState(window.innerWidth)
+    let [innerHeight, setInnerHeight] = useState(window.innerHeight)
+
     let {trainingId} = useParams();
     let [exercises, setExercises] = React.useState<Exercise[]>([]);
     let [exerciseCards, setExerciseCards] = React.useState<ExerciseCardProps[]>([]);
@@ -43,7 +47,7 @@ const TrainingPage = () => {
     }, [])
 
     useEffect(() => {
-
+        console.log('inside exercises.forEach: ' + window.innerWidth)
         exercises.forEach(exercise => {
             fetchGetAllSetsByExerciseId(exercise.id)
                 .then(data => {
@@ -79,6 +83,8 @@ const TrainingPage = () => {
             })
 
             setAllLoaded(true);
+
+            console.log('after all loaded' + window.innerWidth)
         } else {
             if (loadedExercisesNumber !== 0) {
                 console.log('loading exercises sets: ' + loadedExercisesNumber + ' / ' + exercises.length);
@@ -95,6 +101,8 @@ const TrainingPage = () => {
 
         return 0;
     }
+
+    console.log("before render function: " + window.innerWidth)
 
     return (
         <motion.div
@@ -113,10 +121,11 @@ const TrainingPage = () => {
         >
             <div style={{
                 position: 'relative',
-                width: window.innerWidth + 'px',
-                height: window.innerHeight + 'px'
+                width: innerWidth + 'px',
+                height: innerHeight + 'px',
             }}
                  key="TrainingPage-Wrapper"
+                 id={"TrainingPage-Wrapper"}
             >
                 <Header key={'TrainingPage-header'}/>
 
