@@ -24,7 +24,7 @@ const App: React.FC = () => {
 
     return (
         <div className="App" id='App'>
-            <AnimatePresence mode={"sync"} >
+            <AnimatePresence mode={"sync"} initial={false}>
                 <Routes location={location} key={location.pathname}>
                     <Route path={"/*"} element={<MainPage trainings={trainings}/>} />
                     <Route path={"/training/:trainingId"} element={<TrainingPage/>}/>

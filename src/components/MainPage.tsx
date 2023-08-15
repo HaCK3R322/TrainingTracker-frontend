@@ -33,7 +33,7 @@ const MainPage: React.FC<MainPageProps> = (props) => {
             initial={{x: -window.innerWidth}}
             animate={{x: 0}}
             exit={{x: -window.innerWidth}}
-            transition={{ duration: 0.5}}
+            transition={{ duration: 0.3}}
 
             key={'MainPage-content'}
 
@@ -58,8 +58,15 @@ const MainPage: React.FC<MainPageProps> = (props) => {
 
                 <TrainingsButtonsComposer key={'TrainingsButtonsComposer'} buttonsProps={buttonsProps}/>
 
-                <button key={'add-button'} style={newTrainingButtonStyle} onClick={addTrainingMock}>
-                    +
+                <button key={'add-button'} style={{ ...newTrainingButtonStyle, display: 'flex', alignItems: 'center' }} onClick={addTrainingMock}>
+                    <img
+                        src={require("./../images/plus.png")}
+                        style={{
+                            width: '34px',
+                            height: '32px',
+                            transform: 'scaleX(-1)', // This will reverse the image horizontally
+                        }}
+                    />
                 </button>
             </div>
         </motion.div>

@@ -106,7 +106,7 @@ const TrainingPage = () => {
             initial={{x: window.innerWidth}}
             animate={{x: 0}}
             exit={{x: window.innerWidth}}
-            transition={{ duration: 0.5}}
+            transition={{ duration: 0.3}}
 
             key={'TrainingPage-content'}
 
@@ -126,8 +126,15 @@ const TrainingPage = () => {
             >
                 <Header key={'TrainingPage-header'}/>
 
-                <button key={'backToMainPageButton'} style={backToMainPageButton} onClick={() => navigate("/")}>
-                    ←
+                <button key={'add-button'} style={backToMainPageButton} onClick={() => navigate("/")}>
+                    <img
+                        src={require("./../images/arrow.png")}
+                        style={{
+                            width: '34px',
+                            height: '32px',
+                            transform: 'scaleX(-1)', // This will reverse the image horizontally
+                        }}
+                    />
                 </button>
 
                 {!allLoaded
@@ -141,8 +148,15 @@ const TrainingPage = () => {
                     />
                 }
 
-                <button key={'toStatsButton'} style={toStatsButton} onClick={() => {alert('soon...')}}>
-                    ↓
+                <button key={'add-button'} style={toStatsButton} onClick={() => alert("soon...")}>
+                    <img
+                        src={require("./../images/arrow.png")}
+                        style={{
+                            width: '34px',
+                            height: '32px',
+                            transform: 'rotate(90deg)', // This will reverse the image horizontally
+                        }}
+                    />
                 </button>
             </div>
         </motion.div>
