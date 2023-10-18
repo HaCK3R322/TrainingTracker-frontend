@@ -1,0 +1,94 @@
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    overflow: hidden;
+
+    background-color: var(--main-color);
+}
+
+button {
+    color: var(--main-color)
+}
+
+.background-div {
+    position: absolute;
+
+    margin: 0;
+    padding: 0;
+
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+
+    background-color: var(--main-color);
+}
+
+.header {
+    position: absolute;
+
+    margin: 0;
+    padding: 0;
+
+    width: 100%;
+    height: 10%;
+    top: 0;
+    left: 0;
+
+    background-color: black;
+}
+
+.scroller-div {
+    position: absolute;
+
+    width: 100%;
+    top: 10%;
+
+    /*background-color: rgba(255, 255, 0, 0.5);*/
+
+    height: calc(100% - 0.477 * (100% + 9.75%) + 10%);
+}
+
+.exercise-card {
+    position: absolute;
+    width: 76%;
+    height: calc(100% - 20px);
+    left: 20px;
+    bottom: 0;
+    background-color: var(--second-color);
+
+    border-radius: 5px;
+    border: 1px solid black;
+}
+
+.exercise-name-div {
+    position: absolute;
+    font-family: var(--training-tracker-font-family);
+    font-size: 40px;
+    color: var(--main-color);
+    width: 100%;
+    left: 0;
+    top: 0;
+    height: 100px;
+    text-align: center;
+}
+
+.exercise-name-div p {
+    position: absolute;
+    margin: 0;
+    width: 100%;
+    top: 50%;
+    transform: translate(0, -50%);
+}
+
+.swiper-container {
+    position: absolute;
+    width: 300px;
+    height: 600px;
+    left: 0;
+    top: 0;
+    background-color: #0abf7d;
+}
