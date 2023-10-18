@@ -1,9 +1,7 @@
 import MainPage from "./components/mainpage/MainPage";
 import TrainingPage from "./components/trainingpage/TrainingPage";
-import {useEffect} from "react";
-import Swiper from "swiper";
 import {AnimatePresence} from "framer-motion";
-import {Route, Router, Routes, useLocation} from "react-router";
+import {Route, Router, Routes, useLocation} from "react-router-dom";
 
 function App() {
     const location = useLocation();
