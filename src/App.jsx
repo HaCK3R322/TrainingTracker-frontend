@@ -11,7 +11,7 @@ function App() {
             <AnimatePresence mode={"sync"} initial={false}>
                 <Routes location={location} key={location.pathname}>
                     <Route path={"/*"} element={<MainPage />} />
-                    <Route path={"/training/"} element={<TrainingPage/>}/>
+                    <Route path={"/training"} element={<TrainingPage/>}/>
                 </Routes>
             </AnimatePresence>
         </div>

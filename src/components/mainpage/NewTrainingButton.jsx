@@ -1,4 +1,6 @@
 import React from 'react';
+import {motion} from "framer-motion";
+
 
 const NewTrainingButton = ({index, action}) => {
     const calcTopValue = () => {
@@ -13,13 +15,15 @@ const NewTrainingButton = ({index, action}) => {
 
     return (
         <div>
-            <button
+            <motion.button
+                whileTap={{scale: 0.9}}
+
                 className={"new-training-button"}
                 style={{top: calcTopValue()}}
                 onClick={action}
             >
                 +
-            </button>
+            </motion.button>
         </div>
     );
 };

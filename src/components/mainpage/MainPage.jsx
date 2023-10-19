@@ -5,15 +5,18 @@ import gitHubIconSvg from '../../images/github-mark-white.svg'
 import TrainingButton from "./TrainingButton";
 import NewTrainingButton from "./NewTrainingButton";
 import {motion} from "framer-motion";
+import {useNavigate} from "react-router";
+import '../../style/motion-framer-wrapper.css'
 
 
 const MainPage = () => {
+    let navigate = useNavigate()
 
     return (
         <motion.div
-            initial={{x: -1}}
-            animate={{x: 0}}
-            exit={{x: -1}}
+            initial={{x: "-99%"}}
+            animate={{x: "0%"}}
+            exit={{x: "-99%"}}
             transition={{ duration: 0.3}}
 
             key={'MainPage-content'}
@@ -21,16 +24,12 @@ const MainPage = () => {
             style={{
                 position: 'absolute',
                 top: 0,
-                left: 0
+                left: 0,
+                width: "100%",
+                height:  "100%"
             }}
         >
-            <div style={{
-                position: 'relative',
-                width: 100 + '%',
-                height: 100 + '%',
-            }}
-                 key="MainPage-Wrapper"
-            >
+            <div className={"motion-framer-wrapper"} key={'MainPage-wrapper'}>
                 <div className={"training-tracker-theme"}>
                     <div className={"background-div"}>
 
@@ -41,7 +40,7 @@ const MainPage = () => {
                             <img className={"static-logo-github-icon"} src={gitHubIconSvg} alt={"lol xd"}/>
                         </div>
 
-                        <TrainingButton name={"Legs"} action={() => {alert("coming soon...")}} index={0}/>
+                        <TrainingButton name={"Legs"} action={() => {navigate("/training")}} index={0}/>
                         <TrainingButton name={"back"} action={() => {alert("coming soon...")}} index={1}/>
                         <TrainingButton name={"chest"} action={() => {alert("coming soon...")}} index={2}/>
 
