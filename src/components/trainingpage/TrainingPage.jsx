@@ -1,8 +1,9 @@
 import React from 'react';
 import '../../style/trainingpage/trainingpage.css'
 import ExerciseCard from "./ExerciseCard";
-import {motion} from "framer-motion";
 import '../../style/motion-framer-wrapper.css'
+import {motion} from "framer-motion";
+
 
 
 const TrainingPage = () => {
