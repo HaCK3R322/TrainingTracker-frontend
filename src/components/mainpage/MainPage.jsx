@@ -3,7 +3,9 @@ import '../../style/theme.css'
 import '../../style/mainpage/mainpage.css'
 import gitHubIconSvg from '../../images/github-mark-white.svg'
 import TrainingButton from "./TrainingButton";
+import '../../style/mainpage/newtrainingbutton.css'
 import NewTrainingButton from "./NewTrainingButton";
+import '../../style/mainpage/trainingbutton.css';
 import {motion} from "framer-motion";
 import {useNavigate} from "react-router";
 import '../../style/motion-framer-wrapper.css'

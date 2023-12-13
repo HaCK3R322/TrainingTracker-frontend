@@ -1,0 +1,73 @@
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    overflow: hidden;
+
+    background-color: var(--main-color);
+}
+
+.background-div {
+    position: absolute;
+
+    margin: 0;
+    padding: 0;
+
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+
+    background-color: var(--main-color);
+}
+
+.header {
+    position: absolute;
+
+    margin: 0;
+    padding: 0;
+
+    width: 100%;
+    height: 10%;
+    top: 0;
+    left: 0;
+
+    background-color: black;
+}
+
+.static-logo {
+    position: absolute;
+    margin: 0;
+    padding: 0;
+
+    width: 100%;
+    height: 110px;
+    top: 10%;
+    left: 0;
+}
+
+.static-logo p {
+    position: absolute;
+
+    font-family: var(--training-tracker-font-family);
+    font-size: 30px;
+    color: var(--second-color);
+
+    top: 50%;
+    transform: translate(0, -50%);
+    width: calc(100% - 80px);
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+.static-logo-github-icon {
+    position: absolute;
+
+    height: 50px;
+    width: 50px;
+    right: 30px;
+    top: 30px;
+}

@@ -4,13 +4,16 @@ import {motion} from "framer-motion";
 
 const TrainingButton = ({name, index, action}) => {
     const calcTopValue = () => {
-        let headerSize = "10% + ";
-        let logoSize = "40px + 40px + 31px";
-        let initialSpace = " + 20px + ";
+        let headerSize = "10%";
+        let logoSize = "110px";
 
         let sizeNumberOfButtons = index * (20 + 70) + "px"
 
-        return "calc(" + headerSize + logoSize + initialSpace + sizeNumberOfButtons + ")"
+        return "calc(" +
+                headerSize + " + " +
+                logoSize + " + " +
+                sizeNumberOfButtons +
+            ")"
     }
 
     return (

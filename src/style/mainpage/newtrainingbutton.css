@@ -1,0 +1,15 @@
+.new-training-button {
+    position: absolute;
+
+    height: 50px;
+    width: calc((100% - 40px) / 2);
+    left: 20px;
+    border-radius: 5px;
+    font-family: var(--training-tracker-font-family);
+    font-size: 30px;
+    color: var(--main-color);
+
+    background-color: var(--second-button-color);
+
+    border: 1px solid black;
+}
