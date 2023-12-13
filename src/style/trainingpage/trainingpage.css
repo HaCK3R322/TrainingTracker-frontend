@@ -90,5 +90,5 @@ button {
     height: 600px;
     left: 0;
     top: 0;
-    background-color: #0abf7d;
+    background-color: var(--button-color);
 }

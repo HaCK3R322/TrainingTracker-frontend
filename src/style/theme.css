@@ -1,0 +1,9 @@
+.training-tracker-theme {
+    --main-color: rgb(51, 49, 64);
+    --second-color: rgb(235, 239, 242);
+    --blue-color: #1ba0f2;
+    --button-color: #0abf7d;
+    --second-button-color: #46a683;
+
+    --training-tracker-font-family: Campton, Arial, sans-serif
+}
