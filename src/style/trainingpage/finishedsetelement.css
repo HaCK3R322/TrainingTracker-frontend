@@ -1,0 +1,38 @@
+.set-div {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    height: 35px;
+    font-family: var(--training-tracker-font-family);
+    font-size: 30px;
+    text-align: center;
+    color: var(--main-color);
+
+}
+
+.set-div .amount {
+    position: absolute;
+    height: 100%;
+
+    width: 80px;
+    left: 10%;
+    border: 1px solid black;
+    border-radius: 5px;
+}
+
+.set-div .units-container-div {
+    position: absolute;
+    height: 100%;
+
+    width: 35px;
+    text-align: left;
+    left: calc(10% + 80px + 10px);
+}
+
+.set-div .reps {
+    position: absolute;
+    width: 80px;
+    right: 10%;
+    border: 1px solid black;
+    border-radius: 5px;
+}
