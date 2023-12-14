@@ -63,57 +63,76 @@ const UnfinishedSetElement = ({index, units}) => {
 }
 
 
-let a = 0;
 
-const ExerciseCard = ({name, units, sets}) => {
+const ExerciseCard = ({name, units, sets, swipedRightCallback, swipedLeftCallback, swipeState}) => {
     const [swipedRight, setSwipedRight] = useState(false);
+    const [swipedLeft, setSwipedLeft] = useState(false);
     const [dragStart, setDragStart] = useState(0);
-    const [dist, setDist] = useState(0);
+    const [releasedAndShouldBeLeft, setReleasedAndShouldBeLeft] = useState(false);
 
     const handleDragStart = (info) => {
         setDragStart(info.point.x);
-    }
 
+    }
     const handleOnDrag = (info) => {
-        setDist(info.point.x - dragStart);
-    }
 
-    const handleDragEnd = (info) => {
         let dragEnd = info.point.x;
         if(dragStart - dragEnd > 200) {
             setSwipedRight(false);
+            setSwipedLeft(true);
         } else if (dragStart - dragEnd < -200) {
             setSwipedRight(true);
+            setSwipedLeft(false);
+        } else {
+            setSwipedRight(false);
+            setSwipedLeft(false);
         }
-        setDist(0);
+
+    }
+
+    const handleDragEnd = (info) => {
+        setSwipedRight(false);
+
+        if(swipedLeft) {
+            console.log("released and should be left")
+            setReleasedAndShouldBeLeft(true);
+        }
     }
 
 
     return (
-        <div>
-            <motion.div className={"exercise-card"}
-                        drag={"x"}
-                        dragSnapToOrigin={true}
-                        onDragStart={ (event, info) => {handleDragStart(info)} }
-                        onDragEnd={ (event, info) => {handleDragEnd(info)} }
-                        onDrag={ (event, info) => {handleOnDrag(info)} }
+        <motion.div className={"exercise-card"}
+                    id={"123"}
 
-                        style={{
-                            backgroundColor: swipedRight ? "yellow" : "green"
-                        }}
-            >
-                <div className={"exercise-name-div"}>
-                    {dist}
-                </div>
+                    drag={"x"}
+                    dragSnapToOrigin={true}
+                    onDragStart={(event, info) => {handleDragStart(info)}}
+                    onDragEnd={(event, info) => {handleDragEnd(info)}}
+                    onDrag={(event, info) => {handleOnDrag(info)}}
 
-                <FinishedSetElement index={0} amount={250} units={"kg"} reps={12}/>
-                <FinishedSetElement index={1} amount={250} units={"kg"} reps={13}/>
-                <FinishedSetElement index={2} amount={250} units={"kg"} reps={14}/>
-                <FinishedSetElement index={3} amount={250} units={"kg"} reps={14}/>
+                    animate={releasedAndShouldBeLeft ? {x: "-80%", zIndex: 0, scale: 0.95, opacity: 0.5} : {x: 0, zIndex: 3}}
 
-                <UnfinishedSetElement index={4} units={"kg"}/>
-            </motion.div>
-        </div>
+                    dragConstraints={{
+                        left: 0,
+                        right: 0
+                    }}
+
+
+                    style={{
+                        backgroundColor: swipedRight ? "yellow" : swipedLeft ? "green" : "var(--second-color)"
+                    }}
+        >
+            <div className={"exercise-name-div"}>
+                <p>{name}</p>{swipeState}
+            </div>
+
+            <FinishedSetElement index={0} amount={250} units={"kg"} reps={12}/>
+            <FinishedSetElement index={1} amount={250} units={"kg"} reps={13}/>
+            <FinishedSetElement index={2} amount={250} units={"kg"} reps={14}/>
+            <FinishedSetElement index={3} amount={250} units={"kg"} reps={14}/>
+
+            <UnfinishedSetElement index={4} units={"kg"}/>
+        </motion.div>
     );
 };
 
