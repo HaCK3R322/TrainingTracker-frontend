@@ -4,6 +4,20 @@ import '../../style/trainingpage/unfinishedsetelement.css'
 import {wait} from "@testing-library/user-event/dist/utils";
 import {motion, useMotionValue} from "framer-motion";
 
+const cardStates = {
+    CENTRAL: 'CENTRAL',
+    MOST_LEFT: 'MOST_LEFT',
+    MOST_RIGHT: 'MOST_RIGHT',
+
+    LEFTER_THAN_VISIBLE: 'LEFTER_THAN_VISIBLE',
+    LEFTER_THAN_CHOSEN: 'LEFTER_THAN_CHOSEN',
+    SECOND: 'SECOND',
+
+    RIGHTER_THAN_VISIBLE: 'RIGHTER_THAN_VISIBLE',
+    RIGHTER_THAN_CHOSEN: "RIGHTER_THAN_CHOSEN",
+    PENULTIMATE: 'PENULTIMATE'
+}
+
 const FinishedSetElement = ({amount, units, reps, index}) => {
     function calcSetTopValue(index) {
         let nameDivSize = 100; //px
@@ -68,7 +82,6 @@ const ExerciseCard = ({name, units, sets, swipedRightCallback, swipedLeftCallbac
     const [swipedRight, setSwipedRight] = useState(false);
     const [swipedLeft, setSwipedLeft] = useState(false);
     const [dragStart, setDragStart] = useState(0);
-    const [releasedAndShouldBeLeft, setReleasedAndShouldBeLeft] = useState(false);
 
     const handleDragStart = (info) => {
         setDragStart(info.point.x);
@@ -77,10 +90,10 @@ const ExerciseCard = ({name, units, sets, swipedRightCallback, swipedLeftCallbac
     const handleOnDrag = (info) => {
 
         let dragEnd = info.point.x;
-        if(dragStart - dragEnd > 200) {
+        if(dragStart - dragEnd > 150) {
             setSwipedRight(false);
             setSwipedLeft(true);
-        } else if (dragStart - dragEnd < -200) {
+        } else if (dragStart - dragEnd < -150) {
             setSwipedRight(true);
             setSwipedLeft(false);
         } else {
@@ -91,14 +104,67 @@ const ExerciseCard = ({name, units, sets, swipedRightCallback, swipedLeftCallbac
     }
 
     const handleDragEnd = (info) => {
-        setSwipedRight(false);
-
         if(swipedLeft) {
-            console.log("released and should be left")
-            setReleasedAndShouldBeLeft(true);
+            swipedLeftCallback();
+        }
+
+        if(swipedRight) {
+            swipedRightCallback();
+        }
+
+        setSwipedRight(false);
+        setSwipedLeft(false);
+    }
+
+    const [animateState, setAnimateState] = useState({zIndex: 3});
+
+    function getAnimateStateBasedBySwipeState() {
+        switch(swipeState) {
+            case cardStates.CENTRAL:
+                setAnimateState({
+                    zIndex: 3,
+                    x: 0,
+                    opacity: 1
+                });
+                break;
+            case cardStates.LEFTER_THAN_CHOSEN:
+                setAnimateState({
+                    scale: 0.95,
+                    x: "-95%",
+                    opacity: 0.5,
+                    zIndex: 1
+                });
+                break;
+            case cardStates.LEFTER_THAN_VISIBLE:
+                setAnimateState({
+                    scale: 0.95,
+                    x: "-195%",
+                    opacity: 0,
+                    zIndex: 1
+                });
+                break;
+            case cardStates.RIGHTER_THAN_CHOSEN:
+                setAnimateState({
+                    scale: 0.95,
+                    x: "95%",
+                    opacity: 0.5,
+                    zIndex: 1
+                });
+                break;
+            case cardStates.RIGHTER_THAN_VISIBLE:
+                setAnimateState({
+                    scale: 0.95,
+                    x: "195%",
+                    opacity: 0,
+                    zIndex: 1
+                });
+                break;
         }
     }
 
+    useEffect(() => {
+        getAnimateStateBasedBySwipeState()
+    }, [swipeState]);
 
     return (
         <motion.div className={"exercise-card"}
@@ -110,28 +176,17 @@ const ExerciseCard = ({name, units, sets, swipedRightCallback, swipedLeftCallbac
                     onDragEnd={(event, info) => {handleDragEnd(info)}}
                     onDrag={(event, info) => {handleOnDrag(info)}}
 
-                    animate={releasedAndShouldBeLeft ? {x: "-80%", zIndex: 0, scale: 0.95, opacity: 0.5} : {x: 0, zIndex: 3}}
-
-                    dragConstraints={{
-                        left: 0,
-                        right: 0
-                    }}
-
-
-                    style={{
-                        backgroundColor: swipedRight ? "yellow" : swipedLeft ? "green" : "var(--second-color)"
-                    }}
+                    animate={animateState}
         >
             <div className={"exercise-name-div"}>
                 <p>{name}</p>{swipeState}
             </div>
 
-            <FinishedSetElement index={0} amount={250} units={"kg"} reps={12}/>
-            <FinishedSetElement index={1} amount={250} units={"kg"} reps={13}/>
-            <FinishedSetElement index={2} amount={250} units={"kg"} reps={14}/>
-            <FinishedSetElement index={3} amount={250} units={"kg"} reps={14}/>
+            {sets.map((set, index) =>
+                <FinishedSetElement index={index} amount={set.amount} units={units} reps={set.reps}/>
+            )}
 
-            <UnfinishedSetElement index={4} units={"kg"}/>
+            <UnfinishedSetElement index={sets.length} units={"kg"}/>
         </motion.div>
     );
 };
