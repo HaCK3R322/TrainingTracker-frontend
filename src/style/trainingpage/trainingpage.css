@@ -52,38 +52,6 @@ button {
     height: calc(100% - 0.477 * (100% + 9.75%) + 10%);
 }
 
-.exercise-card {
-    position: absolute;
-    width: 76%;
-    height: calc(100% - 20px);
-    left: calc(50% - (76% * 0.5));
-    bottom: 0;
-    background-color: var(--second-color);
-
-    border-radius: 5px;
-    border: 1px solid black;
-}
-
-.exercise-name-div {
-    position: absolute;
-    font-family: var(--training-tracker-font-family);
-    font-size: 40px;
-    color: var(--main-color);
-    width: 100%;
-    left: 0;
-    top: 0;
-    height: 100px;
-    text-align: center;
-}
-
-.exercise-name-div p {
-    position: absolute;
-    margin: 0;
-    width: 100%;
-    top: 50%;
-    transform: translate(0, -50%);
-}
-
 .swiper-container {
     position: absolute;
     width: 300px;

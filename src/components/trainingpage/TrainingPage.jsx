@@ -1,40 +1,50 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import '../../style/trainingpage/trainingpage.css'
 import ExerciseCard from "./ExerciseCard";
 import '../../style/motion-framer-wrapper.css'
 import {motion} from "framer-motion";
+import '../../style/trainingpage/exercisecard.css'
+import '../../style/trainingpage/exercisecardsswiperpagination.css'
+
+const ExerciseCardsSwiperPagination = ({arrLength, chosenIndex, setChosenIndex}) => {
+    const [dots, setDots] = useState([]);
+    useEffect(() => {
+        let newDots = []
+        for(let i = 0; i < arrLength; i++) {
+            newDots.push({index: i});
+        }
+        setDots(newDots);
+    }, [arrLength]);
+
+    return(
+        <div className={"exercise-cards-swiper-pagination"}>
+            {dots.map((dot) =>
+                <div
+                    className={"dot"}
+                    key={dot.index} onClick={() => {setChosenIndex(dot.index)}}
+                    style={{
+                        opacity: dot.index === chosenIndex ? 1.0 : 0.5
+                    }}
+                >
+                    {dot.index}
+                </div>
+            )}
+        </div>
+    )
+}
 
 const ExerciseCardsSwiper = ({cardsData}) => {
     const cardStates = {
         CENTRAL: 'CENTRAL',
-        MOST_LEFT: 'MOST_LEFT',
-        MOST_RIGHT: 'MOST_RIGHT',
 
         LEFTER_THAN_VISIBLE: 'LEFTER_THAN_VISIBLE',
         LEFTER_THAN_CHOSEN: 'LEFTER_THAN_CHOSEN',
-        SECOND: 'SECOND',
 
         RIGHTER_THAN_VISIBLE: 'RIGHTER_THAN_VISIBLE',
         RIGHTER_THAN_CHOSEN: "RIGHTER_THAN_CHOSEN",
-        PENULTIMATE: 'PENULTIMATE'
     }
 
     function calculateCardStateByItsPositionInArray(arraySize, currentChosenCardIndex, thisCardIndex) {
-        // let lastCardIndex = arraySize - 1;
-        // if(arraySize < 2) {
-        //     return cardStates.CENTRAL;
-        // } else if(currentChosenCardIndex === thisCardIndex) {
-        //     if(thisCardIndex === 0) return cardStates.MOST_LEFT;
-        //     if(thisCardIndex === lastCardIndex) return cardStates.MOST_RIGHT;
-        //     return cardStates.CENTRAL;
-        // } else if(thisCardIndex < currentChosenCardIndex) {
-        //     if(lastCardIndex - thisCardIndex === 1) return cardStates.PENULTIMATE;
-        //     return cardStates.LEFTER_THAN_CHOSEN;
-        // } else if(thisCardIndex > currentChosenCardIndex) {
-        //     if(thisCardIndex === 2) return cardStates.SECOND;
-        //     return cardStates.RIGHTER_THAN_CHOSEN;
-        // }`
-
         if(currentChosenCardIndex === thisCardIndex) {
             return cardStates.CENTRAL;
         } else if(currentChosenCardIndex < thisCardIndex) {
@@ -69,9 +79,38 @@ const ExerciseCardsSwiper = ({cardsData}) => {
                     swipedRightCallback={swipedRightCallback}
                 />
             )}
+
+            <ExerciseCardsSwiperPagination
+                arrLength={cards.length}
+                chosenIndex={currentChosenCardIndex}
+                setChosenIndex={setCurrentChosenCardIndex}
+            />
         </div>
     )
 }
+
+const cardsDataInitial = [
+    {name: "1",
+        units: "kg",
+        sets: [{amount: 80, reps: 12}, {amount: 250, reps: 12}, {amount: 250, reps: 12}]
+    },
+    {name: "2",
+        units: "kg",
+        sets: [{amount: 80, reps: 12}, {amount: 250, reps: 12}, {amount: 250, reps: 12}]
+    },
+    {name: "3",
+        units: "kg",
+        sets: [{amount: 80, reps: 12}, {amount: 250, reps: 12}, {amount: 250, reps: 12}]
+    },
+    {name: "4",
+        units: "kg",
+        sets: [{amount: 94, reps: 12}, {amount: 94, reps: 10}, {amount: 94, reps: 8}]
+    },
+    {name: "5",
+        units: "kg",
+        sets: [{amount: 250, reps: 12}, {amount: 250, reps: 12}, {amount: 250, reps: 12}]
+    }
+]
 
 const TrainingPage = () => {
     return (
@@ -97,28 +136,7 @@ const TrainingPage = () => {
                         <div className={"header"} />
 
                         <div className={"scroller-div"}>
-                            <ExerciseCardsSwiper cardsData={[
-                                {name: "1",
-                                    units: "kg",
-                                    sets: [{amount: 80, reps: 12}, {amount: 250, reps: 12}, {amount: 250, reps: 12}]
-                                },
-                                {name: "2",
-                                    units: "kg",
-                                    sets: [{amount: 80, reps: 12}, {amount: 250, reps: 12}, {amount: 250, reps: 12}]
-                                },
-                                {name: "3",
-                                    units: "kg",
-                                    sets: [{amount: 80, reps: 12}, {amount: 250, reps: 12}, {amount: 250, reps: 12}]
-                                },
-                                {name: "4",
-                                    units: "kg",
-                                    sets: [{amount: 94, reps: 12}, {amount: 94, reps: 10}, {amount: 94, reps: 8}]
-                                },
-                                {name: "5",
-                                    units: "kg",
-                                    sets: [{amount: 250, reps: 12}, {amount: 250, reps: 12}, {amount: 250, reps: 12}]
-                                }
-                            ]}/>
+                            <ExerciseCardsSwiper cardsData={cardsDataInitial}/>
                         </div>
 
                         <div className={"tipa-keyboard"}/>

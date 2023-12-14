@@ -1,0 +1,32 @@
+.exercise-card {
+    position: absolute;
+    width: 76%;
+    height: calc(100% - 20px);
+    left: calc(50% - (76% * 0.5));
+    bottom: 0;
+    background-color: var(--second-color);
+
+    border-radius: var(--training-tracker-border-radius);
+    border: 1px solid black;
+}
+
+.exercise-name-div {
+    position: absolute;
+    font-family: var(--training-tracker-font-family);
+    font-size: 40px;
+    color: var(--main-color);
+    width: 100%;
+    left: 0;
+    top: 0;
+    height: 100px;
+    text-align: center;
+}
+
+.exercise-name-div p {
+    position: absolute;
+    margin: 0;
+    width: 100%;
+    top: 50%;
+    transform: translate(0, -50%);
+}
+

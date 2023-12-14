@@ -1,0 +1,20 @@
+.exercise-cards-swiper-pagination {
+    position: absolute;
+    width: 100%;
+    height: 50px;
+    top: calc(100% + 20px);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.dot {
+    margin-left: 10px;
+    margin-right: 10px;
+    width: 30px;
+    height: 30px;
+    background-color: white;
+
+    border-radius: 100px;
+}

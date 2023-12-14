@@ -17,7 +17,9 @@
     width: 80px;
     left: 10%;
     border: 1px solid black;
-    border-radius: 5px;
+    border-radius: var(--training-tracker-border-radius);
+
+    -webkit-text-stroke: 2px var(--main-color);
 }
 
 .set-div .units-container-div {
@@ -34,5 +36,6 @@
     width: 80px;
     right: 10%;
     border: 1px solid black;
-    border-radius: 5px;
+    border-radius: var(--training-tracker-border-radius);
+    -webkit-text-stroke: 2px var(--main-color);
 }

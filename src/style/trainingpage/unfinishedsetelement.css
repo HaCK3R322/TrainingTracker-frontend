@@ -14,7 +14,7 @@
 
     width: 78px;
     left: 10%;
-    border-radius: 5px;
+    border-radius: var(--training-tracker-border-radius);
     border: 2px dotted var(--main-color);
     opacity: 0.5;
 }
@@ -35,7 +35,7 @@
     height: 100%;
     width: 78px;
     right: 10%;
-    border-radius: 5px;
+    border-radius: var(--training-tracker-border-radius);
     border: 2px dotted var(--main-color);
     opacity: 0.5;
 }

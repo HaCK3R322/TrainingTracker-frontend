@@ -6,16 +6,12 @@ import {motion, useMotionValue} from "framer-motion";
 
 const cardStates = {
     CENTRAL: 'CENTRAL',
-    MOST_LEFT: 'MOST_LEFT',
-    MOST_RIGHT: 'MOST_RIGHT',
 
     LEFTER_THAN_VISIBLE: 'LEFTER_THAN_VISIBLE',
     LEFTER_THAN_CHOSEN: 'LEFTER_THAN_CHOSEN',
-    SECOND: 'SECOND',
 
     RIGHTER_THAN_VISIBLE: 'RIGHTER_THAN_VISIBLE',
     RIGHTER_THAN_CHOSEN: "RIGHTER_THAN_CHOSEN",
-    PENULTIMATE: 'PENULTIMATE'
 }
 
 const FinishedSetElement = ({amount, units, reps, index}) => {
@@ -36,7 +32,7 @@ const FinishedSetElement = ({amount, units, reps, index}) => {
              style={{top: calcSetTopValue(index)}}
         >
             <div className={"amount"}>
-                <b>{amount}</b>
+                {amount}
             </div>
 
             <div className={"units-container-div"}>
@@ -44,7 +40,7 @@ const FinishedSetElement = ({amount, units, reps, index}) => {
             </div>
 
             <div className={"reps"}>
-                <b>{reps}</b>
+                {reps}
             </div>
         </div>
     )
@@ -82,18 +78,26 @@ const ExerciseCard = ({name, units, sets, swipedRightCallback, swipedLeftCallbac
     const [swipedRight, setSwipedRight] = useState(false);
     const [swipedLeft, setSwipedLeft] = useState(false);
     const [dragStart, setDragStart] = useState(0);
+    const [animateState, setAnimateState] = useState({zIndex: 3});
 
     const handleDragStart = (info) => {
         setDragStart(info.point.x);
 
     }
+
+    const [startedSwipingToRight, setStartedSwipingToRight] = useState(false);
+    const [startedSwipingToLeft, setStartedSwipingToLeft] = useState(false);
+    const [basedZIndex, setBasedZIndex] = useState(1);
     const handleOnDrag = (info) => {
 
         let dragEnd = info.point.x;
-        if(dragStart - dragEnd > 150) {
+
+        let distance = dragStart - dragEnd;
+
+        if(distance > 100) {
             setSwipedRight(false);
             setSwipedLeft(true);
-        } else if (dragStart - dragEnd < -150) {
+        } else if (distance < -100) {
             setSwipedRight(true);
             setSwipedLeft(false);
         } else {
@@ -101,6 +105,16 @@ const ExerciseCard = ({name, units, sets, swipedRightCallback, swipedLeftCallbac
             setSwipedLeft(false);
         }
 
+        if(distance > 5) {
+            setStartedSwipingToRight(true);
+            setStartedSwipingToLeft(false);
+        } else if(distance < -5) {
+            setStartedSwipingToRight(false);
+            setStartedSwipingToLeft(true);
+        } else {
+            setStartedSwipingToRight(false);
+            setStartedSwipingToLeft(false);
+        }
     }
 
     const handleDragEnd = (info) => {
@@ -116,70 +130,76 @@ const ExerciseCard = ({name, units, sets, swipedRightCallback, swipedLeftCallbac
         setSwipedLeft(false);
     }
 
-    const [animateState, setAnimateState] = useState({zIndex: 3});
+    useEffect(() => {
+        if(swipeState === cardStates.LEFTER_THAN_CHOSEN) {
+            setBasedZIndex(2);
+        } else {
+            setBasedZIndex(1);
+        }
+    }, [startedSwipingToRight]);
 
     function getAnimateStateBasedBySwipeState() {
         switch(swipeState) {
             case cardStates.CENTRAL:
-                setAnimateState({
+                return {
                     zIndex: 3,
                     x: 0,
-                    opacity: 1
-                });
-                break;
+                    opacity: 3
+                };
             case cardStates.LEFTER_THAN_CHOSEN:
-                setAnimateState({
-                    scale: 0.95,
-                    x: "-95%",
-                    opacity: 0.5,
-                    zIndex: 1
-                });
-                break;
+                return {
+                    scale: 0.87,
+                    x: "-50px",
+                    opacity: 1,
+                    zIndex: basedZIndex
+                };
             case cardStates.LEFTER_THAN_VISIBLE:
-                setAnimateState({
-                    scale: 0.95,
-                    x: "-195%",
-                    opacity: 0,
-                    zIndex: 1
-                });
-                break;
+                return{
+                    scale: 0.87,
+                    x: "-120%",
+                    opacity: 1,
+                    zIndex: basedZIndex
+                };
             case cardStates.RIGHTER_THAN_CHOSEN:
-                setAnimateState({
-                    scale: 0.95,
-                    x: "95%",
-                    opacity: 0.5,
-                    zIndex: 1
-                });
-                break;
+                return {
+                    scale: 0.87,
+                    x: "+50px",
+                    opacity: basedZIndex,
+                };
             case cardStates.RIGHTER_THAN_VISIBLE:
-                setAnimateState({
-                    scale: 0.95,
-                    x: "195%",
-                    opacity: 0,
-                    zIndex: 1
-                });
-                break;
+                return{
+                    scale: 0.87,
+                    x: "+120%",
+                    opacity: 1,
+                    zIndex: basedZIndex
+                };
+            default:
+                alert("Wrong card state : " + swipeState)
         }
     }
 
     useEffect(() => {
-        getAnimateStateBasedBySwipeState()
+        let newAnimateState = getAnimateStateBasedBySwipeState();
+        setAnimateState(newAnimateState);
     }, [swipeState]);
 
     return (
         <motion.div className={"exercise-card"}
-                    id={"123"}
-
                     drag={"x"}
                     dragSnapToOrigin={true}
                     onDragStart={(event, info) => {handleDragStart(info)}}
                     onDragEnd={(event, info) => {handleDragEnd(info)}}
                     onDrag={(event, info) => {handleOnDrag(info)}}
 
+                    transition={{duration: 0.1}}
                     animate={animateState}
+
+                    style={{
+                        zIndex: basedZIndex
+                    }}
         >
             <div className={"exercise-name-div"}>
-                <p>{name}</p>{swipeState}
+                <p>{name}</p>
             </div>
 
             {sets.map((set, index) =>

@@ -5,5 +5,7 @@
     --button-color: #0abf7d;
     --second-button-color: #46a683;
 
-    --training-tracker-font-family: Campton, Arial, sans-serif
+    --training-tracker-font-family: Campton, Arial, sans-serif;
+
+    --training-tracker-border-radius: 10px;
 }
