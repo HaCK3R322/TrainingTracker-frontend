@@ -74,7 +74,18 @@ const UnfinishedSetElement = ({index, units}) => {
 
 
 
-const ExerciseCard = ({name, units, sets, swipedRightCallback, swipedLeftCallback, swipeState}) => {
+const ExerciseCard = ({
+                          name,
+                          units,
+                          sets,
+                          swipedRightCallback,
+                          swipedLeftCallback,
+                          swipeState,
+                          isUpperCardSwipingLeft,
+                          isUpperCardSwipingRight,
+                          swipingRightCallback,
+                          swipingLeftCallBack
+}) => {
     const [swipedRight, setSwipedRight] = useState(false);
     const [swipedLeft, setSwipedLeft] = useState(false);
     const [dragStart, setDragStart] = useState(0);
@@ -82,12 +93,7 @@ const ExerciseCard = ({name, units, sets, swipedRightCallback, swipedLeftCallbac
 
     const handleDragStart = (info) => {
         setDragStart(info.point.x);
-
     }
-
-    const [startedSwipingToRight, setStartedSwipingToRight] = useState(false);
-    const [startedSwipingToLeft, setStartedSwipingToLeft] = useState(false);
-    const [basedZIndex, setBasedZIndex] = useState(1);
     const handleOnDrag = (info) => {
 
         let dragEnd = info.point.x;
@@ -104,17 +110,6 @@ const ExerciseCard = ({name, units, sets, swipedRightCallback, swipedLeftCallbac
             setSwipedRight(false);
             setSwipedLeft(false);
         }
-
-        if(distance > 5) {
-            setStartedSwipingToRight(true);
-            setStartedSwipingToLeft(false);
-        } else if(distance < -5) {
-            setStartedSwipingToRight(false);
-            setStartedSwipingToLeft(true);
-        } else {
-            setStartedSwipingToRight(false);
-            setStartedSwipingToLeft(false);
-        }
     }
 
     const handleDragEnd = (info) => {
@@ -130,14 +125,6 @@ const ExerciseCard = ({name, units, sets, swipedRightCallback, swipedLeftCallbac
         setSwipedLeft(false);
     }
 
-    useEffect(() => {
-        if(swipeState === cardStates.LEFTER_THAN_CHOSEN) {
-            setBasedZIndex(2);
-        } else {
-            setBasedZIndex(1);
-        }
-    }, [startedSwipingToRight]);
-
     function getAnimateStateBasedBySwipeState() {
         switch(swipeState) {
             case cardStates.CENTRAL:
@@ -149,29 +136,30 @@ const ExerciseCard = ({name, units, sets, swipedRightCallback, swipedLeftCallbac
             case cardStates.LEFTER_THAN_CHOSEN:
                 return {
                     scale: 0.87,
-                    x: "-50px",
-                    opacity: 1,
-                    zIndex: basedZIndex
+                    x: "-100%",
+                    opacity: 0.5,
+                    zIndex: 2
                 };
             case cardStates.LEFTER_THAN_VISIBLE:
                 return{
                     scale: 0.87,
                     x: "-120%",
-                    opacity: 1,
-                    zIndex: basedZIndex
+                    opacity: 0.5,
+                    zIndex: 2
                 };
             case cardStates.RIGHTER_THAN_CHOSEN:
                 return {
                     scale: 0.87,
-                    x: "+50px",
-                    opacity: basedZIndex,
+                    x: "+100%",
+                    opacity: 0.5,
+                    zIndex: 2
                 };
             case cardStates.RIGHTER_THAN_VISIBLE:
                 return{
                     scale: 0.87,
                     x: "+120%",
-                    opacity: 1,
-                    zIndex: basedZIndex
+                    opacity: 0.5,
+                    zIndex: 2
                 };
             default:
                 alert("Wrong card state : " + swipeState)
@@ -193,10 +181,6 @@ const ExerciseCard = ({name, units, sets, swipedRightCallback, swipedLeftCallbac
 
                     transition={{duration: 0.1}}
                     animate={animateState}
-
-                    style={{
-                        zIndex: basedZIndex
-                    }}
         >
             <div className={"exercise-name-div"}>
                 <p>{name}</p>

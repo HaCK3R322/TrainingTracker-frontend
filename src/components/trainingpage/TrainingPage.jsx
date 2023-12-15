@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import '../../style/theme.css'
 import '../../style/trainingpage/trainingpage.css'
 import ExerciseCard from "./ExerciseCard";
 import '../../style/motion-framer-wrapper.css'
@@ -10,7 +11,7 @@ const ExerciseCardsSwiperPagination = ({arrLength, chosenIndex, setChosenIndex})
     const [dots, setDots] = useState([]);
     useEffect(() => {
         let newDots = []
-        for(let i = 0; i < arrLength; i++) {
+        for(let i = 0; i <= arrLength; i++) {
             newDots.push({index: i});
         }
         setDots(newDots);
@@ -23,10 +24,10 @@ const ExerciseCardsSwiperPagination = ({arrLength, chosenIndex, setChosenIndex})
                     className={"dot"}
                     key={dot.index} onClick={() => {setChosenIndex(dot.index)}}
                     style={{
-                        opacity: dot.index === chosenIndex ? 1.0 : 0.5
+                        opacity: dot.index === chosenIndex ? 1.0 : 0.5,
+                        backgroundColor: dot.index < arrLength ? "var(--second-color)" : "var(--button-color)"
                     }}
                 >
-                    {dot.index}
                 </div>
             )}
         </div>
@@ -66,6 +67,30 @@ const ExerciseCardsSwiper = ({cardsData}) => {
         if(currentChosenCardIndex > 0) setCurrentChosenCardIndex(currentChosenCardIndex - 1);
     }
 
+    const [isUpperCardSwipingLeft, setIsUpperCardSwipingLeft] = useState(false);
+    const [isUpperCardSwipingRight, setIsUpperCardSwipingRight] = useState(false);
+
+    const swipingLeftCallback = (index, isSwipingLeft) => {
+        if(index === currentChosenCardIndex) {
+            if(isSwipingLeft) {
+                setIsUpperCardSwipingLeft(true);
+            } else {
+                setIsUpperCardSwipingLeft(false);
+            }
+        }
+    }
+
+    const swipingRightCallback = (index, isSwipingRight) => {
+        if(index === currentChosenCardIndex) {
+            if(isSwipingRight) {
+                setIsUpperCardSwipingRight(true);
+            } else {
+                setIsUpperCardSwipingRight(false);
+
+            }
+        }
+    }
+
     return(
         <div>
             {cards.map((card, index) =>
@@ -77,6 +102,11 @@ const ExerciseCardsSwiper = ({cardsData}) => {
                     key={card.name}
                     swipedLeftCallback={swipedLeftCallback}
                     swipedRightCallback={swipedRightCallback}
+
+                    isUpperCardSwipingLeft={isUpperCardSwipingLeft}
+                    isUpperCardSwipingRight={isUpperCardSwipingRight}
+                    swipingLeftCallBack={(isSwipingLeft) => {swipingLeftCallback(index, isSwipingLeft)}}
+                    swipingRightCallback={(isSwipingRight) => {swipingRightCallback(index, isSwipingRight)}}
                 />
             )}
 
