@@ -37,9 +37,9 @@ const cardsDataInitial = [
 const TrainingPage = () => {
     return (
         <motion.div
-            initial={{x: "99%"}}
+            initial={{x: "100%"}}
             animate={{x: "0%"}}
-            exit={{x: "99%"}}
+            exit={{x: "100%"}}
             transition={{duration: 0.3}}
 
             key={'TrainingPage-content'}

@@ -1,14 +1,14 @@
 import React from 'react';
-import '../../style/theme.css'
-import '../../style/mainpage/mainpage.css'
-import gitHubIconSvg from '../../images/github-mark-white.svg'
-import TrainingButton from "./TrainingButton";
-import '../../style/mainpage/newtrainingbutton.css'
 import NewTrainingButton from "./NewTrainingButton";
-import '../../style/mainpage/trainingbutton.css';
+import TrainingButton from "./TrainingButton";
 import {motion} from "framer-motion";
 import {useNavigate} from "react-router";
+import '../../style/theme.css'
+import '../../style/mainpage/mainpage.css'
+import '../../style/mainpage/newtrainingbutton.css'
+import '../../style/mainpage/trainingbutton.css';
 import '../../style/motion-framer-wrapper.css'
+import gitHubIconSvg from '../../images/github-mark-white.svg'
 
 
 const MainPage = () => {
@@ -16,9 +16,9 @@ const MainPage = () => {
 
     return (
         <motion.div
-            initial={{x: "-99%"}}
+            initial={{x: "-100%"}}
             animate={{x: "0%"}}
-            exit={{x: "-99%"}}
+            exit={{x: "-100%"}}
             transition={{ duration: 0.3}}
 
             key={'MainPage-content'}
