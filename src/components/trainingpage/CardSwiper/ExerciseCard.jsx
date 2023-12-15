@@ -4,66 +4,6 @@ import '../../../style/trainingpage/finishedsetelement.css'
 import '../../../style/trainingpage/unfinishedsetelement.css'
 import SwipeStates from "./SwipeStates.json"
 
-const FinishedSetElement = ({amount, units, reps, index}) => {
-    function calcSetTopValue(index) {
-        let nameDivSize = 100; //px
-        let betweenSetsSpace = 15; //px
-        let selfSize = 35; //px
-
-        let prevSetsSize = index * (betweenSetsSpace + selfSize);
-
-        let resultTopValue = `${nameDivSize}px + ${prevSetsSize}px`
-        // alert(`for index ${index} = ${resultTopValue}`)
-        return `calc(${resultTopValue})`;
-    }
-
-    return(
-        <div className={"set-div"}
-             style={{top: calcSetTopValue(index)}}
-        >
-            <div className={"amount"}>
-                {amount}
-            </div>
-
-            <div className={"units-container-div"}>
-                {units}
-            </div>
-
-            <div className={"reps"}>
-                {reps}
-            </div>
-        </div>
-    )
-}
-
-const UnfinishedSetElement = ({index, units}) => {
-    function calcSetTopValue(index) {
-        let nameDivSize = 100; //px
-        let betweenSetsSpace = 15; //px
-        let selfSize = 35; //px
-
-        let prevSetsSize = index * (betweenSetsSpace + selfSize);
-
-        let resultTopValue = `${nameDivSize}px + ${prevSetsSize}px`
-        // alert(`for index ${index} = ${resultTopValue}`)
-        return `calc(${resultTopValue})`;
-    }
-
-    return(
-        <div className={"unfinished-set-div"}
-             style={{top: calcSetTopValue(index)}}
-        >
-            <div className={"amount"}/>
-            <div className={"units-container-div"}>
-                {units}
-            </div>
-            <div className={"reps"}/>
-        </div>
-    )
-}
-
-
-
 const ExerciseCard = ({
                           name,
                           units,
@@ -130,10 +70,68 @@ const ExerciseCard = ({
                 <FinishedSetElement index={index} amount={set.amount} units={units} reps={set.reps}/>
             )}
 
-            {}<UnfinishedSetElement index={sets.length} units={"kg"}/>
+            {sets.length < 5 ? <UnfinishedSetElement index={sets.length} units={"kg"}/> : <div/>}
         </motion.div>
     );
 };
+
+const FinishedSetElement = ({amount, units, reps, index}) => {
+    function calcSetTopValue(index) {
+        let nameDivSize = 100; //px
+        let betweenSetsSpace = 15; //px
+        let selfSize = 35; //px
+
+        let prevSetsSize = index * (betweenSetsSpace + selfSize);
+
+        let resultTopValue = `${nameDivSize}px + ${prevSetsSize}px`
+        // alert(`for index ${index} = ${resultTopValue}`)
+        return `calc(${resultTopValue})`;
+    }
+
+    return(
+        <div className={"set-div"}
+             style={{top: calcSetTopValue(index)}}
+        >
+            <div className={"amount"}>
+                <input defaultValue={amount} type={"number"}/>
+            </div>
+
+            <div className={"units-container-div"}>
+                {units}
+            </div>
+
+            <div className={"reps"}>
+                <input defaultValue={reps} type={"number"}/>
+            </div>
+        </div>
+    )
+}
+
+const UnfinishedSetElement = ({index, units}) => {
+    function calcSetTopValue(index) {
+        let nameDivSize = 100; //px
+        let betweenSetsSpace = 15; //px
+        let selfSize = 35; //px
+
+        let prevSetsSize = index * (betweenSetsSpace + selfSize);
+
+        let resultTopValue = `${nameDivSize}px + ${prevSetsSize}px`
+        // alert(`for index ${index} = ${resultTopValue}`)
+        return `calc(${resultTopValue})`;
+    }
+
+    return(
+        <div className={"unfinished-set-div"}
+             style={{top: calcSetTopValue(index)}}
+        >
+            <div className={"amount"}/>
+            <div className={"units-container-div"}>
+                {units}
+            </div>
+            <div className={"reps"}/>
+        </div>
+    )
+}
 
 function getAnimationBasedOnSwipeState(swipeState) {
     switch(swipeState) {

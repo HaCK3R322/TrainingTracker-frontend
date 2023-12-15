@@ -10,7 +10,7 @@ import '../../style/trainingpage/exercisecardsswiperpagination.css'
 const cardsDataInitial = [
     {name: "1",
         units: "kg",
-        sets: [{amount: 80, reps: 12}, {amount: 250, reps: 12}, {amount: 250, reps: 12}]
+        sets: [{amount: 80, reps: 12}, {amount: 250, reps: 12}, {amount: 250, reps: 12}, {amount: 250, reps: 12},{amount: 250, reps: 12}]
     },
     {name: "2",
         units: "kg",
@@ -25,6 +25,10 @@ const cardsDataInitial = [
         sets: [{amount: 94, reps: 12}, {amount: 94, reps: 10}, {amount: 94, reps: 8}]
     },
     {name: "5",
+        units: "kg",
+        sets: [{amount: 250, reps: 12}, {amount: 250, reps: 12}, {amount: 250, reps: 12}]
+    },
+    {name: "6",
         units: "kg",
         sets: [{amount: 250, reps: 12}, {amount: 250, reps: 12}, {amount: 250, reps: 12}]
     }

@@ -2,7 +2,7 @@
     position: absolute;
     width: 100%;
     left: 0;
-    height: 35px;
+    height: 30px;
     font-family: var(--training-tracker-font-family);
     font-size: 30px;
     text-align: center;
@@ -10,16 +10,28 @@
 
 }
 
-.set-div .amount {
+.set-div input {
     position: absolute;
+    width: 80px;
     height: 100%;
 
-    width: 80px;
-    left: 10%;
     border: 1px solid black;
     border-radius: var(--training-tracker-border-radius);
 
+    background-color: var(--second-color);
+
+    text-align: center;
+    font-size: 30px;
+
     -webkit-text-stroke: 2px var(--main-color);
+}
+
+.set-div .amount input {
+    left: 10%;
+}
+
+.set-div .reps input {
+    right: 10%;
 }
 
 .set-div .units-container-div {
@@ -29,13 +41,4 @@
     width: 35px;
     text-align: left;
     left: calc(10% + 80px + 10px);
-}
-
-.set-div .reps {
-    position: absolute;
-    width: 80px;
-    right: 10%;
-    border: 1px solid black;
-    border-radius: var(--training-tracker-border-radius);
-    -webkit-text-stroke: 2px var(--main-color);
 }
