@@ -9,3 +9,7 @@
 
     --training-tracker-border-radius: 10px;
 }
+
+.body {
+    background-color: var(--main-color);
+}

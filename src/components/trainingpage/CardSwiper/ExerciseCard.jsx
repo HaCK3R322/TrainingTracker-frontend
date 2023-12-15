@@ -1,18 +1,8 @@
-import React, {useEffect, useRef, useState} from 'react';
-import '../../style/trainingpage/finishedsetelement.css'
-import '../../style/trainingpage/unfinishedsetelement.css'
-import {wait} from "@testing-library/user-event/dist/utils";
-import {motion, useMotionValue} from "framer-motion";
-
-const cardStates = {
-    CENTRAL: 'CENTRAL',
-
-    LEFTER_THAN_VISIBLE: 'LEFTER_THAN_VISIBLE',
-    LEFTER_THAN_CHOSEN: 'LEFTER_THAN_CHOSEN',
-
-    RIGHTER_THAN_VISIBLE: 'RIGHTER_THAN_VISIBLE',
-    RIGHTER_THAN_CHOSEN: "RIGHTER_THAN_CHOSEN",
-}
+import React, {useEffect, useState} from 'react';
+import {motion} from "framer-motion";
+import '../../../style/trainingpage/finishedsetelement.css'
+import '../../../style/trainingpage/unfinishedsetelement.css'
+import SwipeStates from "./SwipeStates.json"
 
 const FinishedSetElement = ({amount, units, reps, index}) => {
     function calcSetTopValue(index) {
@@ -80,24 +70,21 @@ const ExerciseCard = ({
                           sets,
                           swipedRightCallback,
                           swipedLeftCallback,
-                          swipeState,
-                          isUpperCardSwipingLeft,
-                          isUpperCardSwipingRight,
-                          swipingRightCallback,
-                          swipingLeftCallBack
+                          swipeState
 }) => {
     const [swipedRight, setSwipedRight] = useState(false);
     const [swipedLeft, setSwipedLeft] = useState(false);
     const [dragStart, setDragStart] = useState(0);
     const [animateState, setAnimateState] = useState({zIndex: 3});
 
+    useEffect(() => {setAnimateState(getAnimationBasedOnSwipeState(swipeState));}, [swipeState]);
+
     const handleDragStart = (info) => {
         setDragStart(info.point.x);
     }
+
     const handleOnDrag = (info) => {
-
         let dragEnd = info.point.x;
-
         let distance = dragStart - dragEnd;
 
         if(distance > 100) {
@@ -110,13 +97,12 @@ const ExerciseCard = ({
             setSwipedRight(false);
             setSwipedLeft(false);
         }
-    }
 
+    }
     const handleDragEnd = (info) => {
         if(swipedLeft) {
             swipedLeftCallback();
         }
-
         if(swipedRight) {
             swipedRightCallback();
         }
@@ -124,52 +110,6 @@ const ExerciseCard = ({
         setSwipedRight(false);
         setSwipedLeft(false);
     }
-
-    function getAnimateStateBasedBySwipeState() {
-        switch(swipeState) {
-            case cardStates.CENTRAL:
-                return {
-                    zIndex: 3,
-                    x: 0,
-                    opacity: 3
-                };
-            case cardStates.LEFTER_THAN_CHOSEN:
-                return {
-                    scale: 0.87,
-                    x: "-100%",
-                    opacity: 0.5,
-                    zIndex: 2
-                };
-            case cardStates.LEFTER_THAN_VISIBLE:
-                return{
-                    scale: 0.87,
-                    x: "-120%",
-                    opacity: 0.5,
-                    zIndex: 2
-                };
-            case cardStates.RIGHTER_THAN_CHOSEN:
-                return {
-                    scale: 0.87,
-                    x: "+100%",
-                    opacity: 0.5,
-                    zIndex: 2
-                };
-            case cardStates.RIGHTER_THAN_VISIBLE:
-                return{
-                    scale: 0.87,
-                    x: "+120%",
-                    opacity: 0.5,
-                    zIndex: 2
-                };
-            default:
-                alert("Wrong card state : " + swipeState)
-        }
-    }
-
-    useEffect(() => {
-        let newAnimateState = getAnimateStateBasedBySwipeState();
-        setAnimateState(newAnimateState);
-    }, [swipeState]);
 
     return (
         <motion.div className={"exercise-card"}
@@ -190,9 +130,50 @@ const ExerciseCard = ({
                 <FinishedSetElement index={index} amount={set.amount} units={units} reps={set.reps}/>
             )}
 
-            <UnfinishedSetElement index={sets.length} units={"kg"}/>
+            {}<UnfinishedSetElement index={sets.length} units={"kg"}/>
         </motion.div>
     );
 };
+
+function getAnimationBasedOnSwipeState(swipeState) {
+    switch(swipeState) {
+        case SwipeStates.CENTRAL:
+            return {
+                zIndex: 3,
+                x: 0,
+                opacity: 3
+            };
+        case SwipeStates.LEFTER_THAN_CHOSEN:
+            return {
+                scale: 0.87,
+                x: "-100%",
+                opacity: 0.5,
+                zIndex: 2
+            };
+        case SwipeStates.LEFTER_THAN_VISIBLE:
+            return{
+                scale: 0.87,
+                x: "-120%",
+                opacity: 0.5,
+                zIndex: 2
+            };
+        case SwipeStates.RIGHTER_THAN_CHOSEN:
+            return {
+                scale: 0.87,
+                x: "+100%",
+                opacity: 0.5,
+                zIndex: 2
+            };
+        case SwipeStates.RIGHTER_THAN_VISIBLE:
+            return{
+                scale: 0.87,
+                x: "+120%",
+                opacity: 0.5,
+                zIndex: 2
+            };
+        default:
+            alert("Wrong card state : " + swipeState)
+    }
+}
 
 export default ExerciseCard;
