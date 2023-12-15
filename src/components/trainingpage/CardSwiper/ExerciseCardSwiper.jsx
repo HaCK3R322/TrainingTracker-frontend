@@ -14,6 +14,36 @@ const ExerciseCardsSwiper = ({cardsData}) => {
         if(currentChosenCardIndex > 0) setCurrentChosenCardIndex(currentChosenCardIndex - 1);
     }
 
+    const swapRightCallback = () => {
+        if(currentChosenCardIndex !== cards.length - 1) {
+            let chosenCard = cards[currentChosenCardIndex];
+            let nextCard = cards[currentChosenCardIndex + 1];
+
+            let newCardsArray = [...cards];
+            newCardsArray[currentChosenCardIndex + 1] = chosenCard;
+            newCardsArray[currentChosenCardIndex] = nextCard;
+
+            setCards(newCardsArray);
+
+            setCurrentChosenCardIndex(currentChosenCardIndex + 1);
+        }
+    }
+
+    const swapLeftCallback = () => {
+        if(currentChosenCardIndex !== 0) {
+            let chosenCard = cards[currentChosenCardIndex];
+            let prevCard = cards[currentChosenCardIndex - 1];
+
+            let newCardsArray = [...cards];
+            newCardsArray[currentChosenCardIndex - 1] = chosenCard;
+            newCardsArray[currentChosenCardIndex] = prevCard;
+
+            setCards(newCardsArray);
+
+            setCurrentChosenCardIndex(currentChosenCardIndex - 1);
+        }
+    }
+
     return(
         <div>
             {cards.map((card, index) =>
@@ -22,6 +52,9 @@ const ExerciseCardsSwiper = ({cardsData}) => {
                     key={card.name}
                     swipedLeftCallback={swipedLeftCallback}
                     swipedRightCallback={swipedRightCallback}
+
+                    swapToRightCallback={swapRightCallback}
+                    swapToLeftCallback={swapLeftCallback}
 
                     name={card.name}
                     units={card.units}

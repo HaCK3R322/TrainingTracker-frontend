@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {motion} from "framer-motion";
+import {motion, useDragControls} from "framer-motion";
 import '../../../style/trainingpage/finishedsetelement.css'
 import '../../../style/trainingpage/unfinishedsetelement.css'
 import SwipeStates from "./SwipeStates.json"
@@ -10,60 +10,138 @@ const ExerciseCard = ({
                           sets,
                           swipedRightCallback,
                           swipedLeftCallback,
-                          swipeState
+                          swipeState,
+                          swapToRightCallback,
+                          swapToLeftCallback
 }) => {
     const [swipedRight, setSwipedRight] = useState(false);
     const [swipedLeft, setSwipedLeft] = useState(false);
-    const [dragStart, setDragStart] = useState(0);
+    const [dragStartPoint, setDragStartPoint] = useState(0);
     const [animateState, setAnimateState] = useState({zIndex: 3});
 
-    useEffect(() => {setAnimateState(getAnimationBasedOnSwipeState(swipeState));}, [swipeState]);
+    const [wasLongDragging, setWasLongDragging] = useState(false);
+
+    const [dragStartTime, setDragStartTime] = useState(Number.MAX_VALUE);
+    const [isDragStartTimeUpdated, setIsDragStartTimeUpdated] = useState(false);
+    const [isLongDragging, setIsLongDragging] = useState(false);
+    const [swappedWithRight, setSwappedWithRight] = useState(false);
+    const [swappedWithLeft, setSwappedWithLeft] = useState(false);
+    useEffect(() => {
+        setIsDragStartTimeUpdated(true);
+    }, [dragStartTime]);
+
+    useEffect(() => {
+        if(isLongDragging === true) {
+            setWasLongDragging(true);
+            console.log("WAS")
+
+            if(swappedWithLeft || swappedWithRight) navigator.vibrate(100);
+
+            if(swappedWithRight) {
+                swapToRightCallback();
+                setSwappedWithRight(true);
+                setSwappedWithLeft(false);
+            }
+            if(swappedWithLeft) {
+                swapToLeftCallback();
+                setSwappedWithLeft(true);
+                setSwappedWithRight(false);
+            }
+
+            setIsLongDragging(false);
+            setDragStartTime(Date.now());
+        }
+    }, [isLongDragging, swappedWithRight, swappedWithLeft]);
+
+
+    useEffect(() => {
+        setAnimateState(getAnimationBasedOnSwipeState(swipeState));
+    }, [swipeState]);
 
     const handleDragStart = (info) => {
-        setDragStart(info.point.x);
+        setDragStartPoint(info.point.x);
+        setDragStartTime(Date.now());
     }
+
+    const [rotateValue, setRotateValue] = useState(0);
 
     const handleOnDrag = (info) => {
         let dragEnd = info.point.x;
-        let distance = dragStart - dragEnd;
+        let distance = dragEnd - dragStartPoint;
 
-        if(distance > 100) {
-            setSwipedRight(false);
-            setSwipedLeft(true);
-        } else if (distance < -100) {
+        if(distance > 100) { // --->
             setSwipedRight(true);
             setSwipedLeft(false);
-        } else {
+        } else if (distance < -100) { // <---
+            setSwipedLeft(true);
+            setSwipedRight(false);
+        } else { // <->
             setSwipedRight(false);
             setSwipedLeft(false);
         }
 
+        if(isDragStartTimeUpdated) {
+            let dragTime = Date.now() - dragStartTime;
+            if(dragTime > 1500) {
+                setIsLongDragging(true);
+
+                if(distance > 100) { // --->
+                    setSwappedWithRight(true);
+                    setSwappedWithLeft(false);
+                } else if (distance < -100) { // <---
+                    setSwappedWithLeft(true);
+                    setSwappedWithRight(false);
+                } else { // <->
+                    setSwappedWithLeft(false);
+                    setSwappedWithRight(false);
+                }
+            }
+        }
+
+        if(wasLongDragging) {
+            setRotateValue(50);
+        } else {
+            setRotateValue(0);
+        }
     }
     const handleDragEnd = (info) => {
-        if(swipedLeft) {
+        if(swipedLeft && !swappedWithLeft) {
             swipedLeftCallback();
         }
-        if(swipedRight) {
+        if(swipedRight && !swappedWithRight) {
             swipedRightCallback();
         }
 
         setSwipedRight(false);
         setSwipedLeft(false);
+
+        setSwappedWithLeft(false);
+        setSwappedWithRight(false);
+
+        setIsDragStartTimeUpdated(false);
+        setIsLongDragging(false);
+
+        setWasLongDragging(false);
     }
 
     return (
         <motion.div className={"exercise-card"}
                     drag={"x"}
                     dragSnapToOrigin={true}
+
                     onDragStart={(event, info) => {handleDragStart(info)}}
-                    onDragEnd={(event, info) => {handleDragEnd(info)}}
                     onDrag={(event, info) => {handleOnDrag(info)}}
+                    onDragEnd={(event, info) => {handleDragEnd(info)}}
 
                     transition={{duration: 0.1}}
                     animate={animateState}
+
+                    whileTap={{
+                        scale: 1.03
+                    }}
         >
             <div className={"exercise-name-div"}>
-                <p>{name}</p>
+                <p>{name.toLowerCase()}</p>
             </div>
 
             {sets.map((set, index) =>
