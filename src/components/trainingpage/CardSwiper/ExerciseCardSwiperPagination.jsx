@@ -79,7 +79,7 @@ const ExerciseCardsSwiperPagination = ({arrLength, chosenIndex, setChosenIndex})
                 width: (arrLength + 1) * 30
             }}
         >
-            {dots.map((dot) =>
+            {dots.map((dot, index) =>
                 <div
                     className={"dot-hitbox"}
                     onClick={() => {setChosenIndex(dot.index)}}

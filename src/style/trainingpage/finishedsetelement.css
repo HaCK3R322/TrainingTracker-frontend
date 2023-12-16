@@ -7,7 +7,6 @@
     font-size: 30px;
     text-align: center;
     color: var(--main-color);
-
 }
 
 .set-div input {
@@ -24,6 +23,11 @@
     font-size: 30px;
 
     -webkit-text-stroke: 2px var(--main-color);
+}
+
+.set-div input:focus {
+    outline: none !important;
+    border: 2px solid var(--button-color);
 }
 
 .set-div .amount input {

@@ -1,0 +1,106 @@
+.new-card-form {
+    position: absolute;
+    width: 76%;
+    height: calc(100% - 20px);
+    left: calc(50% - (76% * 0.5));
+    bottom: 0;
+    background-color: var(--second-color);
+
+    border-radius: var(--training-tracker-border-radius);
+    outline: 5px solid var(--button-color);
+
+    font-family: var(--training-tracker-font-family);
+}
+
+.name input {
+    position: absolute;
+    width: calc(100% - 40px);
+    top: 20px;
+    left: 20px;
+    height: 60px;
+    outline: 3px solid var(--button-color);
+    border-radius: var(--training-tracker-border-radius);
+    border-width: 0;
+
+    text-align: center;
+
+    background-color: var(--second-color);
+
+    box-sizing: border-box;
+
+    font-size: 40px;
+}
+
+.name input:focus {
+    outline: 4px solid var(--button-color);
+}
+
+.name input::placeholder {
+    color: rgba(51, 49, 64, 0.5);
+}
+
+.units-choice-div {
+    position: absolute;
+    width: calc(100% - 40px);
+    left: 20px;
+    top: 120px;
+    height: 60px;
+    outline: 3px solid var(--button-color);
+    border-radius: var(--training-tracker-border-radius);
+    border-width: 0;
+
+    text-align: center;
+    font-size: 30px;
+}
+
+.units-choice-div p {
+    top: 50%;
+    transform: translate(0, -50%);
+}
+
+.units-choice-div .option {
+    position: absolute;
+    height: 100%;
+    border-radius: var(--training-tracker-border-radius);
+}
+
+.units-choice-div .kg {
+    left: 0;
+    width: 33%;
+    border-right: 0;
+    border-radius: var(--training-tracker-border-radius) 0 0 0;
+}
+.units-choice-div .min {
+    left: calc(33%);
+    width: calc(33% - 4px);
+
+
+    border-left: 3px solid var(--button-color);
+    border-right: 3px solid var(--button-color);
+    border-radius: 0;
+}
+.units-choice-div .sec {
+    right: 0;
+    width: calc(33% + 2px);
+    border-radius: 0 0 0 0;
+}
+
+.chosen-unit {
+    background-color: rgba(70, 166, 131, 0.5);
+}
+
+.create-button button {
+    position: absolute;
+    width: 130px;
+    height: 60px;
+    bottom: 20px;
+    left: calc(50% - 75px);
+    outline: 3px solid var(--button-color);
+    border-radius: var(--training-tracker-border-radius);
+    border-width: 0;
+}
+
+.create-button button img {
+    width: 50px;
+    height: 50px;
+}

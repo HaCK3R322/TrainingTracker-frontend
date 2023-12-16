@@ -8,29 +8,55 @@ import '../../style/trainingpage/exercisecardsswiperpagination.css'
 
 
 const cardsDataInitial = [
-    {name: "1",
+    {name: "squats",
         units: "kg",
-        sets: [{amount: 80, reps: 12}, {amount: 250, reps: 12}, {amount: 250, reps: 12}, {amount: 250, reps: 12},{amount: 250, reps: 12}]
+        sets: [{amount: 80, reps: 12}, {amount: 80, reps: 10}, {amount: 80, reps: 6}],
+        id: 1
     },
-    {name: "2",
+    {name: "leg extention (two legs)",
         units: "kg",
-        sets: [{amount: 80, reps: 12}, {amount: 250, reps: 12}, {amount: 250, reps: 12}]
+        sets: [{amount: 110, reps: 12}, {amount: 110, reps: 12}, {amount: 110, reps: 11}],
+        id: 2
     },
-    {name: "3",
+    {name: "leg curls",
         units: "kg",
-        sets: [{amount: 80, reps: 12}, {amount: 250, reps: 12}, {amount: 250, reps: 12}]
+        sets: [{amount: 94, reps: 12}, {amount: 250, reps: 10}, {amount: 250, reps: 8}],
+        id: 3
     },
-    {name: "4",
+    {name: "shoulders",
         units: "kg",
-        sets: [{amount: 94, reps: 12}, {amount: 94, reps: 10}, {amount: 94, reps: 8}]
+        sets: [{amount: 12, reps: 12}, {amount: 12, reps: 12}, {amount: 12, reps: 12}],
+        id: 4
     },
-    {name: "5",
+    {name: "rotator",
         units: "kg",
-        sets: [{amount: 250, reps: 12}, {amount: 250, reps: 12}, {amount: 250, reps: 12}]
+        sets: [{amount: 8, reps: 10}, {amount: 8, reps: 10}, {amount: 8, reps: 10}],
+        id: 5
     },
-    {name: "6",
+    {name: "предплечье блок",
         units: "kg",
-        sets: [{amount: 250, reps: 12}, {amount: 250, reps: 12}, {amount: 250, reps: 12}]
+        sets: [{amount: 60, reps: 12}, {amount: 60, reps: 12}, {amount: 60, reps: 12}],
+        id: 6
+    },
+    {name: "shoulders",
+        units: "kg",
+        sets: [{amount: 12, reps: 12}, {amount: 12, reps: 12}, {amount: 12, reps: 12}],
+        id: 7
+    },
+    {name: "rotator",
+        units: "kg",
+        sets: [{amount: 8, reps: 10}, {amount: 8, reps: 10}, {amount: 8, reps: 10}],
+        id: 8
+    },
+    {name: "предплечье блок",
+        units: "kg",
+        sets: [{amount: 60, reps: 12}, {amount: 60, reps: 12}, {amount: 60, reps: 12}],
+        id: 9
+    },
+    {name: "rotator",
+        units: "kg",
+        sets: [{amount: 8, reps: 10}, {amount: 8, reps: 10}, {amount: 8, reps: 10}],
+        id: 10
     }
 ]
 

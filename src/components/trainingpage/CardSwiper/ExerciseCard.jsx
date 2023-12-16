@@ -168,9 +168,9 @@ const FinishedSetElement = ({amount, units, reps, index}) => {
         <div className={"set-div"}
              style={{top: calcSetTopValue(index)}}
         >
-            <div className={"amount"}>
+            <motion.div className={"amount"}>
                 <input defaultValue={amount} type={"number"}/>
-            </div>
+            </motion.div>
 
             <div className={"units-container-div"}>
                 {units}
