@@ -18,8 +18,6 @@ const ExerciseCardsSwiperPagination = ({arrLength, chosenIndex, setChosenIndex})
 
     const [prevChosenIndex, setPrevChosenIndex] = useState(0);
 
-    const [timeFrames, setTimeFrames] = useState([0, 0.5, 0.5, 1, 1]);
-
     const [leftStartDistance, setLeftStartDistance] = useState([5,5,5,5,5]); //px
     const [leftWidthFrames, setLeftWidthFrames] = useState([0,0,0,0]);
     const [leftOpacityFrames, setLeftOpacityFrames] = useState([0,0,0,0]);
@@ -35,7 +33,7 @@ const ExerciseCardsSwiperPagination = ({arrLength, chosenIndex, setChosenIndex})
         let width = 20; //px
 
         let dotDistance = chosenIndex - prevChosenIndex;
-        let newWidth = width + Math.abs(dotDistance) * 30;
+        let newWidth = width + Math.abs(dotDistance) * 30; //px
         let opacityGrow = [1, 1, 0, 0, 0]
 
         let widthGrow = [`${width}px`, `${newWidth}px`, `${newWidth}px`, `${newWidth}px`, `0px`];
@@ -66,8 +64,6 @@ const ExerciseCardsSwiperPagination = ({arrLength, chosenIndex, setChosenIndex})
 
 
     useEffect(() => {
-        console.log(leftStartDistance)
-
         leftAnimationControls.start({
             width: leftWidthFrames,
             opacity: leftOpacityFrames,

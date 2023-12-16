@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {motion, useDragControls} from "framer-motion";
+import {motion} from "framer-motion";
 import '../../../style/trainingpage/finishedsetelement.css'
 import '../../../style/trainingpage/unfinishedsetelement.css'
 import SwipeStates from "./SwipeStates.json"
@@ -19,22 +19,18 @@ const ExerciseCard = ({
     const [dragStartPoint, setDragStartPoint] = useState(0);
     const [animateState, setAnimateState] = useState({zIndex: 3});
 
-    const [wasLongDragging, setWasLongDragging] = useState(false);
-
     const [dragStartTime, setDragStartTime] = useState(Number.MAX_VALUE);
     const [isDragStartTimeUpdated, setIsDragStartTimeUpdated] = useState(false);
     const [isLongDragging, setIsLongDragging] = useState(false);
     const [swappedWithRight, setSwappedWithRight] = useState(false);
     const [swappedWithLeft, setSwappedWithLeft] = useState(false);
+
     useEffect(() => {
         setIsDragStartTimeUpdated(true);
     }, [dragStartTime]);
 
     useEffect(() => {
         if(isLongDragging === true) {
-            setWasLongDragging(true);
-            console.log("WAS")
-
             if(swappedWithLeft || swappedWithRight) navigator.vibrate(100);
 
             if(swappedWithRight) {
@@ -62,8 +58,6 @@ const ExerciseCard = ({
         setDragStartPoint(info.point.x);
         setDragStartTime(Date.now());
     }
-
-    const [rotateValue, setRotateValue] = useState(0);
 
     const handleOnDrag = (info) => {
         let dragEnd = info.point.x;
@@ -97,12 +91,6 @@ const ExerciseCard = ({
                 }
             }
         }
-
-        if(wasLongDragging) {
-            setRotateValue(50);
-        } else {
-            setRotateValue(0);
-        }
     }
     const handleDragEnd = (info) => {
         if(swipedLeft && !swappedWithLeft) {
@@ -120,8 +108,6 @@ const ExerciseCard = ({
 
         setIsDragStartTimeUpdated(false);
         setIsLongDragging(false);
-
-        setWasLongDragging(false);
     }
 
     return (
@@ -162,7 +148,6 @@ const FinishedSetElement = ({amount, units, reps, index}) => {
         let prevSetsSize = index * (betweenSetsSpace + selfSize);
 
         let resultTopValue = `${nameDivSize}px + ${prevSetsSize}px`
-        // alert(`for index ${index} = ${resultTopValue}`)
         return `calc(${resultTopValue})`;
     }
 
@@ -194,7 +179,6 @@ const UnfinishedSetElement = ({index, units}) => {
         let prevSetsSize = index * (betweenSetsSpace + selfSize);
 
         let resultTopValue = `${nameDivSize}px + ${prevSetsSize}px`
-        // alert(`for index ${index} = ${resultTopValue}`)
         return `calc(${resultTopValue})`;
     }
 
