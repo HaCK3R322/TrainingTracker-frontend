@@ -47,16 +47,6 @@ const cardsDataInitial = [
         units: "kg",
         sets: [{amount: 8, reps: 10}, {amount: 8, reps: 10}, {amount: 8, reps: 10}],
         id: 8
-    },
-    {name: "предплечье блок",
-        units: "kg",
-        sets: [{amount: 60, reps: 12}, {amount: 60, reps: 12}, {amount: 60, reps: 12}],
-        id: 9
-    },
-    {name: "rotator",
-        units: "kg",
-        sets: [{amount: 8, reps: 10}, {amount: 8, reps: 10}, {amount: 8, reps: 10}],
-        id: 10
     }
 ]
 

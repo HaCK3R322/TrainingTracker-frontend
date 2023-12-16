@@ -82,7 +82,8 @@ const ExerciseCardsSwiperPagination = ({arrLength, chosenIndex, setChosenIndex})
             {dots.map((dot, index) =>
                 <div
                     className={"dot-hitbox"}
-                    onClick={() => {setChosenIndex(dot.index)}}
+                    onClick={
+                        index < 10 ? () => {setChosenIndex(dot.index)} : ()=>{}}
                     key={dot.index}
                 >
                     <div
@@ -90,7 +91,10 @@ const ExerciseCardsSwiperPagination = ({arrLength, chosenIndex, setChosenIndex})
 
                         style={{
                             opacity: dot.index === chosenIndex ? 1.0 : 0.5,
-                            backgroundColor: dot.index < arrLength ? "var(--second-color)" : "var(--button-color)"
+                            backgroundColor: dot.index < arrLength ?
+                                "var(--second-color)" :
+                                arrLength === 10 ?
+                                    "red" : "var(--button-color)"
                         }}
                     >
                     </div>

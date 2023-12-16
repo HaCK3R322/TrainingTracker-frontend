@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import ExerciseCard from "./ExerciseCard";
 import {ExerciseCardsSwiperPagination} from "./ExerciseCardSwiperPagination";
 import SwipeStates from "./SwipeStates.json"
@@ -7,9 +7,17 @@ import NewCardForm from "./NewCardForm";
 const ExerciseCardsSwiper = ({cardsData}) => {
     const [cards, setCards] = useState(cardsData);
     const [currentChosenCardIndex, setCurrentChosenCardIndex] = useState(0);
+    const [cardLimitNotExceed, setCardLimitNotExceed] = useState(cards.length < 10);
+    useEffect(() => {
+        setCardLimitNotExceed(cards.length < 10);
+    }, [cards]);
 
     const swipedLeftCallback = () => {
-        if(currentChosenCardIndex < cards.length) setCurrentChosenCardIndex(currentChosenCardIndex + 1);
+        if(currentChosenCardIndex < cards.length) {
+            if(cardLimitNotExceed || (currentChosenCardIndex !== cards.length - 1)) {
+                setCurrentChosenCardIndex(currentChosenCardIndex + 1);
+            }
+        }
     }
     const swipedRightCallback = () => {
         if(currentChosenCardIndex > 0) setCurrentChosenCardIndex(currentChosenCardIndex - 1);
@@ -80,17 +88,20 @@ const ExerciseCardsSwiper = ({cardsData}) => {
                 arrLength={cards.length}
                 chosenIndex={currentChosenCardIndex}
                 setChosenIndex={setCurrentChosenCardIndex}
-            />
-
-            <NewCardForm
-                swipeState={calculateSwipeStateByCardPosition(cards.length + 1, currentChosenCardIndex, cards.length)}
-                key={"new-form"}
-                swipedLeftCallback={swipedLeftCallback}
-                swipedRightCallback={swipedRightCallback}
-
                 cards={cards}
-                setCards={setCards}
             />
+
+            {cardLimitNotExceed &&
+                <NewCardForm
+                    swipeState={calculateSwipeStateByCardPosition(cards.length + 1, currentChosenCardIndex, cards.length)}
+                    key={"new-form"}
+                    swipedLeftCallback={swipedLeftCallback}
+                    swipedRightCallback={swipedRightCallback}
+
+                    cards={cards}
+                    setCards={setCards}
+                />
+            }
         </div>
     )
 }
