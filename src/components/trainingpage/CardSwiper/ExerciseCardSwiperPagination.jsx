@@ -14,6 +14,7 @@ const ExerciseCardsSwiperPagination = ({arrLength, chosenIndex, setChosenIndex})
             newDots.push({index: i});
         }
         setDots(newDots);
+        setPrevChosenIndex(chosenIndex)
     }, [arrLength]);
 
     const [prevChosenIndex, setPrevChosenIndex] = useState(0);
@@ -27,7 +28,7 @@ const ExerciseCardsSwiperPagination = ({arrLength, chosenIndex, setChosenIndex})
     const [rightOpacityFrames, setRightOpacityFrames] = useState([0,0,0,0]);
 
     const leftAnimationControls = useAnimationControls();
-    const rightAnimaitonControls = useAnimationControls();
+    const rightAnimationControls = useAnimationControls();
 
     useEffect(() => {
         let width = 20; //px
@@ -49,8 +50,8 @@ const ExerciseCardsSwiperPagination = ({arrLength, chosenIndex, setChosenIndex})
 
         let a = `${prevChosenIndex * 30 + 5}px`;
         let b = `${chosenIndex * 30 + 5}px`;
-        let c = `${185 - chosenIndex * 30}px`
-        let d = `${185 - prevChosenIndex * 30}px`
+        let c = `${arrLength * 30 + 5 - chosenIndex * 30}px`
+        let d = `${arrLength * 30 + 5 - prevChosenIndex * 30}px`
 
         setLeftStartDistance(dotDistance > 0 ?
             [a,a,a,a,a] :
@@ -70,7 +71,7 @@ const ExerciseCardsSwiperPagination = ({arrLength, chosenIndex, setChosenIndex})
             left: leftStartDistance
         });
 
-        rightAnimaitonControls.start({
+        rightAnimationControls.start({
             width: rightWidthFrames,
             opacity: rightOpacityFrames,
             right: rightStartDistance
@@ -116,7 +117,7 @@ const ExerciseCardsSwiperPagination = ({arrLength, chosenIndex, setChosenIndex})
             <motion.div
                 className={"dot2"}
 
-                animate={rightAnimaitonControls}
+                animate={rightAnimationControls}
                 transition={{
                     times: [0, 0.5, 0.5, 1, 1],
                     duration: 0.1,

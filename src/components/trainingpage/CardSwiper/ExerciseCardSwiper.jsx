@@ -44,6 +44,17 @@ const ExerciseCardsSwiper = ({cardsData}) => {
         }
     }
 
+    const deleteCallback = () => {
+        let newCards = [...cards];
+        newCards.splice(currentChosenCardIndex, 1);
+
+        setCards(newCards);
+
+        setCurrentChosenCardIndex(currentChosenCardIndex === cards.length - 1 ?
+            currentChosenCardIndex - 1 :
+            currentChosenCardIndex)
+    }
+
     return(
         <div>
             {cards.map((card, index) =>
@@ -55,6 +66,8 @@ const ExerciseCardsSwiper = ({cardsData}) => {
 
                     swapToRightCallback={swapRightCallback}
                     swapToLeftCallback={swapLeftCallback}
+
+                    selfDeleteCallback={deleteCallback}
 
                     name={card.name}
                     units={card.units}

@@ -3,16 +3,19 @@ import {motion} from "framer-motion";
 import '../../../style/trainingpage/finishedsetelement.css'
 import '../../../style/trainingpage/unfinishedsetelement.css'
 import SwipeStates from "./SwipeStates.json"
+import trashCanIcon from '../../../images/trash-can-icon.png'
 
 const ExerciseCard = ({
                           name,
                           units,
                           sets,
+
                           swipedRightCallback,
                           swipedLeftCallback,
                           swipeState,
                           swapToRightCallback,
-                          swapToLeftCallback
+                          swapToLeftCallback,
+                          selfDeleteCallback
 }) => {
     const [swipedRight, setSwipedRight] = useState(false);
     const [swipedLeft, setSwipedLeft] = useState(false);
@@ -24,6 +27,12 @@ const ExerciseCard = ({
     const [isLongDragging, setIsLongDragging] = useState(false);
     const [swappedWithRight, setSwappedWithRight] = useState(false);
     const [swappedWithLeft, setSwappedWithLeft] = useState(false);
+
+    const handleOnDelete = () => {
+        if(swipeState === SwipeStates.CENTRAL) { // check if we are central card
+            selfDeleteCallback()
+        }
+    }
 
     useEffect(() => {
         setIsDragStartTimeUpdated(true);
@@ -135,6 +144,10 @@ const ExerciseCard = ({
             )}
 
             {sets.length < 5 ? <UnfinishedSetElement index={sets.length} units={"kg"}/> : <div/>}
+
+            <div className={"delete-button"} onClick={handleOnDelete}>
+                <img src={trashCanIcon} alt={"delete"} />
+            </div>
         </motion.div>
     );
 };
