@@ -1,11 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {motion, useAnimationControls} from "framer-motion";
 
-const AnimationDirections = {
-    LEFT_TO_RIGHT: 0,
-    RIGHT_TO_LEFT: 1
-}
-
 const ExerciseCardsSwiperPagination = ({arrLength, chosenIndex, setChosenIndex}) => {
     const [dots, setDots] = useState([]);
     useEffect(() => {
