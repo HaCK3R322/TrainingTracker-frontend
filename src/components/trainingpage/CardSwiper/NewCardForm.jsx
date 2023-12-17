@@ -46,6 +46,7 @@ const NewCardForm = ({
 
     const handleSubmitCreateCard = () => {
         if(cards.length < 10) {
+
             let newCard = {
                 name: name,
                 units: chosenUnit,
@@ -55,7 +56,10 @@ const NewCardForm = ({
             let newCards = [...cards];
             newCards.push(newCard);
 
-            setCards(newCards)
+            setCards(newCards);
+
+            setName("");
+            setChosenUnit("kg");
         } else {
             alert("Достигнут предел упражнений!");
         }
@@ -111,6 +115,7 @@ const NewCardForm = ({
             <div className={"name"}>
                 <input
                     placeholder={"name"}
+                    value={name}
                     onChange={(event) => setName(event.target.value.toLowerCase())}
                 />
             </div>
