@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import '../../../style/trainingpage/newcardform.css'
+import '../../style/trainingpage/newcardform.css'
 import SwipeStates from "./SwipeStates.json";
 import {motion} from "framer-motion";
-import okaymark from '../../../images/okaymark.png'
+import okaymark from '../../images/okaymark.png'
 
 const NewCardForm = ({
                          swipedRightCallback,

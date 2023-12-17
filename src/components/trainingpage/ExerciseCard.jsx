@@ -1,9 +1,9 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {motion} from "framer-motion";
-import '../../../style/trainingpage/finishedsetelement.css'
-import '../../../style/trainingpage/unfinishedsetelement.css'
+import '../../style/trainingpage/finishedsetelement.css'
+import '../../style/trainingpage/unfinishedsetelement.css'
 import SwipeStates from "./SwipeStates.json"
-import trashCanIcon from '../../../images/trash-can-icon.png'
+import trashCanIcon from '../../images/trash-can-icon.png'
 
 const ExerciseCard = ({
                           name,

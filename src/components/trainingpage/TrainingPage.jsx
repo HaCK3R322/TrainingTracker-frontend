@@ -1,5 +1,5 @@
 import {motion} from "framer-motion";
-import {ExerciseCardsSwiper} from "./CardSwiper/ExerciseCardSwiper";
+import {ExerciseCardsSwiper} from "./ExerciseCardSwiper";
 import '../../style/theme.css'
 import '../../style/trainingpage/trainingpage.css'
 import '../../style/motion-framer-wrapper.css'
