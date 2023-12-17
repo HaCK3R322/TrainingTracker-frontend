@@ -50,7 +50,8 @@ const NewCardForm = ({
             let newCard = {
                 name: name,
                 units: chosenUnit,
-                sets: []
+                sets: [],
+                id: cards[cards.length - 1].id === undefined ? 0 : cards[cards.length - 1].id + 1
             }
 
             let newCards = [...cards];

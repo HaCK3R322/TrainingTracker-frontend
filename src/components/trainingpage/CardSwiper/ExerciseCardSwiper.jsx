@@ -59,9 +59,11 @@ const ExerciseCardsSwiper = ({cardsData}) => {
 
         setCards(newCards);
 
-        setCurrentChosenCardIndex(currentChosenCardIndex === cards.length - 1 ?
-            currentChosenCardIndex - 1 :
-            currentChosenCardIndex)
+        let nextIndex = currentChosenCardIndex === cards.length - 1 ?
+            currentChosenCardIndex === 0 ? currentChosenCardIndex : currentChosenCardIndex - 1 :
+            currentChosenCardIndex
+
+        setCurrentChosenCardIndex(nextIndex)
     }
 
     return(
@@ -81,6 +83,13 @@ const ExerciseCardsSwiper = ({cardsData}) => {
                     name={card.name}
                     units={card.units}
                     sets={card.sets}
+
+                    setSets={(newSets) => {
+                        let newCards = [...cards];
+                        newCards[index].sets = newSets;
+                        setCards(newCards);
+                        console.log(newCards[index].sets.length)
+                    }}
                 />
             )}
 

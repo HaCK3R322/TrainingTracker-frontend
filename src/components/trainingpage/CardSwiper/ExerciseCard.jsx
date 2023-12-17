@@ -9,6 +9,7 @@ const ExerciseCard = ({
                           name,
                           units,
                           sets,
+                          setSets,
 
                           swipedRightCallback,
                           swipedLeftCallback,
@@ -140,10 +141,13 @@ const ExerciseCard = ({
             </div>
 
             {sets.map((set, index) =>
-                <FinishedSetElement index={index} amount={set.amount} units={units} reps={set.reps}/>
+                <FinishedSetElement index={index} amount={set.amount} units={units} reps={set.reps} key={index}/>
             )}
 
-            {sets.length < 5 ? <UnfinishedSetElement index={sets.length} units={"kg"}/> : <div/>}
+            {sets.length < 5 ?
+                <UnfinishedSetElement index={sets.length} units={units} sets={sets} setSets={setSets}/>
+                : <div/>
+            }
 
             <div className={"delete-button"} onClick={handleOnDelete}>
                 <img src={trashCanIcon} alt={"delete"} />
@@ -183,7 +187,7 @@ const FinishedSetElement = ({amount, units, reps, index}) => {
     )
 }
 
-const UnfinishedSetElement = ({index, units}) => {
+const UnfinishedSetElement = ({index, units, sets, setSets}) => {
     function calcSetTopValue(index) {
         let nameDivSize = 100; //px
         let betweenSetsSpace = 15; //px
@@ -198,6 +202,13 @@ const UnfinishedSetElement = ({index, units}) => {
     return(
         <div className={"unfinished-set-div"}
              style={{top: calcSetTopValue(index)}}
+
+             onClick={() => {
+                 console.log("new sets...")
+                 let newSets = [...sets];
+                 newSets.push({amount: null, reps: null});
+                 setSets(newSets);
+             }}
         >
             <div className={"amount"}/>
             <div className={"units-container-div"}>
