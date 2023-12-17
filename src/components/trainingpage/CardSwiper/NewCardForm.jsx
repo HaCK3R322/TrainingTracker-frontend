@@ -118,7 +118,11 @@ const NewCardForm = ({
                     placeholder={"name"}
                     value={name}
                     onChange={(event) => setName(event.target.value.toLowerCase())}
-                    onTap={(event) => event.target.focus()}
+                    onTap={(event) => {
+                        if(event !== null && event !== undefined && event.isTrusted === true) {
+                            event.target.focus()
+                        }
+                    }}
                 />
             </div>
 
