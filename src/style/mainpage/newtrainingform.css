@@ -1,0 +1,50 @@
+.new-training-form-background {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    opacity: 0.5;
+}
+
+.new-training-form input {
+    box-sizing: border-box;
+
+    position: absolute;
+
+    width: calc(100% - 40px);
+    height: 70px;
+    left: 20px;
+
+    border-radius: var(--training-tracker-border-radius);
+    border: 0;
+
+    font-family: var(--training-tracker-font-family);
+    font-size: 30px;
+
+    opacity: 1;
+
+    text-align: center;
+}
+
+.new-training-form input:focus {
+    outline: 4px solid var(--button-color);
+}
+
+.new-training-form button {
+    position: absolute;
+    width: 130px;
+    height: 60px;
+    bottom: 20px;
+    left: calc(50% - 65px);
+    outline: 3px solid var(--button-color);
+    border-radius: var(--training-tracker-border-radius);
+    border-width: 0;
+}
+
+.new-training-form button img {
+    width: 50px;
+    height: 50px;
+}
+

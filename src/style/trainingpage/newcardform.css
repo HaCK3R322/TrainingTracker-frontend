@@ -94,7 +94,7 @@
     width: 130px;
     height: 60px;
     bottom: 20px;
-    left: calc(50% - 75px);
+    left: calc(50% - 65px);
     outline: 3px solid var(--button-color);
     border-radius: var(--training-tracker-border-radius);
     border-width: 0;
