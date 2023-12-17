@@ -88,7 +88,6 @@ const ExerciseCardsSwiper = ({cardsData}) => {
                         let newCards = [...cards];
                         newCards[index].sets = newSets;
                         setCards(newCards);
-                        console.log(newCards[index].sets.length)
                     }}
                 />
             )}

@@ -80,10 +80,9 @@ const ExerciseCardsSwiperPagination = ({arrLength, chosenIndex, setChosenIndex})
             }}
         >
             {dots.map((dot, index) =>
-                <div
+                <motion.div
                     className={"dot-hitbox"}
-                    onClick={
-                        index < 10 ? () => {setChosenIndex(dot.index)} : ()=>{}}
+                    onTap={index < 10 ? () => {setChosenIndex(dot.index)} : ()=>{}}
                     key={dot.index}
                 >
                     <div
@@ -98,7 +97,7 @@ const ExerciseCardsSwiperPagination = ({arrLength, chosenIndex, setChosenIndex})
                         }}
                     >
                     </div>
-                </div>
+                </motion.div>
             )}
 
             {/* left-fixed positioned slider */}

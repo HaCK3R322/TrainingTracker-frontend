@@ -51,7 +51,7 @@ const NewCardForm = ({
                 name: name,
                 units: chosenUnit,
                 sets: [],
-                id: cards[cards.length - 1].id === undefined ? 0 : cards[cards.length - 1].id + 1
+                id: cards[cards.length - 1] === undefined ? 0 : cards[cards.length - 1].id + 1
             }
 
             let newCards = [...cards];
@@ -114,31 +114,32 @@ const NewCardForm = ({
                     animate={animateState}
         >
             <div className={"name"}>
-                <input
+                <motion.input
                     placeholder={"name"}
                     value={name}
                     onChange={(event) => setName(event.target.value.toLowerCase())}
+                    onTap={(event) => event.target.focus()}
                 />
             </div>
 
             <div className={"units-choice-div"} >
-                <div className={`kg option ${chosenUnit === "kg" ? "chosen-unit" : ""}`}
-                    onClick={() => {setChosenUnit("kg")}}
+                <motion.div className={`kg option ${chosenUnit === "kg" ? "chosen-unit" : ""}`}
+                    onTap={() => {setChosenUnit("kg")}}
                 >
                     <p>kg</p>
-                </div>
+                </motion.div>
 
-                <div className={`sec option ${chosenUnit === "sec" ? "chosen-unit" : ""}`}
-                     onClick={() => {setChosenUnit("sec")}}
+                <motion.div className={`sec option ${chosenUnit === "sec" ? "chosen-unit" : ""}`}
+                            onTap={() => {setChosenUnit("sec")}}
                 >
                     <p>sec</p>
-                </div>
+                </motion.div>
 
-                <div className={`min option ${chosenUnit === "min" ? "chosen-unit" : ""}`}
-                     onClick={() => {setChosenUnit("min")}}
+                <motion.div className={`min option ${chosenUnit === "min" ? "chosen-unit" : ""}`}
+                            onTap={() => {setChosenUnit("min")}}
                 >
                     <p>min</p>
-                </div>
+                </motion.div>
             </div>
 
             <div

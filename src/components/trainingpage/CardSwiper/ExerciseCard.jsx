@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {motion} from "framer-motion";
 import '../../../style/trainingpage/finishedsetelement.css'
 import '../../../style/trainingpage/unfinishedsetelement.css'
@@ -32,6 +32,14 @@ const ExerciseCard = ({
     const handleOnDelete = () => {
         if(swipeState === SwipeStates.CENTRAL) { // check if we are central card
             selfDeleteCallback()
+        }
+    }
+
+    const handleDeleteSet = () => {
+        if(sets.length > 0) {
+            let newSets = [...sets];
+            newSets.splice(newSets.length - 1, 1);
+            setSets(newSets);
         }
     }
 
@@ -149,9 +157,16 @@ const ExerciseCard = ({
                 : <div/>
             }
 
-            <div className={"delete-button"} onClick={handleOnDelete}>
+            <motion.div className={"delete-button"} onTap={handleOnDelete}>
                 <img src={trashCanIcon} alt={"delete"} />
-            </div>
+            </motion.div>
+
+
+            <motion.div className={"delete-set-button-hitbox"}
+                onTap={handleDeleteSet}
+            >
+                <div className={"delete-set-button"}/>
+            </motion.div>
         </motion.div>
     );
 };
@@ -173,7 +188,11 @@ const FinishedSetElement = ({amount, units, reps, index}) => {
              style={{top: calcSetTopValue(index)}}
         >
             <motion.div className={"amount"}>
-                <input defaultValue={amount} type={"number"}/>
+                <motion.input
+                    defaultValue={amount}
+                    type={"number"}
+                    onTap={(event) => event.target.focus()}
+                />
             </motion.div>
 
             <div className={"units-container-div"}>
@@ -181,7 +200,11 @@ const FinishedSetElement = ({amount, units, reps, index}) => {
             </div>
 
             <div className={"reps"}>
-                <input defaultValue={reps} type={"number"}/>
+                <motion.input
+                    defaultValue={reps}
+                    type={"number"}
+                    onTap={(event) => event.target.focus()}
+                />
             </div>
         </div>
     )
@@ -200,11 +223,10 @@ const UnfinishedSetElement = ({index, units, sets, setSets}) => {
     }
 
     return(
-        <div className={"unfinished-set-div"}
+        <motion.div className={"unfinished-set-div"}
              style={{top: calcSetTopValue(index)}}
 
-             onClick={() => {
-                 console.log("new sets...")
+             onTap={() => {
                  let newSets = [...sets];
                  newSets.push({amount: null, reps: null});
                  setSets(newSets);
@@ -215,7 +237,7 @@ const UnfinishedSetElement = ({index, units, sets, setSets}) => {
                 {units}
             </div>
             <div className={"reps"}/>
-        </div>
+        </motion.div>
     )
 }
 
@@ -224,7 +246,7 @@ function getAnimationBasedOnSwipeState(swipeState) {
         case SwipeStates.CENTRAL:
             return {
                 zIndex: 3,
-                x: 0,
+                x: "0%",
                 opacity: 3
             };
         case SwipeStates.LEFTER_THAN_CHOSEN:
