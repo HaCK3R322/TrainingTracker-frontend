@@ -5,6 +5,7 @@ import '../../style/trainingpage/trainingpage.css'
 import '../../style/motion-framer-wrapper.css'
 import '../../style/trainingpage/exercisecard.css'
 import '../../style/trainingpage/exercisecardsswiperpagination.css'
+import TrainingPageHeader from "./TrainingPageHeader";
 
 
 const cardsDataInitial = [
@@ -71,11 +72,13 @@ const TrainingPage = () => {
             <div className={"motion-framer-wrapper"}   key="TrainingPage-Wrapper">
                 <div className={"training-tracker-theme"}>
                     <div className={"background-div"}>
-                        <div className={"header"} />
+
+                        <TrainingPageHeader />
 
                         <div className={"scroller-div"}>
                             <ExerciseCardsSwiper cardsData={cardsDataInitial}/>
                         </div>
+
                     </div>
                 </div>
             </div>
