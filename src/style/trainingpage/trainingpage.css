@@ -9,10 +9,6 @@ body {
     background-color: var(--main-color);
 }
 
-button {
-    color: var(--main-color)
-}
-
 .background-div {
     position: absolute;
 

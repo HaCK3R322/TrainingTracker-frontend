@@ -6,6 +6,11 @@ import '../../style/motion-framer-wrapper.css'
 import '../../style/trainingpage/exercisecard.css'
 import '../../style/trainingpage/exercisecardsswiperpagination.css'
 import TrainingPageHeader from "./TrainingPageHeader";
+import {DateCalendar, LocalizationProvider} from "@mui/x-date-pickers";
+import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
+import React, {useState} from "react";
+import {createTheme, ThemeProvider, useTheme} from "@mui/material";
+import {makeStyles} from "@mui/styles";
 
 
 const cardsDataInitial = [
@@ -52,6 +57,16 @@ const cardsDataInitial = [
 ]
 
 const TrainingPage = () => {
+    const [isCalendarVisible, setIsCalendarVisible] = useState(false);
+
+    const calendarTheme = createTheme({
+        typography: {
+            fontFamily: `'Questrial', sans-serif`,
+            fontSize: "100px",
+            color: "white"
+        }
+    })
+
     return (
         <motion.div
             initial={{x: "100%"}}
@@ -72,13 +87,64 @@ const TrainingPage = () => {
             <div className={"motion-framer-wrapper"}   key="TrainingPage-Wrapper">
                 <div className={"training-tracker-theme"}>
                     <div className={"background-div"}>
+                        <motion.div
+                            animate={isCalendarVisible
+                                ? {top: "0"} :
+                                {top: "-334px"}
+                            }
 
-                        <TrainingPageHeader />
+                            style={{
+                                position: "absolute",
+                                width: "100%",
+                                height: "100%"
+                            }}
+                        >
+                            <div style={{
+                                position: "absolute",
+                                left: "50%",
+                                transform: "translate(-50%, 0)",
+                                backgroundColor: "black",
+                                width: "100%",
+                                height: "334px"
+                            }}>
+                                <ThemeProvider theme={calendarTheme}>
+                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                        <DateCalendar sx={{color: "white"}} />
+                                    </LocalizationProvider>
+                                </ThemeProvider>
+                            </div>
+                        </motion.div>
 
-                        <div className={"scroller-div"}>
-                            <ExerciseCardsSwiper cardsData={cardsDataInitial}/>
-                        </div>
+                        <motion.div
+                            animate={isCalendarVisible
+                                ? {top: "334px"} :
+                                {top: "0px"}
+                            }
 
+                            style={{
+                                position: "absolute",
+                                width: "100%",
+                                height: "100%"
+                            }}
+                        >
+                            <TrainingPageHeader />
+
+                            <div className={"scroller-div"}>
+                                <ExerciseCardsSwiper cardsData={cardsDataInitial}/>
+                            </div>
+                        </motion.div>
+
+
+                        <button onClick={() => {setIsCalendarVisible(!isCalendarVisible)}}
+                                style={{
+                                    width: "100px",
+                                    height: "50px",
+                                    backgroundColor: "red",
+                                    top: "500px",
+                                    position: "absolute",
+                                    zIndex: 5
+                                }}
+                        />
                     </div>
                 </div>
             </div>
