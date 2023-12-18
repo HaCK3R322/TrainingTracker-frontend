@@ -11,6 +11,8 @@ import '../../style/motion-framer-wrapper.css'
 import gitHubIconSvg from '../../images/github-mark-white.svg'
 import '../../style/mainpage/newtrainingform.css'
 import okaymark from "../../images/okaymark.png";
+import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
+import {DateCalendar, LocalizationProvider} from "@mui/x-date-pickers";
 
 const NewTrainingForm = ({setInvisibleCallback, index, addTraining}) => {
     const [name, setName] = useState("");
