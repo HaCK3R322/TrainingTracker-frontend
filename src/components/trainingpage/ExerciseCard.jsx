@@ -139,10 +139,6 @@ const ExerciseCard = ({
 
                     transition={{duration: 0.1}}
                     animate={animateState}
-
-                    whileTap={{
-                        scale: 1.03
-                    }}
         >
             <div className={"exercise-name-div"}>
                 <p>{name.toLowerCase()}</p>

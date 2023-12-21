@@ -62,8 +62,7 @@ const TrainingPage = () => {
     const calendarTheme = createTheme({
         typography: {
             fontFamily: `'Questrial', sans-serif`,
-            fontSize: "100px",
-            color: "white"
+            color: "var(--second-color)"
         }
     })
 
@@ -109,7 +108,11 @@ const TrainingPage = () => {
                             }}>
                                 <ThemeProvider theme={calendarTheme}>
                                     <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                        <DateCalendar sx={{color: "white"}} />
+                                        <DateCalendar sx={{
+                                            color: "var(--second-color)",
+                                            '& button': {color: 'var(--second-color)'},
+                                            '& span': {color: 'var(--second-color)'}
+                                        }} />
                                     </LocalizationProvider>
                                 </ThemeProvider>
                             </div>
@@ -127,24 +130,12 @@ const TrainingPage = () => {
                                 height: "100%"
                             }}
                         >
-                            <TrainingPageHeader />
+                            <TrainingPageHeader onClickCallback={() => {setIsCalendarVisible(!isCalendarVisible)}}/>
 
                             <div className={"scroller-div"}>
                                 <ExerciseCardsSwiper cardsData={cardsDataInitial}/>
                             </div>
                         </motion.div>
-
-
-                        <button onClick={() => {setIsCalendarVisible(!isCalendarVisible)}}
-                                style={{
-                                    width: "100px",
-                                    height: "50px",
-                                    backgroundColor: "red",
-                                    top: "500px",
-                                    position: "absolute",
-                                    zIndex: 5
-                                }}
-                        />
                     </div>
                 </div>
             </div>

@@ -11,8 +11,6 @@ import {motion} from "framer-motion";
 function App() {
     const location = useLocation();
 
-    const [visibleCalendar, setVisibleCalendar] = useState(false);
-
     return (
         <div>
             <AnimatePresence mode={"sync"} initial={false}>
