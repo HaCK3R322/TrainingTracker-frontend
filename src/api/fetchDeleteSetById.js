@@ -1,8 +1,8 @@
 import BackendUrls from "./BackendUrls.json";
 import getAuthorizationHeaderWithJWT from "./getAuthorizationHeaderWithJWT";
 
-export default function fetchDeleteExerciseById(exerciseId) {
-    let url = BackendUrls.host + BackendUrls.urls.exercises + "?exerciseId=" + exerciseId;
+export default function fetchDeleteSetById(setId) {
+    let url = BackendUrls.host + BackendUrls.urls.sets + "?setId=" + setId;
     let jwtHeader = getAuthorizationHeaderWithJWT();
 
     const requestHeaders = new Headers();

@@ -18,6 +18,9 @@ import dayjs from "dayjs";
 import fetchPost from "../../api/fetchPost";
 import 'dayjs/locale/en-gb';
 import fetchDeleteExerciseById from "../../api/fetchDeleteExerciseById";
+import {create} from "@mui/material/styles/createTransitions";
+import fetchPatchSet from "../../api/fetchPatchSet";
+import fetchDeleteSetById from "../../api/fetchDeleteSetById";
 
 const TrainingPage = () => {
     const {trainingId} = useParams()
@@ -81,6 +84,31 @@ const TrainingPage = () => {
             let currentChosenDate = dayjs(dateCalendarValue).format('DD-MM-YYYY')
             return currentChosenDate === dayjs(exerciseDate).format('DD-MM-YYYY')
         })
+    }
+
+    const createNewSetForExerciseWithId = (exerciseId) => {
+        let newSet = {
+            exerciseId: exerciseId,
+            amount: null,
+            reps: null
+        }
+
+        fetchPost(BackendUrls.urls.sets, newSet)
+            .then(response => response.json())
+            .then(createdSet => {
+                let newExercises = [...exercises]
+                newExercises.find(exercise => exercise.id === exerciseId)
+                    .sets.push(createdSet)
+                setExercises(newExercises)
+            })
+    }
+
+    const patchSetCallback = (newSet) => {
+        fetchPatchSet(newSet)
+    }
+
+    const deleteSetByIdCallback = (setId) => {
+        fetchDeleteSetById(setId)
     }
 
     return (
@@ -162,6 +190,9 @@ const TrainingPage = () => {
                                     createNewExerciseFromNameAndUnitsCallback={createNewExerciseFromNameAndUnitsCallback}
                                     deleteExerciseByIdCallback={deleteExerciseByIdCallback}
                                     chosenDate={dateCalendarValue}
+                                    createNewSetForExerciseWithId={createNewSetForExerciseWithId}
+                                    patchSetCallback={patchSetCallback}
+                                    deleteSetByIdCallback={deleteSetByIdCallback}
                                 />
                             </div>
                         </motion.div>

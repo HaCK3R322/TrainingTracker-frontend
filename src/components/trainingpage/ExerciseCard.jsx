@@ -10,13 +10,16 @@ const ExerciseCard = ({
                           units,
                           sets,
                           setSets,
+                          createNewSetCallback,
+                          patchSetCallback,
 
                           swipedRightCallback,
                           swipedLeftCallback,
                           swipeState,
                           swapToRightCallback,
                           swapToLeftCallback,
-                          selfDeleteCallback
+                          selfDeleteCallback,
+                          deleteLastSetCallback
 }) => {
     const [swipedRight, setSwipedRight] = useState(false);
     const [swipedLeft, setSwipedLeft] = useState(false);
@@ -32,14 +35,6 @@ const ExerciseCard = ({
     const handleOnDelete = () => {
         if(swipeState === SwipeStates.CENTRAL) { // check if we are central card
             selfDeleteCallback()
-        }
-    }
-
-    const handleDeleteSet = () => {
-        if(sets.length > 0) {
-            let newSets = [...sets];
-            newSets.splice(newSets.length - 1, 1);
-            setSets(newSets);
         }
     }
 
@@ -145,11 +140,19 @@ const ExerciseCard = ({
             </div>
 
             {sets.map((set, index) =>
-                <FinishedSetElement index={index} amount={set.amount} units={units} reps={set.reps} key={index}/>
+                <FinishedSetElement
+                    index={index}
+                    initialAmount={set.amount}
+                    units={units}
+                    initialReps={set.reps}
+                    key={index}
+                    id={set.id}
+                    patchSetCallback={patchSetCallback}
+                />
             )}
 
             {sets.length < 5 ?
-                <UnfinishedSetElement index={sets.length} units={units} sets={sets} setSets={setSets}/>
+                <UnfinishedSetElement index={sets.length} units={units} createNewSetCallback={createNewSetCallback}/>
                 : <div/>
             }
 
@@ -159,7 +162,9 @@ const ExerciseCard = ({
 
 
             <motion.div className={"delete-set-button-hitbox"}
-                onTap={handleDeleteSet}
+                onTap={() => {
+                    deleteLastSetCallback()
+                }}
             >
                 <div className={"delete-set-button"}/>
             </motion.div>
@@ -167,7 +172,10 @@ const ExerciseCard = ({
     );
 };
 
-const FinishedSetElement = ({amount, units, reps, index}) => {
+const FinishedSetElement = ({initialAmount, units, initialReps, index, id, patchSetCallback}) => {
+    const [amount, setAmount] = useState(initialAmount);
+    const [reps, setReps] = useState(initialReps);
+
     function calcSetTopValue(index) {
         let nameDivSize = 100; //px
         let betweenSetsSpace = 15; //px
@@ -179,6 +187,16 @@ const FinishedSetElement = ({amount, units, reps, index}) => {
         return `calc(${resultTopValue})`;
     }
 
+    useEffect(() => {
+        let setPatch = {
+            id: id,
+            amount: amount,
+            reps: reps
+        }
+
+        patchSetCallback(setPatch)
+    }, [amount, reps]);
+
     return(
         <div className={"set-div"}
              style={{top: calcSetTopValue(index)}}
@@ -188,6 +206,7 @@ const FinishedSetElement = ({amount, units, reps, index}) => {
                     defaultValue={amount}
                     type={"number"}
                     onTap={(event) => event.target.focus()}
+                    onChange={event => setAmount(event.target.value)}
                 />
             </motion.div>
 
@@ -200,13 +219,14 @@ const FinishedSetElement = ({amount, units, reps, index}) => {
                     defaultValue={reps}
                     type={"number"}
                     onTap={(event) => event.target.focus()}
+                    onChange={event => setReps(event.target.value)}
                 />
             </div>
         </div>
     )
 }
 
-const UnfinishedSetElement = ({index, units, sets, setSets}) => {
+const UnfinishedSetElement = ({index, units, createNewSetCallback}) => {
     function calcSetTopValue(index) {
         let nameDivSize = 100; //px
         let betweenSetsSpace = 15; //px
@@ -222,11 +242,7 @@ const UnfinishedSetElement = ({index, units, sets, setSets}) => {
         <motion.div className={"unfinished-set-div"}
              style={{top: calcSetTopValue(index)}}
 
-             onTap={() => {
-                 let newSets = [...sets];
-                 newSets.push({amount: null, reps: null});
-                 setSets(newSets);
-             }}
+             onTap={() => {createNewSetCallback()}}
         >
             <div className={"amount"}/>
             <div className={"units-container-div"}>

@@ -14,7 +14,10 @@ const ExerciseCardsSwiper = ({
                                  setCards,
                                  chosenDate,
                                  createNewExerciseFromNameAndUnitsCallback,
-                                 deleteExerciseByIdCallback
+                                 deleteExerciseByIdCallback,
+                                 createNewSetForExerciseWithId,
+                                 patchSetCallback,
+                                 deleteSetByIdCallback
 }) => {
     const [currentChosenCardIndex, setCurrentChosenCardIndex] = useState(0);
 
@@ -83,6 +86,24 @@ const ExerciseCardsSwiper = ({
         setCurrentChosenCardIndex(nextIndex)
     }
 
+    const createNewSetCallback = () => {
+        createNewSetForExerciseWithId(cards[currentChosenCardIndex].id)
+    }
+
+    const handleDeleteLastSet = () => {
+        let setsLen = cards[currentChosenCardIndex].sets.length;
+        if(setsLen > 0) {
+            let setId = cards[currentChosenCardIndex].sets[setsLen - 1].id;
+            deleteSetByIdCallback(setId);
+
+            let newSets = [...cards[currentChosenCardIndex].sets];
+            newSets.splice(setsLen - 1, 1);
+            let newCards = [...cards]
+            newCards[currentChosenCardIndex].sets = newSets;
+            setCards(newCards);
+        }
+    }
+
 
     return(
         <div>
@@ -106,6 +127,9 @@ const ExerciseCardsSwiper = ({
                             newCards[index].sets = newSets;
                             setCards(newCards);
                         }}
+                        createNewSetCallback={createNewSetCallback}
+                        patchSetCallback={patchSetCallback}
+                        deleteLastSetCallback={handleDeleteLastSet}
                     />
             )}
 
