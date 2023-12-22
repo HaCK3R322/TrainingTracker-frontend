@@ -13,7 +13,7 @@ const NewCardForm = ({
                          swipeState,
 
                          cards,
-                         handleCreateNewExercise
+                         createNewExerciseFromNameAndUnitsCallback
                      }) => {
     const [swipedRight, setSwipedRight] = useState(false);
     const [swipedLeft, setSwipedLeft] = useState(false);
@@ -140,7 +140,12 @@ const NewCardForm = ({
                     }}
 
                     onClick={
-                        canSubmit ? () => handleCreateNewExercise(name, chosenUnit) : ()=>{}
+                        canSubmit ? () => {
+                                createNewExerciseFromNameAndUnitsCallback(name, chosenUnit);
+                                setName("");
+                                setChosenUnit("kg");
+                            } :
+                            ()=>{}
                     }
                 >
                     <img src={okaymark} />

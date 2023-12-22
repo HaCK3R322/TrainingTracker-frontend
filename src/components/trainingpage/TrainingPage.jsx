@@ -15,17 +15,14 @@ import {useParams} from "react-router";
 import fetchGet from "../../api/fetchGet";
 import BackendUrls from '../../api/BackendUrls.json';
 import dayjs from "dayjs";
-
+import fetchPost from "../../api/fetchPost";
+import 'dayjs/locale/en-gb';
 
 const TrainingPage = () => {
     const {trainingId} = useParams()
     const [exercises, setExercises] = useState([]);
     const [dateCalendarValue, setDateCalendarValue] = useState(dayjs(new Date()))
-    const [chosenDate, setChosenDate] = useState(null)
-    useEffect(() => {
-        setChosenDate(dayjs(dateCalendarValue).format('DD-MM-YYYY'))
-    }, [dateCalendarValue]);
-
+    const [cardsCreatedOnPickedDate, setCardsCreatedOnPickedDate] = useState([]);
 
     useEffect(() => {
         fetchGet(BackendUrls.urls.exercises + "?trainingId=" + trainingId) // get all exercises for training
@@ -33,11 +30,15 @@ const TrainingPage = () => {
             .then(async exercisesData => {
                 for (const exercise of exercisesData) {
                     exercise.sets = await fetchGet(BackendUrls.urls.sets + "?exerciseId=" + exercise.id)
-                        .then(response => response.ok ? response.json() : [])
+                        .then(response => response.json())
                 }
                 setExercises(exercisesData)
             })
     }, []);
+
+    useEffect(() => {
+        setCardsCreatedOnPickedDate(getCardsCreatedOnPickedDate())
+    }, [dateCalendarValue, exercises]);
 
     const [isCalendarVisible, setIsCalendarVisible] = useState(false);
     const calendarTheme = createTheme({
@@ -47,10 +48,31 @@ const TrainingPage = () => {
         }
     })
 
-    function getCardsThatContainsSetsOfChosenDay() {
+    const createNewExerciseFromNameAndUnitsCallback = (name, units) => {
+        let pickedDateTimestamp = dayjs(dateCalendarValue).unix() * 1000;
+
+        let newExerciseBody = {
+            name: name,
+            units: units,
+            trainingId: trainingId,
+            timestamp: pickedDateTimestamp
+        }
+
+        fetchPost(BackendUrls.urls.exercises, newExerciseBody)
+            .then(response => response.json())
+            .then(createdExercise => {
+                let newExercises = [...exercises];
+                createdExercise.sets = []
+                newExercises.push(createdExercise);
+                setExercises(newExercises);
+            })
+    }
+
+    function getCardsCreatedOnPickedDate() {
         return exercises.filter(exercise => {
             let exerciseDate = new Date(Date.parse(exercise.timestamp))
-            return chosenDate === dayjs(exerciseDate).format('DD-MM-YYYY')
+            let currentChosenDate = dayjs(dateCalendarValue).format('DD-MM-YYYY')
+            return currentChosenDate === dayjs(exerciseDate).format('DD-MM-YYYY')
         })
     }
 
@@ -95,7 +117,7 @@ const TrainingPage = () => {
                                 height: "334px"
                             }}>
                                 <ThemeProvider theme={calendarTheme}>
-                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={'en-gb'}>
                                         <DateCalendar
                                             sx={{
                                                 color: "var(--second-color)",
@@ -128,10 +150,10 @@ const TrainingPage = () => {
 
                             <div className={"scroller-div"}>
                                 <ExerciseCardsSwiper
-                                    trainingId={trainingId}
-                                    cards={getCardsThatContainsSetsOfChosenDay()}
+                                    cards={cardsCreatedOnPickedDate}
                                     setCards={setExercises}
-                                    chosenDate={chosenDate}
+                                    createNewExerciseFromNameAndUnitsCallback={createNewExerciseFromNameAndUnitsCallback}
+                                    chosenDate={dateCalendarValue}
                                 />
                             </div>
                         </motion.div>

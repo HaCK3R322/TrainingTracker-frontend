@@ -12,7 +12,8 @@ import fetchPost from "../../api/fetchPost";
 const ExerciseCardsSwiper = ({
                                  cards,
                                  setCards,
-                                 trainingId
+                                 chosenDate,
+                                 createNewExerciseFromNameAndUnitsCallback
 }) => {
     const [currentChosenCardIndex, setCurrentChosenCardIndex] = useState(0);
 
@@ -20,6 +21,10 @@ const ExerciseCardsSwiper = ({
     useEffect(() => {
         setCardLimitNotExceed(cards.length < 10);
     }, [cards]);
+
+    useEffect(() => {
+        setCurrentChosenCardIndex(0);
+    }, [chosenDate]);
 
     const swipedLeftCallback = () => {
         if(currentChosenCardIndex < cards.length) {
@@ -75,24 +80,6 @@ const ExerciseCardsSwiper = ({
         setCurrentChosenCardIndex(nextIndex)
     }
 
-    const handleCreateNewExerciseFromNameAndUnits = (name, units) => {
-        let newExerciseBody = {
-            name: name,
-            units: units,
-            trainingId: trainingId,
-            timestamp: Date.now()
-        }
-
-        fetchPost(BackendUrls.urls.exercises, newExerciseBody)
-            .then(response => response.json())
-            .then(createdExercise => {
-                let newCards = [...cards];
-                createdExercise.sets = []
-                newCards.push(createdExercise);
-                setCards(newCards);
-            })
-    }
-
 
     return(
         <div>
@@ -135,7 +122,7 @@ const ExerciseCardsSwiper = ({
 
                     cards={cards}
 
-                    handleCreateNewExercise={handleCreateNewExerciseFromNameAndUnits}
+                    createNewExerciseFromNameAndUnitsCallback={createNewExerciseFromNameAndUnitsCallback}
                 />
             }
         </div>
