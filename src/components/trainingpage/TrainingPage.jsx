@@ -17,6 +17,7 @@ import BackendUrls from '../../api/BackendUrls.json';
 import dayjs from "dayjs";
 import fetchPost from "../../api/fetchPost";
 import 'dayjs/locale/en-gb';
+import fetchDeleteExerciseById from "../../api/fetchDeleteExerciseById";
 
 const TrainingPage = () => {
     const {trainingId} = useParams()
@@ -66,6 +67,12 @@ const TrainingPage = () => {
                 newExercises.push(createdExercise);
                 setExercises(newExercises);
             })
+    }
+
+    const deleteExerciseByIdCallback = (exerciseId) => {
+        console.log("deleting exercise with id " + exerciseId)
+
+        fetchDeleteExerciseById(exerciseId);
     }
 
     function getCardsCreatedOnPickedDate() {
@@ -153,6 +160,7 @@ const TrainingPage = () => {
                                     cards={cardsCreatedOnPickedDate}
                                     setCards={setExercises}
                                     createNewExerciseFromNameAndUnitsCallback={createNewExerciseFromNameAndUnitsCallback}
+                                    deleteExerciseByIdCallback={deleteExerciseByIdCallback}
                                     chosenDate={dateCalendarValue}
                                 />
                             </div>

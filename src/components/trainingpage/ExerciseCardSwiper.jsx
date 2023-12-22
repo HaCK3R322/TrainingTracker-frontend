@@ -13,7 +13,8 @@ const ExerciseCardsSwiper = ({
                                  cards,
                                  setCards,
                                  chosenDate,
-                                 createNewExerciseFromNameAndUnitsCallback
+                                 createNewExerciseFromNameAndUnitsCallback,
+                                 deleteExerciseByIdCallback
 }) => {
     const [currentChosenCardIndex, setCurrentChosenCardIndex] = useState(0);
 
@@ -68,9 +69,11 @@ const ExerciseCardsSwiper = ({
     }
 
     const deleteCallback = () => {
+        let exerciseId = cards[currentChosenCardIndex].id
+        deleteExerciseByIdCallback(exerciseId);
+
         let newCards = [...cards];
         newCards.splice(currentChosenCardIndex, 1);
-
         setCards(newCards);
 
         let nextIndex = currentChosenCardIndex === cards.length - 1 ?
