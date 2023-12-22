@@ -13,6 +13,7 @@ import '../../style/mainpage/newtrainingform.css'
 import okaymark from "../../images/okaymark.png";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import {DateCalendar, LocalizationProvider} from "@mui/x-date-pickers";
+import fetchGetAllUserTrainings from "../../api/fetchGetAllUserTrainings";
 
 const NewTrainingForm = ({setInvisibleCallback, index, addTraining}) => {
     const [name, setName] = useState("");
@@ -73,18 +74,18 @@ const NewTrainingForm = ({setInvisibleCallback, index, addTraining}) => {
 const MainPage = () => {
     let navigate = useNavigate();
 
-    const [trainings, setTrainings] = useState([
-        {name: "arms and back"},
-        {name: "chest"},
-        {name: "legs"},
-        {name: "base"}
-    ])
+    const [trainings, setTrainings] = useState([])
     const [newTrainingFormVisible, setNewTrainingFormVisible] = useState(false);
     const addTraining = (newTraining) => {
         let newTrainings = [...trainings];
         newTrainings.push(newTraining);
         setTrainings(newTrainings);
     }
+
+    useEffect(() => {
+        fetchGetAllUserTrainings()
+            .then(trainings => setTrainings(trainings))
+    }, []);
 
     return (
         <motion.div
@@ -114,12 +115,20 @@ const MainPage = () => {
                             <img className={"static-logo-github-icon"} src={gitHubIconSvg} alt={"lol xd"}/>
                         </div>
 
-                        {trainings.map((button, index) =>
-                            <TrainingButton name={button.name} key={button.name} action={() => {navigate("/training")}} index={index}/>
+                        {trainings.map((training, index) =>
+                            <TrainingButton
+                                name={training.name}
+                                key={training.name}
+                                action={() => {navigate("/training/" + training.id)}}
+                                index={index}
+                            />
                         )}
 
                         {trainings.length < 6 &&
-                            <NewTrainingButton index={trainings.length} action={() => {setNewTrainingFormVisible(true)}}/>
+                            <NewTrainingButton
+                                index={trainings.length}
+                                action={() => {setNewTrainingFormVisible(true)}}
+                            />
                         }
 
                         {newTrainingFormVisible &&

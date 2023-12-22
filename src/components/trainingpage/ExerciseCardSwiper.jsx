@@ -3,11 +3,19 @@ import ExerciseCard from "./ExerciseCard";
 import {ExerciseCardsSwiperPagination} from "./ExerciseCardSwiperPagination";
 import SwipeStates from "./SwipeStates.json"
 import NewCardForm from "./NewCardForm";
+import fetchGet from "../../api/fetchGet";
+import dayjs from "dayjs";
 
-const ExerciseCardsSwiper = ({cardsData}) => {
-    const [cards, setCards] = useState(cardsData);
+
+const ExerciseCardsSwiper = ({
+                                 cards,
+                                 setCards,
+                                 chosenDate
+}) => {
+
     const [currentChosenCardIndex, setCurrentChosenCardIndex] = useState(0);
-    const [cardLimitNotExceed, setCardLimitNotExceed] = useState(cards.length < 10);
+
+    const [cardLimitNotExceed, setCardLimitNotExceed] = useState(false);
     useEffect(() => {
         setCardLimitNotExceed(cards.length < 10);
     }, [cards]);
@@ -82,8 +90,10 @@ const ExerciseCardsSwiper = ({cardsData}) => {
 
                     name={card.name}
                     units={card.units}
-                    sets={card.sets}
-
+                    sets={card.sets.filter(set => {
+                        let setDay = dayjs(new Date(Date.parse(set.timestamp))).format('DD-MM-YYYY');
+                        return setDay === chosenDate;
+                    })}
                     setSets={(newSets) => {
                         let newCards = [...cards];
                         newCards[index].sets = newSets;

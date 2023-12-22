@@ -4,8 +4,9 @@ import {AnimatePresence} from "framer-motion";
 import {Route, Router, Routes, useLocation} from "react-router-dom";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import {DateCalendar, LocalizationProvider} from "@mui/x-date-pickers";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {motion} from "framer-motion";
+import test from "./api/test"
 
 
 function App() {
@@ -16,7 +17,7 @@ function App() {
             <AnimatePresence mode={"sync"} initial={false}>
                 <Routes location={location} key={location.pathname}>
                     <Route path={"/*"} element={<MainPage />} />
-                    <Route path={"/training"} element={<TrainingPage/>}/>
+                    <Route path={"/training/:trainingId"} element={<TrainingPage/>}/>
                 </Routes>
             </AnimatePresence>
         </div>
