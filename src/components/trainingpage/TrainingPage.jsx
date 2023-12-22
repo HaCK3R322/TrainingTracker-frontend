@@ -49,16 +49,8 @@ const TrainingPage = () => {
 
     function getCardsThatContainsSetsOfChosenDay() {
         return exercises.filter(exercise => {
-            for(let i = 0; i < exercise.sets.length; i++) {
-                let setDate = dayjs(
-                    new Date(
-                        Date.parse(
-                            exercise.sets[i].timestamp
-                        )))
-                    .format('DD-MM-YYYY');
-                if(setDate === chosenDate) return true;
-            }
-            return false;
+            let exerciseDate = new Date(Date.parse(exercise.timestamp))
+            return chosenDate === dayjs(exerciseDate).format('DD-MM-YYYY')
         })
     }
 
@@ -136,6 +128,7 @@ const TrainingPage = () => {
 
                             <div className={"scroller-div"}>
                                 <ExerciseCardsSwiper
+                                    trainingId={trainingId}
                                     cards={getCardsThatContainsSetsOfChosenDay()}
                                     setCards={setExercises}
                                     chosenDate={chosenDate}

@@ -3,6 +3,9 @@ import '../../style/trainingpage/newcardform.css'
 import SwipeStates from "./SwipeStates.json";
 import {motion} from "framer-motion";
 import okaymark from '../../images/okaymark.png'
+import fetchPost from "../../api/fetchPost";
+import BackendUrls from '../../api/BackendUrls.json';
+
 
 const NewCardForm = ({
                          swipedRightCallback,
@@ -10,7 +13,7 @@ const NewCardForm = ({
                          swipeState,
 
                          cards,
-                         setCards
+                         handleCreateNewExercise
                      }) => {
     const [swipedRight, setSwipedRight] = useState(false);
     const [swipedLeft, setSwipedLeft] = useState(false);
@@ -43,28 +46,6 @@ const NewCardForm = ({
     useEffect(() => {
         setCanSubmit(nameAcceptable && cardLimitNotExceed);
     }, [nameAcceptable, cardLimitNotExceed]);
-
-    const handleSubmitCreateCard = () => {
-        if(cards.length < 10) {
-
-            let newCard = {
-                name: name,
-                units: chosenUnit,
-                sets: [],
-                id: cards[cards.length - 1] === undefined ? 0 : cards[cards.length - 1].id + 1
-            }
-
-            let newCards = [...cards];
-            newCards.push(newCard);
-
-            setCards(newCards);
-
-            setName("");
-            setChosenUnit("kg");
-        } else {
-            alert("Достигнут предел упражнений!");
-        }
-    }
 
     useEffect(() => {
         setAnimateState(getAnimationBasedOnSwipeState(swipeState));
@@ -159,7 +140,7 @@ const NewCardForm = ({
                     }}
 
                     onClick={
-                        canSubmit ? handleSubmitCreateCard : ()=>{}
+                        canSubmit ? () => handleCreateNewExercise(name, chosenUnit) : ()=>{}
                     }
                 >
                     <img src={okaymark} />

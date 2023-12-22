@@ -5,14 +5,15 @@ import SwipeStates from "./SwipeStates.json"
 import NewCardForm from "./NewCardForm";
 import fetchGet from "../../api/fetchGet";
 import dayjs from "dayjs";
+import BackendUrls from "../../api/BackendUrls.json";
+import fetchPost from "../../api/fetchPost";
 
 
 const ExerciseCardsSwiper = ({
                                  cards,
                                  setCards,
-                                 chosenDate
+                                 trainingId
 }) => {
-
     const [currentChosenCardIndex, setCurrentChosenCardIndex] = useState(0);
 
     const [cardLimitNotExceed, setCardLimitNotExceed] = useState(false);
@@ -74,32 +75,48 @@ const ExerciseCardsSwiper = ({
         setCurrentChosenCardIndex(nextIndex)
     }
 
+    const handleCreateNewExerciseFromNameAndUnits = (name, units) => {
+        let newExerciseBody = {
+            name: name,
+            units: units,
+            trainingId: trainingId,
+            timestamp: Date.now()
+        }
+
+        fetchPost(BackendUrls.urls.exercises, newExerciseBody)
+            .then(response => response.json())
+            .then(createdExercise => {
+                let newCards = [...cards];
+                createdExercise.sets = []
+                newCards.push(createdExercise);
+                setCards(newCards);
+            })
+    }
+
+
     return(
         <div>
             {cards.map((card, index) =>
-                <ExerciseCard
-                    swipeState={calculateSwipeStateByCardPosition(cards.length, currentChosenCardIndex, index)}
-                    key={card.id}
-                    swipedLeftCallback={swipedLeftCallback}
-                    swipedRightCallback={swipedRightCallback}
+                    <ExerciseCard
+                        swipeState={calculateSwipeStateByCardPosition(cards.length, currentChosenCardIndex, index)}
+                        key={card.id}
+                        swipedLeftCallback={swipedLeftCallback}
+                        swipedRightCallback={swipedRightCallback}
 
-                    swapToRightCallback={swapRightCallback}
-                    swapToLeftCallback={swapLeftCallback}
+                        swapToRightCallback={swapRightCallback}
+                        swapToLeftCallback={swapLeftCallback}
 
-                    selfDeleteCallback={deleteCallback}
+                        selfDeleteCallback={deleteCallback}
 
-                    name={card.name}
-                    units={card.units}
-                    sets={card.sets.filter(set => {
-                        let setDay = dayjs(new Date(Date.parse(set.timestamp))).format('DD-MM-YYYY');
-                        return setDay === chosenDate;
-                    })}
-                    setSets={(newSets) => {
-                        let newCards = [...cards];
-                        newCards[index].sets = newSets;
-                        setCards(newCards);
-                    }}
-                />
+                        name={card.name}
+                        units={card.units}
+                        sets={card.sets}
+                        setSets={(newSets) => {
+                            let newCards = [...cards];
+                            newCards[index].sets = newSets;
+                            setCards(newCards);
+                        }}
+                    />
             )}
 
             <ExerciseCardsSwiperPagination
@@ -117,7 +134,8 @@ const ExerciseCardsSwiper = ({
                     swipedRightCallback={swipedRightCallback}
 
                     cards={cards}
-                    setCards={setCards}
+
+                    handleCreateNewExercise={handleCreateNewExerciseFromNameAndUnits}
                 />
             }
         </div>
