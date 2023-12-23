@@ -131,6 +131,7 @@ const TrainingPage = () => {
             <div className={"motion-framer-wrapper"}   key="TrainingPage-Wrapper">
                 <div className={"training-tracker-theme"}>
                     <div className={"background-div"}>
+
                         <motion.div
                             animate={isCalendarVisible
                                 ? {top: "0"} :
@@ -168,6 +169,20 @@ const TrainingPage = () => {
                                 </ThemeProvider>
                             </div>
                         </motion.div>
+
+                        {isCalendarVisible &&
+                            <motion.div
+                                style={{
+                                    position: "absolute",
+                                    width: "100%",
+                                    height: "100%",
+                                    top: "334px",
+                                    left: 0,
+                                    zIndex: 100
+                                }}
+                                onTap={() => {setIsCalendarVisible(false)}}
+                            />
+                        }
 
                         <motion.div
                             animate={isCalendarVisible
