@@ -4,6 +4,7 @@ import {motion} from "framer-motion";
 import {DateCalendar, LocalizationProvider} from "@mui/x-date-pickers";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import calendarIMG from "../../images/calendar.png"
+import restoreIMG from '../../images/restore.png'
 import dayjs from "dayjs";
 
 const TrainingPageHeader = ({dateCalendarValue, onClickCallback}) => {
@@ -17,8 +18,8 @@ const TrainingPageHeader = ({dateCalendarValue, onClickCallback}) => {
                 {dayjs(dateCalendarValue).format('DD.MM')}
             </div>
 
-            <div className={"new-day"}>
-                *
+            <div className={"restore"} onTap={() => ("Coming soon...")}>
+                <img src={restoreIMG}/>
             </div>
         </motion.div>
     );

@@ -15,7 +15,7 @@
 .calendar-div {
     position: absolute;
     left: 0;
-    bottom: 10px;
+    bottom: 15px;
     width: 100px;
     height: 40px;
 
@@ -45,10 +45,10 @@
     font-family: var(--training-tracker-font-family);
 }
 
-.new-day {
+.restore {
     position: absolute;
     right: 0;
-    bottom: 10px;
+    bottom: 17px;
     width: 100px;
     height: 40px;
 
@@ -56,4 +56,9 @@
     text-align: center;
     font-size: 30px;
     font-family: var(--training-tracker-font-family);
+}
+
+.restore img {
+    width: 35px;
+    height: 35px;
 }
