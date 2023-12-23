@@ -2,7 +2,7 @@
     position: absolute;
     width: 100%;
     left: 0;
-    height: 35px;
+    height: 30px;
     font-family: var(--training-tracker-font-family);
     font-size: 30px;
     color: var(--main-color);
@@ -12,7 +12,7 @@
     position: absolute;
     height: 100%;
 
-    width: 78px;
+    width: 81px;
     left: 10%;
     border-radius: var(--training-tracker-border-radius);
     border: 2px dotted var(--main-color);
@@ -33,7 +33,7 @@
 .unfinished-set-div .reps {
     position: absolute;
     height: 100%;
-    width: 78px;
+    width: 81px;
     right: 10%;
     border-radius: var(--training-tracker-border-radius);
     border: 2px dotted var(--main-color);
