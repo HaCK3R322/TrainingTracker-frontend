@@ -1,25 +1,28 @@
 import MainPage from "./components/mainpage/MainPage";
 import TrainingPage from "./components/trainingpage/TrainingPage";
 import {AnimatePresence} from "framer-motion";
-import {Route, Router, Routes, useLocation} from "react-router-dom";
-import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
-import {DateCalendar, LocalizationProvider} from "@mui/x-date-pickers";
-import React, {useEffect, useState} from "react";
-import {motion} from "framer-motion";
-import test from "./api/test"
-
+import {Route, Routes, useLocation} from "react-router-dom";
+import {useState} from "react";
+import LoginPage from "./components/LoginPage";
 
 function App() {
     const location = useLocation();
+    const [loggedIn, setLoggedIn] = useState(window.localStorage.getItem("JWT") !== null);
+
+    console.log(window.localStorage.getItem("JWT"))
 
     return (
         <div>
-            <AnimatePresence mode={"sync"} initial={false}>
-                <Routes location={location} key={location.pathname}>
-                    <Route path={"/*"} element={<MainPage />} />
-                    <Route path={"/training/:trainingId"} element={<TrainingPage/>}/>
-                </Routes>
-            </AnimatePresence>
+            {
+                loggedIn ?
+                    <AnimatePresence mode={"sync"} initial={false}>
+                        <Routes location={location} key={location.pathname}>
+                            <Route path={"/*"} element={<MainPage />} />
+                            <Route path={"/training/:trainingId"} element={<TrainingPage/>}/>
+                        </Routes>
+                    </AnimatePresence> :
+                    <LoginPage setLoggedIn={setLoggedIn}/>
+            }
         </div>
     );
 }

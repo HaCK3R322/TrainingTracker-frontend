@@ -14,6 +14,8 @@ import okaymark from "../../images/okaymark.png";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import {DateCalendar, LocalizationProvider} from "@mui/x-date-pickers";
 import fetchGetAllUserTrainings from "../../api/fetchGetAllUserTrainings";
+import fetchPost from "../../api/fetchPost";
+import BackendUrls from "../../api/BackendUrls.json";
 
 const NewTrainingForm = ({setInvisibleCallback, index, addTraining}) => {
     const [name, setName] = useState("");
@@ -77,9 +79,16 @@ const MainPage = () => {
     const [trainings, setTrainings] = useState([])
     const [newTrainingFormVisible, setNewTrainingFormVisible] = useState(false);
     const addTraining = (newTraining) => {
-        let newTrainings = [...trainings];
-        newTrainings.push(newTraining);
-        setTrainings(newTrainings);
+        // eslint-disable-next-line no-restricted-globals
+        if(confirm("ПОКА ЧТО УДАЛИТЬ НЕЛЬЗЯ, ТОЧНО СОЗДАТЬ?")) {
+            fetchPost(BackendUrls.urls.trainings, newTraining)
+                .then(response => response.json())
+                .then(createdTraining => {
+                    let newTrainings = [...trainings];
+                    newTrainings.push(createdTraining);
+                    setTrainings(newTrainings);
+                })
+        }
     }
 
     useEffect(() => {
