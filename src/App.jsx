@@ -9,8 +9,6 @@ function App() {
     const location = useLocation();
     const [loggedIn, setLoggedIn] = useState(window.localStorage.getItem("JWT") !== null);
 
-    console.log(window.localStorage.getItem("JWT"))
-
     return (
         <div>
             {

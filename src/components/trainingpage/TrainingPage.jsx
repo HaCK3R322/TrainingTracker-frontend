@@ -73,8 +73,6 @@ const TrainingPage = () => {
     }
 
     const deleteExerciseByIdCallback = (exerciseId) => {
-        console.log("deleting exercise with id " + exerciseId)
-
         fetchDeleteExerciseById(exerciseId);
     }
 
