@@ -18,9 +18,9 @@ const TrainingPageHeader = ({dateCalendarValue, onClickCallback}) => {
                 {dayjs(dateCalendarValue).format('DD.MM')}
             </div>
 
-            <div className={"restore"} onTap={() => alert("Coming soon...")}>
+            <motion.div className={"restore"} onTap={() => alert("Coming soon...")}>
                 <img src={restoreIMG}/>
-            </div>
+            </motion.div>
         </motion.div>
     );
 };
