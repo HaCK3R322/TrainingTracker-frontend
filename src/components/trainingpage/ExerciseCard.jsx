@@ -139,7 +139,7 @@ const ExerciseCard = ({
                 <p>{name.toLowerCase()}</p>
             </div>
 
-            {sets.map((set, index) =>
+            {sets.sort((a, b) => a.id - b.id).map((set, index) =>
                 <FinishedSetElement
                     index={index}
                     initialAmount={set.amount}

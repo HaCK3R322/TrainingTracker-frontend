@@ -6,7 +6,7 @@ import '../../style/motion-framer-wrapper.css'
 import '../../style/trainingpage/exercisecard.css'
 import '../../style/trainingpage/exercisecardsswiperpagination.css'
 import TrainingPageHeader from "./TrainingPageHeader";
-import {DateCalendar, LocalizationProvider} from "@mui/x-date-pickers";
+import {DateCalendar, DatePicker, LocalizationProvider} from "@mui/x-date-pickers";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import React, {useEffect, useState} from "react";
 import {createTheme, ThemeProvider, useTheme} from "@mui/material";
@@ -21,6 +21,7 @@ import fetchDeleteExerciseById from "../../api/fetchDeleteExerciseById";
 import {create} from "@mui/material/styles/createTransitions";
 import fetchPatchSet from "../../api/fetchPatchSet";
 import fetchDeleteSetById from "../../api/fetchDeleteSetById";
+import {format} from "date-fns";
 
 const TrainingPage = () => {
     const {trainingId} = useParams()
@@ -109,6 +110,7 @@ const TrainingPage = () => {
         fetchDeleteSetById(setId)
     }
 
+
     return (
         <motion.div
             initial={{x: "100%"}}
@@ -152,6 +154,12 @@ const TrainingPage = () => {
                             }}>
                                 <ThemeProvider theme={calendarTheme}>
                                     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={'en-gb'}>
+                                        <DatePicker
+                                            renderDay
+                                        >
+
+                                        </DatePicker>
+
                                         <DateCalendar
                                             sx={{
                                                 color: "var(--second-color)",

@@ -43,7 +43,7 @@ body {
     width: 100%;
 }
 
-input {
+.input-container input {
     position: absolute;
     width: 100%;
     left: -2px;
