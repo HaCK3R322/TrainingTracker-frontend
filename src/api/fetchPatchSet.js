@@ -10,9 +10,16 @@ export default function fetchPatchSet(newSet) {
     requestHeaders.set('Content-type', 'application/json');
 
     return fetch(url, {
-        headers: requestHeaders,
-        method: "PATCH",
-        body: JSON.stringify(newSet),
-        mode: 'cors'
-    });
+                headers: requestHeaders,
+                method: "PATCH",
+                body: JSON.stringify(newSet),
+                mode: 'cors'
+            })
+        .then(response => {
+            if(!response.ok) {
+                response.text().then(text => console.log(text))
+            } else {
+                return response;
+            }
+        })
 }

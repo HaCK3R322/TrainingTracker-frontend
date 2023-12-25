@@ -9,7 +9,7 @@ import TrainingPageHeader from "./TrainingPageHeader";
 import {DateCalendar, DatePicker, LocalizationProvider} from "@mui/x-date-pickers";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import React, {useEffect, useState} from "react";
-import {createTheme, ThemeProvider, useTheme} from "@mui/material";
+import {createTheme, TextField, ThemeProvider, useTheme} from "@mui/material";
 import {makeStyles} from "@mui/styles";
 import {useParams} from "react-router";
 import fetchGet from "../../api/fetchGet";
@@ -110,6 +110,22 @@ const TrainingPage = () => {
         fetchDeleteSetById(setId)
     }
 
+    const wasMentioned = (day) => {
+        for (const exercise of exercises) {
+            const exerciseTimestamp = exercise.timestamp;
+
+            // Assuming exerciseTimestamp is a number representing the timestamp
+            const exerciseDay = dayjs(exerciseTimestamp);
+
+            // Compare day with exercise timestamp using dayjs methods
+            if (day.isSame(exerciseDay, 'day')) {
+                return true;
+            }
+        }
+
+        return false;
+    };
+
 
     return (
         <motion.div
@@ -135,7 +151,7 @@ const TrainingPage = () => {
                         <motion.div
                             animate={isCalendarVisible
                                 ? {top: "0"} :
-                                {top: "-334px"}
+                                {top: "-300px"}
                             }
 
                             style={{
@@ -150,25 +166,39 @@ const TrainingPage = () => {
                                 transform: "translate(-50%, 0)",
                                 backgroundColor: "black",
                                 width: "100%",
-                                height: "334px"
+                                height: "300px"
                             }}>
                                 <ThemeProvider theme={calendarTheme}>
                                     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={'en-gb'}>
-                                        <DatePicker
-                                            renderDay
-                                        >
-
-                                        </DatePicker>
-
                                         <DateCalendar
                                             sx={{
                                                 color: "var(--second-color)",
-                                                '& button': {color: 'var(--second-color)'},
-                                                '& span': {color: 'var(--second-color)'}
+                                                '& button': { color: 'var(--second-color)' },
+                                                '& span': { color: 'var(--second-color)' },
                                             }}
                                             value={dateCalendarValue}
                                             onChange={(newDateCalendarValue) => {
-                                                setDateCalendarValue(newDateCalendarValue)
+                                                setDateCalendarValue(newDateCalendarValue);
+                                            }}
+                                            slotProps={{
+                                                day: (date, dateRangeProps) => {
+                                                    const isGreen = wasMentioned(date.day);
+                                                    const dayProps = dateRangeProps?.getDayProps({ date, ...dateRangeProps }) || {};
+
+                                                    return {
+                                                        ...dayProps,
+                                                        style: {
+                                                            ...(dayProps.style || {}),
+                                                            color: isGreen ? 'var(--button-color)' : undefined,
+                                                        },
+                                                        sx: {
+                                                            "&.MuiPickersDay-root.Mui-selected": {
+                                                                outline: "1px solid var(--blue-color)",
+                                                                backgroundColor: "black"
+                                                            },
+                                                        }
+                                                    };
+                                                },
                                             }}
                                         />
                                     </LocalizationProvider>
@@ -182,7 +212,7 @@ const TrainingPage = () => {
                                     position: "absolute",
                                     width: "100%",
                                     height: "100%",
-                                    top: "334px",
+                                    top: "300px",
                                     left: 0,
                                     zIndex: 100
                                 }}
@@ -192,7 +222,7 @@ const TrainingPage = () => {
 
                         <motion.div
                             animate={isCalendarVisible
-                                ? {top: "334px"} :
+                                ? {top: "300px"} :
                                 {top: "0px"}
                             }
 
