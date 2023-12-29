@@ -6,11 +6,10 @@ import '../../style/motion-framer-wrapper.css'
 import '../../style/trainingpage/exercisecard.css'
 import '../../style/trainingpage/exercisecardsswiperpagination.css'
 import TrainingPageHeader from "./TrainingPageHeader";
-import {DateCalendar, DatePicker, LocalizationProvider} from "@mui/x-date-pickers";
+import {DateCalendar, LocalizationProvider} from "@mui/x-date-pickers";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import React, {useEffect, useState} from "react";
-import {createTheme, TextField, ThemeProvider, useTheme} from "@mui/material";
-import {makeStyles} from "@mui/styles";
+import {createTheme, ThemeProvider} from "@mui/material";
 import {useParams} from "react-router";
 import fetchGet from "../../api/fetchGet";
 import BackendUrls from '../../api/BackendUrls.json';
