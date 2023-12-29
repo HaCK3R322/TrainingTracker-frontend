@@ -18,14 +18,12 @@ import dayjs from "dayjs";
 import fetchPost from "../../api/fetchPost";
 import 'dayjs/locale/en-gb';
 import fetchDeleteExerciseById from "../../api/fetchDeleteExerciseById";
-import {create} from "@mui/material/styles/createTransitions";
 import fetchPatchSet from "../../api/fetchPatchSet";
 import fetchDeleteSetById from "../../api/fetchDeleteSetById";
-import {format} from "date-fns";
 
 const TrainingPage = () => {
     const {trainingId} = useParams()
-    const [exercises, setExercises] = useState([]);
+    const [exercises, setExercises] = useState(getCachedExercisesOfTraining(trainingId));
     const [dateCalendarValue, setDateCalendarValue] = useState(dayjs(new Date()))
     const [cardsCreatedOnPickedDate, setCardsCreatedOnPickedDate] = useState([]);
 
@@ -38,11 +36,13 @@ const TrainingPage = () => {
                         .then(response => response.json())
                 }
                 setExercises(exercisesData)
+                cacheExercises(trainingId, exercisesData)
             })
     }, []);
 
     useEffect(() => {
         setCardsCreatedOnPickedDate(getCardsCreatedOnPickedDate())
+        cacheExercises(trainingId, exercises)
     }, [dateCalendarValue, exercises]);
 
     const [isCalendarVisible, setIsCalendarVisible] = useState(false);
@@ -253,5 +253,13 @@ const TrainingPage = () => {
         </motion.div>
     );
 };
+
+function cacheExercises(trainingId, exercises) {
+    window.localStorage.setItem("training-" + trainingId + "-cached-exercises", JSON.stringify(exercises));
+}
+function getCachedExercisesOfTraining(trainingId) {
+    let exercises = JSON.parse(window.localStorage.getItem("training-" + trainingId + "-cached-exercises"));
+    return exercises === null ? [] : exercises
+}
 
 export default TrainingPage;

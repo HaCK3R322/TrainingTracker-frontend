@@ -17,66 +17,10 @@ import fetchGetAllUserTrainings from "../../api/fetchGetAllUserTrainings";
 import fetchPost from "../../api/fetchPost";
 import BackendUrls from "../../api/BackendUrls.json";
 
-const NewTrainingForm = ({setInvisibleCallback, index, addTraining}) => {
-    const [name, setName] = useState("");
-    const [nameAcceptable, setNameAcceptable] = useState(false);
-    useEffect(() => {
-        if(name !== "") {
-            setNameAcceptable(true);
-        } else {
-            setNameAcceptable(false);
-        }
-    }, [name]);
-
-    const dismiss = () => {
-        setName("");
-        setInvisibleCallback();
-    }
-
-    const calcTopValue = () => {
-        let headerSize = "10%";
-        let logoSize = "110px";
-
-        let sizeNumberOfButtons = index * (20 + 70) + "px"
-
-        return "calc(" +
-            headerSize + " + " +
-            logoSize + " + " +
-            sizeNumberOfButtons +
-            ")"
-    }
-
-    return(
-        <div className={"new-training-form"}>
-            <div
-                className={"new-training-form-background"}
-                onClick={() => {
-                    if(nameAcceptable) {
-                        let newTraining = {name: name};
-                        addTraining(newTraining);
-                    }
-                    dismiss();
-                }}
-            />
-
-            <input
-                value={name}
-                style={{
-                    top: calcTopValue(),
-                }}
-                onChange={(event) => {
-                    event.stopPropagation();
-                    setName(event.target.value.toUpperCase());
-                }}
-            />
-        </div>
-    )
-}
-
 const MainPage = () => {
     let navigate = useNavigate();
 
-    const [trainings, setTrainings] = useState([])
+    const [trainings, setTrainings] = useState(getTrainingFromCacheOrDefault)
     const [newTrainingFormVisible, setNewTrainingFormVisible] = useState(false);
     const addTraining = (newTraining) => {
         // eslint-disable-next-line no-restricted-globals
@@ -93,7 +37,10 @@ const MainPage = () => {
 
     useEffect(() => {
         fetchGetAllUserTrainings()
-            .then(trainings => setTrainings(trainings))
+            .then(trainings => {
+                setTrainings(trainings);
+                cacheTrainings(trainings)
+            })
     }, []);
 
     return (
@@ -153,5 +100,75 @@ const MainPage = () => {
         </motion.div>
     );
 };
+
+function cacheTrainings(trainings) {
+    window.localStorage.setItem("trainings-cached", JSON.stringify(trainings));
+}
+
+function getTrainingFromCacheOrDefault() {
+    let trainings = JSON.parse(window.localStorage.getItem("trainings-cached"))
+
+    console.log("Trainigns from cache:")
+    console.log(trainings)
+
+    return trainings === null ? [] : trainings
+}
+
+
+const NewTrainingForm = ({setInvisibleCallback, index, addTraining}) => {
+    const [name, setName] = useState("");
+    const [nameAcceptable, setNameAcceptable] = useState(false);
+    useEffect(() => {
+        if(name !== "") {
+            setNameAcceptable(true);
+        } else {
+            setNameAcceptable(false);
+        }
+    }, [name]);
+
+    const dismiss = () => {
+        setName("");
+        setInvisibleCallback();
+    }
+
+    const calcTopValue = () => {
+        let headerSize = "10%";
+        let logoSize = "110px";
+
+        let sizeNumberOfButtons = index * (20 + 70) + "px"
+
+        return "calc(" +
+            headerSize + " + " +
+            logoSize + " + " +
+            sizeNumberOfButtons +
+            ")"
+    }
+
+    return(
+        <div className={"new-training-form"}>
+            <div
+                className={"new-training-form-background"}
+                onClick={() => {
+                    if(nameAcceptable) {
+                        let newTraining = {name: name};
+                        addTraining(newTraining);
+                    }
+                    dismiss();
+                }}
+            />
+
+            <input
+                value={name}
+                style={{
+                    top: calcTopValue(),
+                }}
+                onChange={(event) => {
+                    event.stopPropagation();
+                    setName(event.target.value.toUpperCase());
+                }}
+            />
+        </div>
+    )
+}
 
 export default MainPage;
