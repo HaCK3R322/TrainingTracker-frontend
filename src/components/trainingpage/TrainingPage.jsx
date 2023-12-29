@@ -52,7 +52,7 @@ const TrainingPage = () => {
         }
     })
 
-    const createNewExerciseFromNameAndUnitsCallback = (name, units) => {
+    const createNewExerciseFromNameAndUnitsForPickedDayCallback = (name, units) => {
         let pickedDateTimestamp = dayjs(dateCalendarValue).unix() * 1000;
 
         let newExerciseBody = {
@@ -130,7 +130,7 @@ const TrainingPage = () => {
         let daysSet = new Set()
         exercises.forEach(exercise => {
             let exerciseDay = dayjs(exercise.timestamp)
-            if(!dayjs(Date.now()).isSame(exerciseDay, 'day'))
+            if(!dayjs(dateCalendarValue).isSame(exerciseDay, 'day'))
                 daysSet.add(exerciseDay);
         })
 
@@ -148,7 +148,7 @@ const TrainingPage = () => {
         })
         // create new ones
         prevTrainingExercises.forEach(exercise => {
-            createNewExerciseFromNameAndUnitsCallback(exercise.name, exercise.units)
+            createNewExerciseFromNameAndUnitsForPickedDayCallback(exercise.name, exercise.units)
         })
     }
 
@@ -268,7 +268,7 @@ const TrainingPage = () => {
                                 <ExerciseCardsSwiper
                                     cards={cardsCreatedOnPickedDate}
                                     setCards={setExercises}
-                                    createNewExerciseFromNameAndUnitsCallback={createNewExerciseFromNameAndUnitsCallback}
+                                    createNewExerciseFromNameAndUnitsCallback={createNewExerciseFromNameAndUnitsForPickedDayCallback}
                                     deleteExerciseByIdCallback={deleteExerciseByIdCallback}
                                     chosenDate={dateCalendarValue}
                                     createNewSetForExerciseWithId={createNewSetForExerciseWithId}
