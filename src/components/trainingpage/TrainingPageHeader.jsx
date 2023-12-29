@@ -7,7 +7,7 @@ import calendarIMG from "../../images/calendar.png"
 import restoreIMG from '../../images/restore.png'
 import dayjs from "dayjs";
 
-const TrainingPageHeader = ({dateCalendarValue, onClickCallback}) => {
+const TrainingPageHeader = ({dateCalendarValue, onClickCallback, onRestoreClickCallback}) => {
     return (
         <motion.div className={"header"}>
             <motion.div className={"calendar-div"} onTap={onClickCallback}>
@@ -18,7 +18,7 @@ const TrainingPageHeader = ({dateCalendarValue, onClickCallback}) => {
                 {dayjs(dateCalendarValue).format('DD.MM')}
             </div>
 
-            <motion.div className={"restore"} onTap={() => alert("Coming soon...")}>
+            <motion.div className={"restore"} onTap={() => onRestoreClickCallback()}>
                 <img src={restoreIMG}/>
             </motion.div>
         </motion.div>

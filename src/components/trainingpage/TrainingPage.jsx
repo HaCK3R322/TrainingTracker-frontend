@@ -62,13 +62,13 @@ const TrainingPage = () => {
             timestamp: pickedDateTimestamp
         }
 
-        fetchPost(BackendUrls.urls.exercises, newExerciseBody)
+        return fetchPost(BackendUrls.urls.exercises, newExerciseBody)
             .then(response => response.json())
             .then(createdExercise => {
-                let newExercises = [...exercises];
                 createdExercise.sets = []
-                newExercises.push(createdExercise);
-                setExercises(newExercises);
+                setExercises(prevState => {
+                    return [...prevState, createdExercise]
+                })
             })
     }
 
@@ -91,7 +91,7 @@ const TrainingPage = () => {
             reps: null
         }
 
-        fetchPost(BackendUrls.urls.sets, newSet)
+        return fetchPost(BackendUrls.urls.sets, newSet)
             .then(response => response.json())
             .then(createdSet => {
                 let newExercises = [...exercises]
@@ -124,6 +124,33 @@ const TrainingPage = () => {
 
         return false;
     };
+
+    const onRestoreClickCallback = () => {
+        // put all days on Set, except for that today
+        let daysSet = new Set()
+        exercises.forEach(exercise => {
+            let exerciseDay = dayjs(exercise.timestamp)
+            if(!dayjs(Date.now()).isSame(exerciseDay, 'day'))
+                daysSet.add(exerciseDay);
+        })
+
+        if(daysSet.size === 0) return; // this is first day of training ever
+
+        // get as array
+        let daysArray = Array.from(daysSet);
+        // sort array
+        daysArray.sort();
+        // DAY = array[len - 1]
+        let prevTrainingDay = daysArray[daysArray.length - 1]
+        // get all that same day as DAY
+        let prevTrainingExercises = exercises.filter(exercise => {
+            return dayjs(exercise.timestamp).isSame(prevTrainingDay, 'day')
+        })
+        // create new ones
+        prevTrainingExercises.forEach(exercise => {
+            createNewExerciseFromNameAndUnitsCallback(exercise.name, exercise.units)
+        })
+    }
 
 
     return (
@@ -231,7 +258,11 @@ const TrainingPage = () => {
                                 height: "100%"
                             }}
                         >
-                            <TrainingPageHeader dateCalendarValue={dateCalendarValue} onClickCallback={() => {setIsCalendarVisible(!isCalendarVisible)}}/>
+                            <TrainingPageHeader
+                                dateCalendarValue={dateCalendarValue}
+                                onClickCallback={() => {setIsCalendarVisible(!isCalendarVisible)}}
+                                onRestoreClickCallback={onRestoreClickCallback}
+                            />
 
                             <div className={"scroller-div"}>
                                 <ExerciseCardsSwiper
