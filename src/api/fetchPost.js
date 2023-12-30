@@ -9,9 +9,6 @@ export default function fetchPost(address, body) {
     requestHeaders.set('Authorization', jwtHeader);
     requestHeaders.set('Content-type', 'application/json');
 
-    console.log('Fetching to ' + address + ' body:');
-    console.log(body);
-
     return fetch(url, {
         headers: requestHeaders,
         method: "POST",

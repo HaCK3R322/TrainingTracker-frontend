@@ -108,9 +108,6 @@ function cacheTrainings(trainings) {
 function getTrainingFromCacheOrDefault() {
     let trainings = JSON.parse(window.localStorage.getItem("trainings-cached"))
 
-    console.log("Trainigns from cache:")
-    console.log(trainings)
-
     return trainings === null ? [] : trainings
 }
 

@@ -119,14 +119,7 @@ const ExerciseCardsSwiper = ({
 
                         selfDeleteCallback={deleteCallback}
 
-                        name={card.name}
-                        units={card.units}
-                        sets={card.sets}
-                        setSets={(newSets) => {
-                            let newCards = [...cards];
-                            newCards[index].sets = newSets;
-                            setCards(newCards);
-                        }}
+                        exercise={card}
                         createNewSetCallback={createNewSetCallback}
                         patchSetCallback={patchSetCallback}
                         deleteLastSetCallback={handleDeleteLastSet}

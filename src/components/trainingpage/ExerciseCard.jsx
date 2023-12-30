@@ -6,10 +6,7 @@ import SwipeStates from "./SwipeStates.json"
 import trashCanIcon from '../../images/trash-can-icon.png'
 
 const ExerciseCard = ({
-                          name,
-                          units,
-                          sets,
-                          setSets,
+                          exercise,
                           createNewSetCallback,
                           patchSetCallback,
 
@@ -136,23 +133,29 @@ const ExerciseCard = ({
                     animate={animateState}
         >
             <div className={"exercise-name-div"}>
-                <p>{name.toLowerCase()}</p>
+                <p>{exercise.name.toLowerCase()}</p>
             </div>
 
-            {sets.sort((a, b) => a.id - b.id).map((set, index) =>
-                <FinishedSetElement
-                    index={index}
-                    initialAmount={set.amount}
-                    units={units}
-                    initialReps={set.reps}
-                    key={index}
-                    id={set.id}
-                    patchSetCallback={patchSetCallback}
-                />
-            )}
+            {exercise
+                .sets
+                .sort((a, b) => a.id - b.id)
+                .map((set, index) =>
+                    <FinishedSetElement
+                        exerciseId={exercise.id}
+                        initialAmount={set.amount}
+                        units={exercise.units}
+                        initialReps={set.reps}
 
-            {sets.length < 5 ?
-                <UnfinishedSetElement index={sets.length} units={units} createNewSetCallback={createNewSetCallback}/>
+                        index={index}
+                        key={index}
+                        id={set.id}
+                        patchSetCallback={patchSetCallback}
+                    />
+                )
+            }
+
+            {exercise.sets.length < 5 ?
+                <UnfinishedSetElement index={exercise.sets.length} units={exercise.units} createNewSetCallback={createNewSetCallback}/>
                 : <div/>
             }
 
@@ -172,7 +175,7 @@ const ExerciseCard = ({
     );
 };
 
-const FinishedSetElement = ({initialAmount, units, initialReps, index, id, patchSetCallback}) => {
+const FinishedSetElement = ({exerciseId, initialReps, units, initialAmount, index, id, patchSetCallback}) => {
     const [amount, setAmount] = useState(initialAmount);
     const [reps, setReps] = useState(initialReps);
 
@@ -190,6 +193,7 @@ const FinishedSetElement = ({initialAmount, units, initialReps, index, id, patch
     useEffect(() => {
         let setPatch = {
             id: id,
+            exerciseId: exerciseId,
             amount: amount,
             reps: reps
         }

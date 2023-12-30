@@ -30,18 +30,19 @@ const TrainingPage = () => {
         fetchGet(BackendUrls.urls.exercises + "?trainingId=" + trainingId) // get all exercises for training
             .then(response => response.json())
             .then(async exercisesData => {
+                let retrievedExercises = []
                 for (const exercise of exercisesData) {
                     exercise.sets = await fetchGet(BackendUrls.urls.sets + "?exerciseId=" + exercise.id)
                         .then(response => response.json())
+                    retrievedExercises.push(exercise)
                 }
-                setExercises(exercisesData)
-                cacheExercises(trainingId, exercisesData)
+                setExercises(retrievedExercises)
+                cacheExercises(trainingId, retrievedExercises)
             })
     }, []);
 
     useEffect(() => {
         setCardsCreatedOnPickedDate(getCardsCreatedOnPickedDate())
-        cacheExercises(trainingId, exercises)
     }, [dateCalendarValue, exercises]);
 
     const [isCalendarVisible, setIsCalendarVisible] = useState(false);
@@ -97,12 +98,22 @@ const TrainingPage = () => {
                 let newExercises = [...exercises]
                 newExercises.find(exercise => exercise.id === exerciseId)
                     .sets.push(createdSet)
-                setExercises(newExercises)
+                setExercises(newExercises);
             })
     }
 
     const patchSetCallback = (newSet) => {
-        fetchPatchSet(newSet)
+        fetchPatchSet(newSet);
+
+        let exerciseIndex = exercises.findIndex(ex => ex.id === newSet.exerciseId);
+
+        let setIndex = (exercises[exerciseIndex]).sets.findIndex(set => set.id === newSet.id)
+
+        let newExercises = [...exercises]
+        newExercises[exerciseIndex].sets[setIndex] = newSet;
+        setExercises(newExercises)
+
+        cacheExercises(trainingId, newExercises);
     }
 
     const deleteSetByIdCallback = (setId) => {
