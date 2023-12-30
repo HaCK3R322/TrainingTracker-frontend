@@ -53,14 +53,12 @@ const TrainingPage = () => {
         }
     })
 
-    const createNewExerciseFromNameAndUnitsForPickedDayCallback = (name, units) => {
-        let pickedDateTimestamp = dayjs(dateCalendarValue).unix() * 1000;
-
+    const createNewExerciseFromNameAndUnitsAndTimestampForPickedDay = (name, units, timestamp) => {
         let newExerciseBody = {
             name: name,
             units: units,
             trainingId: trainingId,
-            timestamp: pickedDateTimestamp
+            timestamp: timestamp
         }
 
         return fetchPost(BackendUrls.urls.exercises, newExerciseBody)
@@ -71,6 +69,11 @@ const TrainingPage = () => {
                     return [...prevState, createdExercise]
                 })
             })
+    }
+
+    const createNewExerciseFromNameAndUnitsForPickedDayCallback = (name, units) => {
+        let pickedDayTimestamp = dayjs(dateCalendarValue)
+        createNewExerciseFromNameAndUnitsAndTimestampForPickedDay(name, units, pickedDayTimestamp)
     }
 
     const deleteExerciseByIdCallback = (exerciseId) => {
@@ -158,8 +161,12 @@ const TrainingPage = () => {
             return dayjs(exercise.timestamp).isSame(prevTrainingDay, 'day')
         })
         // create new ones
-        prevTrainingExercises.forEach(exercise => {
-            createNewExerciseFromNameAndUnitsForPickedDayCallback(exercise.name, exercise.units)
+        prevTrainingExercises.forEach((exercise, index) => {
+            createNewExerciseFromNameAndUnitsAndTimestampForPickedDay(
+                exercise.name,
+                exercise.units,
+                Date.now() + index
+            )
         })
     }
 
