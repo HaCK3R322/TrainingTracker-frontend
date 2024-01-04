@@ -165,13 +165,15 @@ const TrainingPage = () => {
             return dayjs(exercise.timestamp).isSame(prevTrainingDay, 'day')
         })
         // create new ones
-        prevTrainingExercises.forEach((exercise, index) => {
-            createNewExerciseFromNameAndUnitsAndTimestampForPickedDay(
-                exercise.name,
-                exercise.units,
-                Date.now() + index
-            )
-        })
+        prevTrainingExercises
+            .sort((a, b) => b.timestamp - a.timestamp)
+            .forEach((exercise, index) => {
+                createNewExerciseFromNameAndUnitsAndTimestampForPickedDay(
+                    exercise.name,
+                    exercise.units,
+                    Date.now() + index
+                )
+            })
     }
 
 

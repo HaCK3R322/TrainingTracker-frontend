@@ -104,10 +104,13 @@ const ExerciseCardsSwiper = ({
         }
     }
 
-
     return(
         <div>
-            {cards.map((card, index) =>
+            {cards
+                .sort((a, b) => {
+                    return dayjs(a.timestamp) - dayjs(b.timestamp)
+                })
+                .map((card, index) =>
                     <ExerciseCard
                         swipeState={calculateSwipeStateByCardPosition(cards.length, currentChosenCardIndex, index)}
                         key={card.id}
