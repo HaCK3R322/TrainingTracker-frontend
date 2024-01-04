@@ -20,7 +20,7 @@ import BackendUrls from "../../api/BackendUrls.json";
 const MainPage = () => {
     let navigate = useNavigate();
 
-    const [trainings, setTrainings] = useState(getTrainingFromCacheOrDefault)
+    const [trainings, setTrainings] = useState(getTrainingFromCacheOrDefault())
     const [newTrainingFormVisible, setNewTrainingFormVisible] = useState(false);
     const addTraining = (newTraining) => {
         // eslint-disable-next-line no-restricted-globals

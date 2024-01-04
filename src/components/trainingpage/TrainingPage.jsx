@@ -42,6 +42,10 @@ const TrainingPage = () => {
     }, []);
 
     useEffect(() => {
+        cacheExercises(trainingId, exercises)
+    }, [exercises]);
+
+    useEffect(() => {
         setCardsCreatedOnPickedDate(getCardsCreatedOnPickedDate())
     }, [dateCalendarValue, exercises]);
 
