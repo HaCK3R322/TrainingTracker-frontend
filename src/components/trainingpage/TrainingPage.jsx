@@ -25,6 +25,7 @@ const TrainingPage = () => {
     const [exercises, setExercises] = useState(getCachedExercisesOfTraining(trainingId));
     const [dateCalendarValue, setDateCalendarValue] = useState(dayjs(new Date()))
     const [cardsCreatedOnPickedDate, setCardsCreatedOnPickedDate] = useState([]);
+    const [isCalendarVisible, setIsCalendarVisible] = useState(false);
 
     useEffect(() => {
         fetchGet(BackendUrls.urls.exercises + "?trainingId=" + trainingId) // get all exercises for training
@@ -49,7 +50,6 @@ const TrainingPage = () => {
         setCardsCreatedOnPickedDate(getCardsCreatedOnPickedDate())
     }, [dateCalendarValue, exercises]);
 
-    const [isCalendarVisible, setIsCalendarVisible] = useState(false);
     const calendarTheme = createTheme({
         typography: {
             fontFamily: `'Questrial', sans-serif`,
@@ -164,10 +164,13 @@ const TrainingPage = () => {
         let prevTrainingExercises = exercises.filter(exercise => {
             return dayjs(exercise.timestamp).isSame(prevTrainingDay, 'day')
         })
+
         // create new ones
         prevTrainingExercises
-            .sort((a, b) => b.timestamp - a.timestamp)
+            .sort((a, b) => dayjs(a.timestamp) - dayjs(b.timestamp))
             .forEach((exercise, index) => {
+                console.log(dayjs(exercise.timestamp) + " is " + exercise.name)
+                // console.log(Date.now() + index + " for " + exercise.name)
                 createNewExerciseFromNameAndUnitsAndTimestampForPickedDay(
                     exercise.name,
                     exercise.units,
