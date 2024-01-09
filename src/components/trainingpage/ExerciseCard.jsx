@@ -4,6 +4,7 @@ import '../../style/trainingpage/finishedsetelement.css'
 import '../../style/trainingpage/unfinishedsetelement.css'
 import SwipeStates from "./SwipeStates.json"
 import trashCanIcon from '../../images/trash-can-icon.png'
+import SetElement from "./SetElement";
 
 const ExerciseCard = ({
                           exercise,
@@ -61,7 +62,53 @@ const ExerciseCard = ({
 
 
     useEffect(() => {
-        setAnimateState(getAnimationBasedOnSwipeState(swipeState));
+        let animateState = null;
+
+        switch(swipeState) {
+            case SwipeStates.CENTRAL:
+                animateState = {
+                    zIndex: 3,
+                    x: "0%",
+                    opacity: 3
+                };
+                break;
+            case SwipeStates.LEFTER_THAN_CHOSEN:
+                animateState = {
+                    scale: 0.87,
+                    x: "-100%",
+                    opacity: 0.5,
+                    zIndex: 2
+                };
+                break;
+            case SwipeStates.LEFTER_THAN_VISIBLE:
+                animateState = {
+                    scale: 0.87,
+                    x: "-120%",
+                    opacity: 0.5,
+                    zIndex: 2
+                };
+                break;
+            case SwipeStates.RIGHTER_THAN_CHOSEN:
+                animateState = {
+                    scale: 0.87,
+                    x: "+100%",
+                    opacity: 0.5,
+                    zIndex: 2
+                };
+                break;
+            case SwipeStates.RIGHTER_THAN_VISIBLE:
+                animateState = {
+                    scale: 0.87,
+                    x: "+120%",
+                    opacity: 0.5,
+                    zIndex: 2
+                };
+                break;
+            default:
+                alert("Wrong card state : " + swipeState)
+        }
+        
+        setAnimateState(animateState);
     }, [swipeState]);
 
     const handleDragStart = (info) => {
@@ -140,7 +187,7 @@ const ExerciseCard = ({
                 .sets
                 .sort((a, b) => a.id - b.id)
                 .map((set, index) =>
-                    <FinishedSetElement
+                    <SetElement
                         exerciseId={exercise.id}
                         initialAmount={set.amount}
                         units={exercise.units}
@@ -175,61 +222,6 @@ const ExerciseCard = ({
     );
 };
 
-const FinishedSetElement = ({exerciseId, initialReps, units, initialAmount, index, id, patchSetCallback}) => {
-    const [amount, setAmount] = useState(initialAmount);
-    const [reps, setReps] = useState(initialReps);
-
-    function calcSetTopValue(index) {
-        let nameDivSize = 100; //px
-        let betweenSetsSpace = 15; //px
-        let selfSize = 35; //px
-
-        let prevSetsSize = index * (betweenSetsSpace + selfSize);
-
-        let resultTopValue = `${nameDivSize}px + ${prevSetsSize}px`
-        return `calc(${resultTopValue})`;
-    }
-
-    useEffect(() => {
-        let setPatch = {
-            id: id,
-            exerciseId: exerciseId,
-            amount: amount,
-            reps: reps
-        }
-
-        patchSetCallback(setPatch)
-    }, [amount, reps]);
-
-    return(
-        <div className={"set-div"}
-             style={{top: calcSetTopValue(index)}}
-        >
-            <motion.div className={"amount"}>
-                <motion.input
-                    defaultValue={amount}
-                    type={"number"}
-                    onTap={(event) => event.target.focus()}
-                    onChange={event => setAmount(event.target.value)}
-                />
-            </motion.div>
-
-            <div className={"units-container-div"}>
-                {units}
-            </div>
-
-            <div className={"reps"}>
-                <motion.input
-                    defaultValue={reps}
-                    type={"number"}
-                    onTap={(event) => event.target.focus()}
-                    onChange={event => setReps(event.target.value)}
-                />
-            </div>
-        </div>
-    )
-}
-
 const UnfinishedSetElement = ({index, units, createNewSetCallback}) => {
     function calcSetTopValue(index) {
         let nameDivSize = 100; //px
@@ -239,7 +231,7 @@ const UnfinishedSetElement = ({index, units, createNewSetCallback}) => {
         let prevSetsSize = index * (betweenSetsSpace + selfSize);
 
         let resultTopValue = `${nameDivSize}px + ${prevSetsSize}px`
-        return `calc(${resultTopValue})`;
+        state `calc(${resultTopValue})`;
     }
 
     return(
@@ -255,47 +247,6 @@ const UnfinishedSetElement = ({index, units, createNewSetCallback}) => {
             <div className={"reps"}/>
         </motion.div>
     )
-}
-
-function getAnimationBasedOnSwipeState(swipeState) {
-    switch(swipeState) {
-        case SwipeStates.CENTRAL:
-            return {
-                zIndex: 3,
-                x: "0%",
-                opacity: 3
-            };
-        case SwipeStates.LEFTER_THAN_CHOSEN:
-            return {
-                scale: 0.87,
-                x: "-100%",
-                opacity: 0.5,
-                zIndex: 2
-            };
-        case SwipeStates.LEFTER_THAN_VISIBLE:
-            return{
-                scale: 0.87,
-                x: "-120%",
-                opacity: 0.5,
-                zIndex: 2
-            };
-        case SwipeStates.RIGHTER_THAN_CHOSEN:
-            return {
-                scale: 0.87,
-                x: "+100%",
-                opacity: 0.5,
-                zIndex: 2
-            };
-        case SwipeStates.RIGHTER_THAN_VISIBLE:
-            return{
-                scale: 0.87,
-                x: "+120%",
-                opacity: 0.5,
-                zIndex: 2
-            };
-        default:
-            alert("Wrong card state : " + swipeState)
-    }
 }
 
 export default ExerciseCard;
