@@ -107,7 +107,7 @@ const ExerciseCard = ({
             default:
                 alert("Wrong card state : " + swipeState)
         }
-        
+
         setAnimateState(animateState);
     }, [swipeState]);
 
@@ -201,23 +201,41 @@ const ExerciseCard = ({
                 )
             }
 
-            {exercise.sets.length < 5 ?
-                <UnfinishedSetElement index={exercise.sets.length} units={exercise.units} createNewSetCallback={createNewSetCallback}/>
-                : <div/>
-            }
+            {/*{exercise.sets.length < 5 ?*/}
+            {/*    <UnfinishedSetElement index={exercise.sets.length} units={exercise.units} createNewSetCallback={createNewSetCallback}/>*/}
+            {/*    : <div/>*/}
+            {/*}*/}
 
-            <motion.div className={"delete-button"} onTap={handleOnDelete}>
-                <img src={trashCanIcon} alt={"delete"} />
+            <motion.div className={"buttons-footer"}>
+
+                <motion.div
+                    className={"delete-button"}
+                    onTap={handleOnDelete}
+                >
+                    <img src={trashCanIcon} alt={"delete"} />
+                </motion.div>
+
+                <motion.div
+                    className={"delete-set-button-hitbox"}
+                    onTap={() => {
+                        deleteLastSetCallback()
+                    }}
+                >
+                    <div className={"delete-set-button"}/>
+                </motion.div>
+
+                <motion.div
+                    className={"create-new-set-button-hitbox"}
+                    onTap={() => {
+                        createNewSetCallback()
+                    }}
+                >
+                    <div className={"create-new-set-button-vertical"}/>
+                    <div className={"create-new-set-button-horizontal"}/>
+                </motion.div>
+
             </motion.div>
 
-
-            <motion.div className={"delete-set-button-hitbox"}
-                onTap={() => {
-                    deleteLastSetCallback()
-                }}
-            >
-                <div className={"delete-set-button"}/>
-            </motion.div>
         </motion.div>
     );
 };
@@ -231,7 +249,7 @@ const UnfinishedSetElement = ({index, units, createNewSetCallback}) => {
         let prevSetsSize = index * (betweenSetsSpace + selfSize);
 
         let resultTopValue = `${nameDivSize}px + ${prevSetsSize}px`
-        state `calc(${resultTopValue})`;
+        return `calc(${resultTopValue})`;
     }
 
     return(

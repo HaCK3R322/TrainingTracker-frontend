@@ -87,7 +87,8 @@ const ExerciseCardsSwiper = ({
     }
 
     const createNewSetCallback = () => {
-        createNewSetForExerciseWithId(cards[currentChosenCardIndex].id)
+        if(cards[currentChosenCardIndex].sets.length < 5)
+            createNewSetForExerciseWithId(cards[currentChosenCardIndex].id)
     }
 
     const handleDeleteLastSet = () => {
