@@ -19,6 +19,7 @@ import 'dayjs/locale/en-gb';
 import fetchDeleteExerciseById from "../../api/fetchDeleteExerciseById";
 import fetchPatchSet from "../../api/fetchPatchSet";
 import fetchDeleteSetById from "../../api/fetchDeleteSetById";
+import fetchGetAllExercisesWithSetsByTrainingId from "../../api/fetchGetAllExercisesWithSetsByTrainingId";
 
 const TrainingPage = () => {
     const {trainingId} = useParams()
@@ -27,28 +28,28 @@ const TrainingPage = () => {
     const [cardsCreatedOnPickedDate, setCardsCreatedOnPickedDate] = useState([]);
     const [isCalendarVisible, setIsCalendarVisible] = useState(false);
 
+
     useEffect(() => {
-        fetchGet(BackendUrls.urls.exercises + "?trainingId=" + trainingId) // get all exercises for training
-            .then(response => response.json())
-            .then(async exercisesData => {
+        fetchGetAllExercisesWithSetsByTrainingId(trainingId)
+            .then(async data => {
                 let retrievedExercises = []
-                for (const exercise of exercisesData) {
-                    exercise.sets = await fetchGet(BackendUrls.urls.sets + "?exerciseId=" + exercise.id)
-                        .then(response => response.json())
+                for (const exerciseWithSets of data.exercises) {
+                    let exercise = exerciseWithSets.exercise
+                    exercise.sets = exerciseWithSets.sets
                     retrievedExercises.push(exercise)
                 }
                 setExercises(retrievedExercises)
                 cacheExercises(trainingId, retrievedExercises)
             })
-    }, []);
+    }, [trainingId]);
 
     useEffect(() => {
         cacheExercises(trainingId, exercises)
-    }, [exercises]);
+    }, [trainingId, exercises]);
 
     useEffect(() => {
         setCardsCreatedOnPickedDate(getCardsCreatedOnPickedDate())
-    }, [dateCalendarValue, exercises]);
+    }, [trainingId, dateCalendarValue, exercises]);
 
     const calendarTheme = createTheme({
         typography: {
