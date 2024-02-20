@@ -1,6 +1,5 @@
 {
-  "host2": "http://193.218.142.195:8080",
-  "host": "http://localhost:8080",
+  "host": "http://193.218.142.195:8080",
   "urls": {
     "register": "/register",
     "authenticate": "/authenticate",
