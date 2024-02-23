@@ -75,9 +75,11 @@ const ExerciseCardsSwiper = ({
         let exerciseId = cards[currentChosenCardIndex].id
         deleteExerciseByIdCallback(exerciseId);
 
-        let newCards = [...cards];
-        newCards.splice(currentChosenCardIndex, 1);
-        setCards(newCards);
+        setCards(
+            cards.filter(exercise =>
+                exercise.id !== exerciseId
+            )
+        )
 
         let nextIndex = currentChosenCardIndex === cards.length - 1 ?
             currentChosenCardIndex === 0 ? currentChosenCardIndex : currentChosenCardIndex - 1 :
