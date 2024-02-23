@@ -315,6 +315,7 @@ const TrainingPage = () => {
 
 function cacheExercises(trainingId, exercises) {
     window.localStorage.setItem("training-" + trainingId + "-cached-exercises", JSON.stringify(exercises));
+    console.log("Exercises of training " + trainingId + " was cached")
 }
 function getCachedExercisesOfTraining(trainingId) {
     let exercises = JSON.parse(window.localStorage.getItem("training-" + trainingId + "-cached-exercises"));
