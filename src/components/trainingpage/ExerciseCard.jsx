@@ -201,11 +201,6 @@ const ExerciseCard = ({
                 )
             }
 
-            {/*{exercise.sets.length < 5 ?*/}
-            {/*    <UnfinishedSetElement index={exercise.sets.length} units={exercise.units} createNewSetCallback={createNewSetCallback}/>*/}
-            {/*    : <div/>*/}
-            {/*}*/}
-
             <motion.div className={"buttons-footer"}>
 
                 <motion.div
@@ -239,32 +234,5 @@ const ExerciseCard = ({
         </motion.div>
     );
 };
-
-const UnfinishedSetElement = ({index, units, createNewSetCallback}) => {
-    function calcSetTopValue(index) {
-        let nameDivSize = 100; //px
-        let betweenSetsSpace = 15; //px
-        let selfSize = 35; //px
-
-        let prevSetsSize = index * (betweenSetsSpace + selfSize);
-
-        let resultTopValue = `${nameDivSize}px + ${prevSetsSize}px`
-        return `calc(${resultTopValue})`;
-    }
-
-    return(
-        <motion.div className={"unfinished-set-div"}
-             style={{top: calcSetTopValue(index)}}
-
-             onTap={() => {createNewSetCallback()}}
-        >
-            <div className={"amount"}/>
-            <div className={"units-container-div"}>
-                {units}
-            </div>
-            <div className={"reps"}/>
-        </motion.div>
-    )
-}
 
 export default ExerciseCard;
