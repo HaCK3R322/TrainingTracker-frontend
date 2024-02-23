@@ -40,7 +40,6 @@ const TrainingPage = () => {
                     retrievedExercises.push(retrievedExercise)
                 }
                 setExercises(retrievedExercises)
-                cacheExercises(trainingId, retrievedExercises)
             })
     }, [])
 
