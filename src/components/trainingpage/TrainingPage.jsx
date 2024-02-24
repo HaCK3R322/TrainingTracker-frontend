@@ -20,6 +20,7 @@ import fetchDeleteExerciseById from "../../api/fetchDeleteExerciseById";
 import fetchPatchSet from "../../api/fetchPatchSet";
 import fetchDeleteSetById from "../../api/fetchDeleteSetById";
 import fetchGetAllExercisesWithSetsByTrainingId from "../../api/fetchGetAllExercisesWithSetsByTrainingId";
+import transformFetchedDataToExercises from "../../util/transformFetchedDataToExercises";
 
 const TrainingPage = () => {
     const {trainingId} = useParams()
@@ -32,15 +33,7 @@ const TrainingPage = () => {
         setExercises(getCachedExercisesOfTraining(trainingId))
         fetchGetAllExercisesWithSetsByTrainingId(trainingId)
             .then(data => {
-                console.log(data)
-
-                let retrievedExercises = []
-                for (const exerciseWithSets of data) {
-                    let retrievedExercise = exerciseWithSets.exercise
-                    retrievedExercise.sets = exerciseWithSets.sets
-                    retrievedExercises.push(retrievedExercise)
-                }
-                setExercises(retrievedExercises)
+                setExercises(transformFetchedDataToExercises(data))
             })
     }, [])
 
