@@ -20,7 +20,8 @@ import fetchDeleteExerciseById from "../../api/fetchDeleteExerciseById";
 import fetchPatchSet from "../../api/fetchPatchSet";
 import fetchDeleteSetById from "../../api/fetchDeleteSetById";
 import fetchGetAllExercisesWithSetsByTrainingId from "../../api/fetchGetAllExercisesWithSetsByTrainingId";
-import transformFetchedDataToExercises from "../../util/transformFetchedDataToExercises";
+import transformFetchedDataToExercises from "../../util/exercises/transformFetchedDataToExercises";
+import createNewExercise from "../../util/exercises/createNewExercise";
 
 const TrainingPage = () => {
     const {trainingId} = useParams()
@@ -29,18 +30,20 @@ const TrainingPage = () => {
     const [cardsCreatedOnPickedDate, setCardsCreatedOnPickedDate] = useState([]);
     const [isCalendarVisible, setIsCalendarVisible] = useState(false);
 
+    // fetching from server all exercises from server
     useEffect(() => {
-        setExercises(getCachedExercisesOfTraining(trainingId))
         fetchGetAllExercisesWithSetsByTrainingId(trainingId)
             .then(data => {
                 setExercises(transformFetchedDataToExercises(data))
             })
     }, [])
 
+    // Cache exercises on every change
     useEffect(() => {
         cacheExercises(trainingId, exercises)
     }, [exercises]);
 
+    // Re-set cards if changed exercises OR picked day
     useEffect(() => {
         setCardsCreatedOnPickedDate(getCardsCreatedOnPickedDate())
     }, [dateCalendarValue, exercises]);
@@ -52,35 +55,21 @@ const TrainingPage = () => {
         }
     })
 
-    const createNewExerciseFromNameAndUnitsAndTimestampForPickedDay = (name, units, timestamp) => {
-        let newExerciseBody = {
-            name: name,
-            units: units,
-            trainingId: trainingId,
-            timestamp: timestamp
-        }
-
-        console.log("Creating new exercise:")
-        console.log(newExerciseBody)
-
-        return fetchPost(BackendUrls.urls.exercises, newExerciseBody)
-            .then(response => response.json())
+    const createNewExerciseForPickedDayCallback = (name, units) => {
+        let pickedDayTimestamp = dayjs(dateCalendarValue)
+        createNewExercise(trainingId, name, units, pickedDayTimestamp)
             .then(createdExercise => {
-                createdExercise.sets = []
-                setExercises(prevState => {
-                    return [...prevState, createdExercise]
-                })
+                console.log("Created exercise fetched from server:")
+                console.log(createdExercise)
+                setExercises([...exercises, createdExercise])
             })
     }
 
-    const createNewExerciseFromNameAndUnitsForPickedDayCallback = (name, units) => {
-        let pickedDayTimestamp = dayjs(dateCalendarValue)
-        console.log(pickedDayTimestamp)
-        createNewExerciseFromNameAndUnitsAndTimestampForPickedDay(name, units, pickedDayTimestamp)
-    }
-
     const deleteExerciseByIdCallback = (exerciseId) => {
-        fetchDeleteExerciseById(exerciseId);
+        fetchDeleteExerciseById(exerciseId)
+        setExercises(exercises.filter(exercise =>
+            exercise.id !== exerciseId
+        ))
     }
 
     function getCardsCreatedOnPickedDate() {
@@ -118,8 +107,6 @@ const TrainingPage = () => {
         let newExercises = [...exercises]
         newExercises[exerciseIndex].sets[setIndex] = newSet;
         setExercises(newExercises)
-
-        cacheExercises(trainingId, newExercises);
     }
 
     const deleteSetByIdCallback = (setId) => {
@@ -143,37 +130,25 @@ const TrainingPage = () => {
     };
 
     const onRestoreClickCallback = () => {
-        // put all days on Set, except for that today
-        let daysSet = new Set()
-        exercises.forEach(exercise => {
-            let exerciseDay = dayjs(exercise.timestamp)
-            if(!dayjs(dateCalendarValue).isSame(exerciseDay, 'day'))
-                daysSet.add(exerciseDay);
+        const previousExercises = exercises.filter(exercise => {
+            return exercise.timestamp.isBefore(dateCalendarValue, 'day')
         })
-
-        if(daysSet.size === 0) return; // this is first day of training ever
-
-        // get as array
-        let daysArray = Array.from(daysSet);
-        // sort array
-        daysArray.sort();
-        // DAY = array[len - 1]
-        let prevTrainingDay = daysArray[daysArray.length - 1]
-        // get all that same day as DAY
-        let prevTrainingExercises = exercises.filter(exercise => {
-            return dayjs(exercise.timestamp).isSame(prevTrainingDay, 'day')
-        })
+        const sortedExercises = previousExercises.sort((a, b) => b.timestamp.diff(a.timestamp));
+        const firstExerciseTimestamp = sortedExercises.length > 0 ? sortedExercises[0].timestamp : null;
+        const exercisesFromFirstDay = sortedExercises.filter(exercise =>
+            exercise.timestamp.isSame(firstExerciseTimestamp, 'day')
+        );
 
         // create new ones
-        prevTrainingExercises
-            .sort((a, b) => dayjs(a.timestamp) - dayjs(b.timestamp))
+        exercisesFromFirstDay
             .forEach((exercise, index) => {
-                console.log(dayjs(exercise.timestamp) + " is " + exercise.name)
-                // console.log(Date.now() + index + " for " + exercise.name)
-                createNewExerciseFromNameAndUnitsAndTimestampForPickedDay(
+                createNewExercise(
+                    trainingId,
                     exercise.name,
                     exercise.units,
-                    Date.now() + index
+                    dayjs(dateCalendarValue).add(index, 'millisecond')
+                ).then(createdExercise =>
+                    setExercises([...exercises, createdExercise])
                 )
             })
     }
@@ -294,7 +269,7 @@ const TrainingPage = () => {
                                 <ExerciseCardsSwiper
                                     cards={cardsCreatedOnPickedDate}
                                     setCards={setExercises}
-                                    createNewExerciseFromNameAndUnitsCallback={createNewExerciseFromNameAndUnitsForPickedDayCallback}
+                                    createNewExerciseFromNameAndUnitsCallback={createNewExerciseForPickedDayCallback}
                                     deleteExerciseByIdCallback={deleteExerciseByIdCallback}
                                     chosenDate={dateCalendarValue}
                                     createNewSetForExerciseWithId={createNewSetForExerciseWithId}
