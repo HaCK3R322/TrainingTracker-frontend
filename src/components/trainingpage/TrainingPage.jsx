@@ -29,6 +29,7 @@ const TrainingPage = () => {
     const [isCalendarVisible, setIsCalendarVisible] = useState(false);
 
     useEffect(() => {
+        setExercises(getCachedExercisesOfTraining(trainingId))
         fetchGetAllExercisesWithSetsByTrainingId(trainingId)
             .then(data => {
                 console.log(data)
@@ -66,6 +67,9 @@ const TrainingPage = () => {
             timestamp: timestamp
         }
 
+        console.log("Creating new exercise:")
+        console.log(newExerciseBody)
+
         return fetchPost(BackendUrls.urls.exercises, newExerciseBody)
             .then(response => response.json())
             .then(createdExercise => {
@@ -78,6 +82,7 @@ const TrainingPage = () => {
 
     const createNewExerciseFromNameAndUnitsForPickedDayCallback = (name, units) => {
         let pickedDayTimestamp = dayjs(dateCalendarValue)
+        console.log(pickedDayTimestamp)
         createNewExerciseFromNameAndUnitsAndTimestampForPickedDay(name, units, pickedDayTimestamp)
     }
 
