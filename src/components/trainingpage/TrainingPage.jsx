@@ -45,7 +45,10 @@ const TrainingPage = () => {
 
     // Re-set cards if changed exercises OR picked day
     useEffect(() => {
-        setCardsCreatedOnPickedDate(getCardsCreatedOnPickedDate())
+        const cards = getCardsCreatedOnPickedDate()
+        console.log("Updated cards:")
+        console.log(cards)
+        setCardsCreatedOnPickedDate(cards)
     }, [dateCalendarValue, exercises]);
 
     const calendarTheme = createTheme({
@@ -74,9 +77,7 @@ const TrainingPage = () => {
 
     function getCardsCreatedOnPickedDate() {
         return exercises.filter(exercise => {
-            let exerciseDate = new Date(Date.parse(exercise.timestamp))
-            let currentChosenDate = dayjs(dateCalendarValue).format('DD-MM-YYYY')
-            return currentChosenDate === dayjs(exerciseDate).format('DD-MM-YYYY')
+            return exercise.timestamp.isSame(dateCalendarValue, 'day')
         })
     }
 
@@ -133,8 +134,8 @@ const TrainingPage = () => {
         const previousExercises = exercises.filter(exercise => {
             return exercise.timestamp.isBefore(dateCalendarValue, 'day')
         })
-        const sortedExercises = previousExercises.sort((a, b) => b.timestamp.diff(a.timestamp));
-        const firstExerciseTimestamp = sortedExercises.length > 0 ? sortedExercises[0].timestamp : null;
+        const sortedExercises = previousExercises.sort((a, b) => a.timestamp.diff(b.timestamp));
+        const firstExerciseTimestamp = sortedExercises.length > 0 ? sortedExercises[sortedExercises.length - 1].timestamp : null;
         const exercisesFromFirstDay = sortedExercises.filter(exercise =>
             exercise.timestamp.isSame(firstExerciseTimestamp, 'day')
         );
@@ -146,9 +147,9 @@ const TrainingPage = () => {
                     trainingId,
                     exercise.name,
                     exercise.units,
-                    dayjs(dateCalendarValue).add(index, 'millisecond')
+                    dayjs(dateCalendarValue).add(index, 'seconds')
                 ).then(createdExercise =>
-                    setExercises([...exercises, createdExercise])
+                    setExercises((oldExercises) => [...oldExercises, createdExercise])
                 )
             })
     }
@@ -291,7 +292,14 @@ function cacheExercises(trainingId, exercises) {
 }
 function getCachedExercisesOfTraining(trainingId) {
     let exercises = JSON.parse(window.localStorage.getItem("training-" + trainingId + "-cached-exercises"));
-    return exercises === null ? [] : exercises
+    if (exercises === null) exercises = []
+
+    exercises.forEach(exercise => exercise.timestamp = dayjs(exercise.timestamp))
+
+    console.log("Exercises restored from cache:")
+    console.log(exercises)
+
+    return exercises
 }
 
 export default TrainingPage;
