@@ -108,9 +108,7 @@ const ExerciseCardsSwiper = ({
     return(
         <div>
             {cards
-                .sort((a, b) => {
-                    return dayjs(a.timestamp) - dayjs(b.timestamp)
-                })
+                .sort((a, b) => a.timestamp.diff(b.timestamp))
                 .map((card, index) =>
                     <ExerciseCard
                         swipeState={calculateSwipeStateByCardPosition(cards.length, currentChosenCardIndex, index)}
