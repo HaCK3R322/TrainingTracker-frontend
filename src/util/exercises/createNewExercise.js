@@ -10,8 +10,7 @@ function createNewExercise(trainingId, name, units, timestamp)  {
         timestamp: timestamp
     }
 
-    console.log("Fetching new exercise data to server:")
-    console.log(newExerciseBody)
+    console.log("Fetching new exercise data to server:", newExerciseBody)
 
     return fetchPost(BackendUrls.urls.exercises, newExerciseBody)
         .then(response => response.json())

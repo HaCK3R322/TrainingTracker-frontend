@@ -8,7 +8,7 @@ import '../../style/trainingpage/exercisecardsswiperpagination.css'
 import TrainingPageHeader from "./TrainingPageHeader";
 import {DateCalendar, LocalizationProvider} from "@mui/x-date-pickers";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {createTheme, ThemeProvider} from "@mui/material";
 import {useParams} from "react-router";
 import fetchGet from "../../api/fetchGet";
@@ -25,31 +25,32 @@ import createNewExercise from "../../util/exercises/createNewExercise";
 
 const TrainingPage = () => {
     const {trainingId} = useParams()
-    const [exercises, setExercises] = useState(getCachedExercisesOfTraining(trainingId));
+    const [exercises, setExercises] = useState([]);
     const [dateCalendarValue, setDateCalendarValue] = useState(dayjs(new Date()))
     const [cardsCreatedOnPickedDate, setCardsCreatedOnPickedDate] = useState([]);
     const [isCalendarVisible, setIsCalendarVisible] = useState(false);
 
     // fetching from server all exercises from server
     useEffect(() => {
+        getCachedExercisesOfTraining(trainingId)
         fetchGetAllExercisesWithSetsByTrainingId(trainingId)
             .then(data => {
                 setExercises(transformFetchedDataToExercises(data))
             })
-    }, [])
+    }, [trainingId])
 
     // Cache exercises on every change
     useEffect(() => {
+        console.log("EFFECT: exercises state was updated! new state: ", exercises)
         cacheExercises(trainingId, exercises)
     }, [exercises]);
 
     // Re-set cards if changed exercises OR picked day
     useEffect(() => {
         const cards = getCardsCreatedOnPickedDate()
-        console.log("Updated cards:")
-        console.log(cards)
+        console.log("Updated cards:", cards)
         setCardsCreatedOnPickedDate(cards)
-    }, [dateCalendarValue, exercises]);
+    }, [trainingId, dateCalendarValue, exercises]);
 
     const calendarTheme = createTheme({
         typography: {
@@ -62,23 +63,23 @@ const TrainingPage = () => {
         let pickedDayTimestamp = dayjs(dateCalendarValue)
         createNewExercise(trainingId, name, units, pickedDayTimestamp)
             .then(createdExercise => {
-                console.log("Created exercise fetched from server:")
-                console.log(createdExercise)
+                console.log("Created exercise fetched from server:", createdExercise)
                 setExercises([...exercises, createdExercise])
             })
     }
 
     const deleteExerciseByIdCallback = (exerciseId) => {
         fetchDeleteExerciseById(exerciseId)
-        setExercises(exercises.filter(exercise =>
-            exercise.id !== exerciseId
-        ))
+        let newExercises = exercises.filter(e => e.id !== exerciseId)
+        console.log("Deleting exercise by id:\nwas: ", exercises, "\nnow: ", newExercises)
+        cacheExercises(trainingId, newExercises)
+        setExercises(newExercises)
     }
 
     function getCardsCreatedOnPickedDate() {
-        return exercises.filter(exercise => {
-            return exercise.timestamp.isSame(dateCalendarValue, 'day')
-        })
+        return exercises.filter(exercise =>
+            exercise.timestamp.isSame(dateCalendarValue, 'day')
+        )
     }
 
     const createNewSetForExerciseWithId = (exerciseId) => {
@@ -288,7 +289,7 @@ const TrainingPage = () => {
 
 function cacheExercises(trainingId, exercises) {
     window.localStorage.setItem("training-" + trainingId + "-cached-exercises", JSON.stringify(exercises));
-    console.log("Exercises of training " + trainingId + " was cached")
+    console.log("Exercises of training " + trainingId + " was cached\n", exercises)
 }
 function getCachedExercisesOfTraining(trainingId) {
     let exercises = JSON.parse(window.localStorage.getItem("training-" + trainingId + "-cached-exercises"));
@@ -296,8 +297,7 @@ function getCachedExercisesOfTraining(trainingId) {
 
     exercises.forEach(exercise => exercise.timestamp = dayjs(exercise.timestamp))
 
-    console.log("Exercises restored from cache:")
-    console.log(exercises)
+    console.log("Exercises restored from cache:", exercises)
 
     return exercises
 }

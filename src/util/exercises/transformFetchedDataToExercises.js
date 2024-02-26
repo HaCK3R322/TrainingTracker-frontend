@@ -1,8 +1,7 @@
 import dayjs from "dayjs";
 
 function transformFetchedDataToExercises(fetchedData) {
-    console.log("Fetched data:")
-    console.log(fetchedData)
+    console.log("Fetched data:", fetchedData)
 
     let exercises = []
     for (const exerciseData of fetchedData) {
@@ -14,8 +13,7 @@ function transformFetchedDataToExercises(fetchedData) {
         exercises.push(exercise)
     }
 
-    console.log("Exercises array:")
-    console.log(exercises)
+    console.log("Exercises array:", exercises)
 
     return exercises
 }
