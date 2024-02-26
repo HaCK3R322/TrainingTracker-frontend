@@ -3,16 +3,14 @@ import ExerciseCard from "./ExerciseCard";
 import {ExerciseCardsSwiperPagination} from "./ExerciseCardSwiperPagination";
 import SwipeStates from "./SwipeStates.json"
 import NewCardForm from "./NewCardForm";
-import fetchGet from "../../api/fetchGet";
-import dayjs from "dayjs";
-import BackendUrls from "../../api/BackendUrls.json";
-import fetchPost from "../../api/fetchPost";
 
 
 const ExerciseCardsSwiper = ({
                                  cards,
                                  setCards,
                                  chosenDate,
+
+                                 swapTwoCardsTimestamps,
                                  createNewExerciseFromNameAndUnitsCallback,
                                  deleteExerciseByIdCallback,
                                  createNewSetForExerciseWithId,
@@ -46,6 +44,8 @@ const ExerciseCardsSwiper = ({
             let chosenCard = cards[currentChosenCardIndex];
             let nextCard = cards[currentChosenCardIndex + 1];
 
+            swapTwoCardsTimestamps(chosenCard.id, nextCard.id)
+
             let newCardsArray = [...cards];
             newCardsArray[currentChosenCardIndex + 1] = chosenCard;
             newCardsArray[currentChosenCardIndex] = nextCard;
@@ -60,6 +60,8 @@ const ExerciseCardsSwiper = ({
         if(currentChosenCardIndex !== 0) {
             let chosenCard = cards[currentChosenCardIndex];
             let prevCard = cards[currentChosenCardIndex - 1];
+
+            swapTwoCardsTimestamps(chosenCard.id, prevCard.id)
 
             let newCardsArray = [...cards];
             newCardsArray[currentChosenCardIndex - 1] = chosenCard;

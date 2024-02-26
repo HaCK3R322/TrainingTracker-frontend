@@ -82,6 +82,21 @@ const TrainingPage = () => {
         setExercises(newExercises)
     }
 
+    function swapTwoCardsByIdCallback(id1, id2) {
+        let timestamp1 = exercises.find(e => e.id === id1).timestamp
+        let timestamp2 = exercises.find(e => e.id === id2).timestamp
+
+        let exercise1Index = exercises.findIndex(e => e.id === id1)
+        let exercise2Index = exercises.findIndex(e => e.id === id2)
+
+        const newExercises = [...exercises]
+        newExercises[exercise1Index].timestamp = timestamp2
+        newExercises[exercise2Index].timestamp = timestamp1
+        setExercises(newExercises)
+
+        //TODO: save changes to server
+    }
+
     function getCardsCreatedOnPickedDate() {
         return exercises.filter(exercise =>
             exercise.timestamp.isSame(dateCalendarValue, 'day')
@@ -277,9 +292,11 @@ const TrainingPage = () => {
                                 <ExerciseCardsSwiper
                                     cards={cardsCreatedOnPickedDate}
                                     setCards={setCardsCreatedOnPickedDate}
+                                    chosenDate={dateCalendarValue}
+
+                                    swapTwoCardsTimestamps={swapTwoCardsByIdCallback}
                                     createNewExerciseFromNameAndUnitsCallback={createNewExerciseForPickedDayCallback}
                                     deleteExerciseByIdCallback={deleteExerciseByIdCallback}
-                                    chosenDate={dateCalendarValue}
                                     createNewSetForExerciseWithId={createNewSetForExerciseWithId}
                                     patchSetCallback={patchSetCallback}
                                     deleteSetByIdCallback={deleteSetByIdCallback}
