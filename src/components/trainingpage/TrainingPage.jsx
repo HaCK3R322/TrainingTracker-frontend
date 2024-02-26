@@ -8,10 +8,9 @@ import '../../style/trainingpage/exercisecardsswiperpagination.css'
 import TrainingPageHeader from "./TrainingPageHeader";
 import {DateCalendar, LocalizationProvider} from "@mui/x-date-pickers";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {createTheme, ThemeProvider} from "@mui/material";
 import {useParams} from "react-router";
-import fetchGet from "../../api/fetchGet";
 import BackendUrls from '../../api/BackendUrls.json';
 import dayjs from "dayjs";
 import fetchPost from "../../api/fetchPost";
@@ -270,7 +269,7 @@ const TrainingPage = () => {
                             <div className={"scroller-div"}>
                                 <ExerciseCardsSwiper
                                     cards={cardsCreatedOnPickedDate}
-                                    setCards={setExercises}
+                                    setCards={setCardsCreatedOnPickedDate}
                                     createNewExerciseFromNameAndUnitsCallback={createNewExerciseForPickedDayCallback}
                                     deleteExerciseByIdCallback={deleteExerciseByIdCallback}
                                     chosenDate={dateCalendarValue}
