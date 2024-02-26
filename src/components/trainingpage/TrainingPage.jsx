@@ -60,6 +60,13 @@ const TrainingPage = () => {
 
     const createNewExerciseForPickedDayCallback = (name, units) => {
         let pickedDayTimestamp = dayjs(dateCalendarValue)
+
+        // timestamp adjusting
+        pickedDayTimestamp = pickedDayTimestamp.set('hour', new Date().getHours())
+        pickedDayTimestamp = pickedDayTimestamp.set('minute', new Date().getMinutes())
+        pickedDayTimestamp = pickedDayTimestamp.set('second', new Date().getSeconds())
+        pickedDayTimestamp = pickedDayTimestamp.set('millisecond', new Date().getMilliseconds())
+
         createNewExercise(trainingId, name, units, pickedDayTimestamp)
             .then(createdExercise => {
                 console.log("Created exercise fetched from server:", createdExercise)
@@ -81,7 +88,7 @@ const TrainingPage = () => {
         )
     }
 
-    const createNewSetForExerciseWithId = (exerciseId) => {
+    function createNewSetForExerciseWithId(exerciseId)  {
         let newSet = {
             exerciseId: exerciseId,
             amount: null,
