@@ -21,6 +21,7 @@ import fetchDeleteSetById from "../../api/fetchDeleteSetById";
 import fetchGetAllExercisesWithSetsByTrainingId from "../../api/fetchGetAllExercisesWithSetsByTrainingId";
 import transformFetchedDataToExercises from "../../util/exercises/transformFetchedDataToExercises";
 import createNewExercise from "../../util/exercises/createNewExercise";
+import fetchExercisePut from "../../api/fetchExercisePut";
 
 const TrainingPage = () => {
     const {trainingId} = useParams()
@@ -82,7 +83,7 @@ const TrainingPage = () => {
         setExercises(newExercises)
     }
 
-    function swapTwoCardsByIdCallback(id1, id2) {
+    function swapTwoCardsTimestampsByIdCallback(id1, id2) {
         let timestamp1 = exercises.find(e => e.id === id1).timestamp
         let timestamp2 = exercises.find(e => e.id === id2).timestamp
 
@@ -92,9 +93,19 @@ const TrainingPage = () => {
         const newExercises = [...exercises]
         newExercises[exercise1Index].timestamp = timestamp2
         newExercises[exercise2Index].timestamp = timestamp1
-        setExercises(newExercises)
 
-        //TODO: save changes to server
+        fetchExercisePut(newExercises[exercise1Index])
+            .then(response => response.json())
+            .then(updatedExercise =>
+                console.log("Updated exercise! New fields:", updatedExercise)
+            )
+        fetchExercisePut(newExercises[exercise2Index])
+            .then(response => response.json())
+            .then(updatedExercise =>
+                console.log("Updated exercise! New fields:", updatedExercise)
+            )
+
+        setExercises(newExercises)
     }
 
     function getCardsCreatedOnPickedDate() {
@@ -294,7 +305,7 @@ const TrainingPage = () => {
                                     setCards={setCardsCreatedOnPickedDate}
                                     chosenDate={dateCalendarValue}
 
-                                    swapTwoCardsTimestamps={swapTwoCardsByIdCallback}
+                                    swapTwoCardsTimestamps={swapTwoCardsTimestampsByIdCallback}
                                     createNewExerciseFromNameAndUnitsCallback={createNewExerciseForPickedDayCallback}
                                     deleteExerciseByIdCallback={deleteExerciseByIdCallback}
                                     createNewSetForExerciseWithId={createNewSetForExerciseWithId}
