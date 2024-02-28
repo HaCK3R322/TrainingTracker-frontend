@@ -10,7 +10,7 @@ import {DateCalendar, LocalizationProvider} from "@mui/x-date-pickers";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import React, {useEffect, useState} from "react";
 import {createTheme, ThemeProvider} from "@mui/material";
-import {useParams} from "react-router";
+import {useNavigate, useParams} from "react-router";
 import BackendUrls from '../../api/BackendUrls.json';
 import dayjs from "dayjs";
 import fetchPost from "../../api/fetchPost";
@@ -22,6 +22,7 @@ import fetchGetAllExercisesWithSetsByTrainingId from "../../api/fetchGetAllExerc
 import transformFetchedDataToExercises from "../../util/exercises/transformFetchedDataToExercises";
 import createNewExercise from "../../util/exercises/createNewExercise";
 import fetchExercisePut from "../../api/fetchExercisePut";
+import Stats from "../stats/Stats";
 
 const TrainingPage = () => {
     const {trainingId} = useParams()
@@ -29,6 +30,7 @@ const TrainingPage = () => {
     const [dateCalendarValue, setDateCalendarValue] = useState(dayjs(new Date()))
     const [cardsCreatedOnPickedDate, setCardsCreatedOnPickedDate] = useState([]);
     const [isCalendarVisible, setIsCalendarVisible] = useState(false);
+    const [isStatsVisible, setIsStatsVisible] = useState(false)
 
     // fetching from server all exercises from server
     useEffect(() => {
@@ -163,28 +165,31 @@ const TrainingPage = () => {
         return false;
     };
 
+    //TODO: uncomment
     const onRestoreClickCallback = () => {
-        const previousExercises = exercises.filter(exercise => {
-            return exercise.timestamp.isBefore(dateCalendarValue, 'day')
-        })
-        const sortedExercises = previousExercises.sort((a, b) => a.timestamp.diff(b.timestamp));
-        const firstExerciseTimestamp = sortedExercises.length > 0 ? sortedExercises[sortedExercises.length - 1].timestamp : null;
-        const exercisesFromFirstDay = sortedExercises.filter(exercise =>
-            exercise.timestamp.isSame(firstExerciseTimestamp, 'day')
-        );
+        setIsStatsVisible(!isStatsVisible)
 
-        // create new ones
-        exercisesFromFirstDay
-            .forEach((exercise, index) => {
-                createNewExercise(
-                    trainingId,
-                    exercise.name,
-                    exercise.units,
-                    dayjs(dateCalendarValue).add(index, 'seconds')
-                ).then(createdExercise =>
-                    setExercises((oldExercises) => [...oldExercises, createdExercise])
-                )
-            })
+        // const previousExercises = exercises.filter(exercise => {
+        //     return exercise.timestamp.isBefore(dateCalendarValue, 'day')
+        // })
+        // const sortedExercises = previousExercises.sort((a, b) => a.timestamp.diff(b.timestamp));
+        // const firstExerciseTimestamp = sortedExercises.length > 0 ? sortedExercises[sortedExercises.length - 1].timestamp : null;
+        // const exercisesFromFirstDay = sortedExercises.filter(exercise =>
+        //     exercise.timestamp.isSame(firstExerciseTimestamp, 'day')
+        // );
+        //
+        // // create new ones
+        // exercisesFromFirstDay
+        //     .forEach((exercise, index) => {
+        //         createNewExercise(
+        //             trainingId,
+        //             exercise.name,
+        //             exercise.units,
+        //             dayjs(dateCalendarValue).add(index, 'seconds')
+        //         ).then(createdExercise =>
+        //             setExercises((oldExercises) => [...oldExercises, createdExercise])
+        //         )
+        //     })
     }
 
 
@@ -208,7 +213,6 @@ const TrainingPage = () => {
             <div className={"motion-framer-wrapper"}   key="TrainingPage-Wrapper">
                 <div className={"training-tracker-theme"}>
                     <div className={"background-div"}>
-
                         <motion.div
                             animate={isCalendarVisible
                                 ? {top: "0"} :
@@ -313,6 +317,26 @@ const TrainingPage = () => {
                                     deleteSetByIdCallback={deleteSetByIdCallback}
                                 />
                             </div>
+
+                            <motion.div
+                                style={{
+                                    width: '100%',
+                                    height: "100%",
+                                    backgroundColor: "green",
+                                    zIndex: 4,
+                                    position: "absolute"
+                                }}
+
+                                animate={isStatsVisible ?
+                                    {top: "0%"} :
+                                    {top: "100%"}
+                                }
+
+                                onTap={() => setIsStatsVisible(false)}
+                            >
+                                <Stats/>
+                            </motion.div>
+
                         </motion.div>
                     </div>
                 </div>

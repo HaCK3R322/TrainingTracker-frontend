@@ -10,9 +10,6 @@ import '../../style/mainpage/trainingbutton.css';
 import '../../style/motion-framer-wrapper.css'
 import gitHubIconSvg from '../../images/github-mark-white.svg'
 import '../../style/mainpage/newtrainingform.css'
-import okaymark from "../../images/okaymark.png";
-import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
-import {DateCalendar, LocalizationProvider} from "@mui/x-date-pickers";
 import fetchGetAllUserTrainings from "../../api/fetchGetAllUserTrainings";
 import fetchPost from "../../api/fetchPost";
 import BackendUrls from "../../api/BackendUrls.json";
@@ -38,8 +35,9 @@ const MainPage = () => {
     useEffect(() => {
         fetchGetAllUserTrainings()
             .then(trainings => {
+                console.log("Got trainings from server:", trainings)
                 setTrainings(trainings);
-                cacheTrainings(trainings)
+                cacheTrainings(trainings);
             })
     }, []);
 
@@ -107,8 +105,12 @@ function cacheTrainings(trainings) {
 
 function getTrainingFromCacheOrDefault() {
     let trainings = JSON.parse(window.localStorage.getItem("trainings-cached"))
+    console.log("Parsed cached trainings:", trainings)
 
-    return trainings === null ? [] : trainings
+    if(trainings === null) return []
+    if(!Array.isArray(trainings)) return []
+
+    return trainings
 }
 
 
