@@ -5,7 +5,7 @@ import {DateCalendar, LocalizationProvider} from "@mui/x-date-pickers";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 
-const Calendar = ({exercises, dateCalendarValue, setDateCalendarValue, isCalendarVisible, setIsCalendarVisible}) => {
+const Calendar = ({exercises, dateCalendarValue, setDateCalendarValue, isVisible, setVisible}) => {
     const calendarTheme = createTheme({
         typography: {
             fontFamily: `'Questrial', sans-serif`,
@@ -32,7 +32,7 @@ const Calendar = ({exercises, dateCalendarValue, setDateCalendarValue, isCalenda
     return (
         <div>
             <motion.div
-                animate={isCalendarVisible
+                animate={isVisible
                     ? {top: "0"} :
                     {top: "-300px"}
                 }
@@ -89,7 +89,7 @@ const Calendar = ({exercises, dateCalendarValue, setDateCalendarValue, isCalenda
                 </div>
             </motion.div>
 
-            {isCalendarVisible &&
+            {isVisible &&
                 <motion.div
                     style={{
                         position: "absolute",
@@ -99,7 +99,7 @@ const Calendar = ({exercises, dateCalendarValue, setDateCalendarValue, isCalenda
                         left: 0,
                         zIndex: 100
                     }}
-                    onTap={() => {setIsCalendarVisible(false)}}
+                    onTap={() => {setVisible(false)}}
                 />
             }
         </div>

@@ -20,7 +20,7 @@ import fetchGetAllExercisesWithSetsByTrainingId from "../../api/fetchGetAllExerc
 import transformFetchedDataToExercises from "../../util/exercises/transformFetchedDataToExercises";
 import createNewExercise from "../../util/exercises/createNewExercise";
 import fetchExercisePut from "../../api/fetchExercisePut";
-import Stats from "../stats/Stats";
+import Stats from "./Stats";
 import Calendar from "./Calendar";
 
 const TrainingPage = () => {
@@ -28,8 +28,8 @@ const TrainingPage = () => {
     const [exercises, setExercises] = useState([]);
     const [dateCalendarValue, setDateCalendarValue] = useState(dayjs(new Date()))
     const [cardsCreatedOnPickedDate, setCardsCreatedOnPickedDate] = useState([]);
-    const [isCalendarVisible, setIsCalendarVisible] = useState(false);
-    const [isStatsVisible, setIsStatsVisible] = useState(false)
+    const [isCalendarVisible, setCalendarVisible] = useState(false);
+    const [isStatsVisible, setStatsVisible] = useState(false)
 
     // fetching from server all exercises from server
     useEffect(() => {
@@ -143,7 +143,7 @@ const TrainingPage = () => {
 
     //TODO: uncomment
     const onRestoreClickCallback = () => {
-        setIsStatsVisible(!isStatsVisible)
+        setStatsVisible(!isStatsVisible)
 
         // const previousExercises = exercises.filter(exercise => {
         //     return exercise.timestamp.isBefore(dateCalendarValue, 'day')
@@ -193,8 +193,8 @@ const TrainingPage = () => {
                             exercises={exercises}
                             dateCalendarValue={dateCalendarValue}
                             setDateCalendarValue={setDateCalendarValue}
-                            isCalendarVisible={isCalendarVisible}
-                            setIsCalendarVisible={setIsCalendarVisible}
+                            isVisible={isCalendarVisible}
+                            setVisible={setCalendarVisible}
                         />
 
                         <motion.div
@@ -211,7 +211,7 @@ const TrainingPage = () => {
                         >
                             <TrainingPageHeader
                                 dateCalendarValue={dateCalendarValue}
-                                onClickCallback={() => {setIsCalendarVisible(!isCalendarVisible)}}
+                                onClickCallback={() => {setCalendarVisible(!isCalendarVisible)}}
                                 onRestoreClickCallback={onRestoreClickCallback}
                             />
 
@@ -230,25 +230,10 @@ const TrainingPage = () => {
                                 />
                             </div>
 
-                            <motion.div
-                                style={{
-                                    width: '100%',
-                                    height: "100%",
-                                    backgroundColor: "green",
-                                    zIndex: 4,
-                                    position: "absolute"
-                                }}
-
-                                initial={{top: "100%"}}
-                                animate={isStatsVisible ?
-                                    {top: "0%"} :
-                                    {top: "100%"}
-                                }
-
-                                onTap={() => setIsStatsVisible(false)}
-                            >
-                                <Stats/>
-                            </motion.div>
+                            <Stats
+                                isVisible={isStatsVisible}
+                                setVisible={setStatsVisible}
+                            />
 
                         </motion.div>
                     </div>
