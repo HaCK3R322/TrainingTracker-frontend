@@ -1,32 +1,37 @@
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import ExerciseCard from "./ExerciseCard";
 import {ExerciseCardsSwiperPagination} from "./ExerciseCardSwiperPagination";
 import SwipeStates from "./SwipeStates.json"
 import NewCardForm from "./NewCardForm";
+import {ExercisesContext} from "./contexts/ExercisesContext";
+import {CalendarContext} from "./contexts/CalendarContext";
+import dayjs from "dayjs";
 
 
-const ExerciseCardsSwiper = ({
-                                 cards,
-                                 setCards,
-                                 chosenDate,
+const ExerciseCardsSwiper = () => {
+    const exercisesContext = useContext(ExercisesContext)
+    const calendarContext = useContext(CalendarContext)
 
-                                 swapTwoCardsTimestamps,
-                                 createNewExerciseFromNameAndUnitsCallback,
-                                 deleteExerciseByIdCallback,
-                                 createNewSetForExerciseWithId,
-                                 patchSetCallback,
-                                 deleteSetByIdCallback
-}) => {
+    const [exercises, setExercises] = [exercisesContext.exercises, exercisesContext.setExercises]
+    const calendarValue = calendarContext.dateValue
+
+    const [cards, setCards] = useState([])
     const [currentChosenCardIndex, setCurrentChosenCardIndex] = useState(0);
-
     const [cardLimitNotExceed, setCardLimitNotExceed] = useState(false);
+
+    useEffect(() => {
+        const cards = exercises.filter(e => e.timestamp.isSame(calendarValue, 'day'))
+        console.log("Updated cards:", cards)
+        setCards(cards)
+    }, [calendarValue, exercises]);
+
     useEffect(() => {
         setCardLimitNotExceed(cards.length < 10);
     }, [cards]);
 
     useEffect(() => {
         setCurrentChosenCardIndex(0);
-    }, [chosenDate]);
+    }, [calendarValue]);
 
     const swipedLeftCallback = () => {
         if(currentChosenCardIndex < cards.length) {
@@ -44,14 +49,12 @@ const ExerciseCardsSwiper = ({
             let chosenCard = cards[currentChosenCardIndex];
             let nextCard = cards[currentChosenCardIndex + 1];
 
-            swapTwoCardsTimestamps(chosenCard.id, nextCard.id)
+            exercisesContext.swapTimestamps(chosenCard, nextCard)
 
             let newCardsArray = [...cards];
             newCardsArray[currentChosenCardIndex + 1] = chosenCard;
             newCardsArray[currentChosenCardIndex] = nextCard;
-
             setCards(newCardsArray);
-
             setCurrentChosenCardIndex(currentChosenCardIndex + 1);
         }
     }
@@ -61,24 +64,22 @@ const ExerciseCardsSwiper = ({
             let chosenCard = cards[currentChosenCardIndex];
             let prevCard = cards[currentChosenCardIndex - 1];
 
-            swapTwoCardsTimestamps(chosenCard.id, prevCard.id)
+            exercisesContext.swapTimestamps(chosenCard, prevCard)
 
             let newCardsArray = [...cards];
             newCardsArray[currentChosenCardIndex - 1] = chosenCard;
             newCardsArray[currentChosenCardIndex] = prevCard;
-
             setCards(newCardsArray);
-
             setCurrentChosenCardIndex(currentChosenCardIndex - 1);
         }
     }
 
     const deleteCallback = () => {
-        let exerciseId = cards[currentChosenCardIndex].id
-        deleteExerciseByIdCallback(exerciseId);
+        let exerciseToDelete = cards[currentChosenCardIndex]
+        exercisesContext.deleteExercise(exerciseToDelete)
 
         setCards(cards.filter(card =>
-            card.id !== exerciseId
+            card.id !== exerciseToDelete.id
         ))
 
         let nextIndex = currentChosenCardIndex === cards.length - 1 ?
@@ -86,25 +87,6 @@ const ExerciseCardsSwiper = ({
             currentChosenCardIndex
 
         setCurrentChosenCardIndex(nextIndex)
-    }
-
-    const createNewSetCallback = () => {
-        if(cards[currentChosenCardIndex].sets.length < 5)
-            createNewSetForExerciseWithId(cards[currentChosenCardIndex].id)
-    }
-
-    const handleDeleteLastSet = () => {
-        let setsLen = cards[currentChosenCardIndex].sets.length;
-        if(setsLen > 0) {
-            let setId = cards[currentChosenCardIndex].sets[setsLen - 1].id;
-            deleteSetByIdCallback(setId);
-
-            let newSets = [...cards[currentChosenCardIndex].sets];
-            newSets.splice(setsLen - 1, 1);
-            let newCards = [...cards]
-            newCards[currentChosenCardIndex].sets = newSets;
-            setCards(newCards);
-        }
     }
 
     return(
@@ -115,6 +97,7 @@ const ExerciseCardsSwiper = ({
                     <ExerciseCard
                         swipeState={calculateSwipeStateByCardPosition(cards.length, currentChosenCardIndex, index)}
                         key={card.id}
+
                         swipedLeftCallback={swipedLeftCallback}
                         swipedRightCallback={swipedRightCallback}
 
@@ -124,9 +107,6 @@ const ExerciseCardsSwiper = ({
                         selfDeleteCallback={deleteCallback}
 
                         exercise={card}
-                        createNewSetCallback={createNewSetCallback}
-                        patchSetCallback={patchSetCallback}
-                        deleteLastSetCallback={handleDeleteLastSet}
                     />
             )}
 
@@ -145,8 +125,6 @@ const ExerciseCardsSwiper = ({
                     swipedRightCallback={swipedRightCallback}
 
                     cards={cards}
-
-                    createNewExerciseFromNameAndUnitsCallback={createNewExerciseFromNameAndUnitsCallback}
                 />
             }
         </div>

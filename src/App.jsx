@@ -21,7 +21,7 @@ function App() {
                         </Routes>
                     </AnimatePresence> :
                     <LoginPage setLoggedIn={setLoggedIn}/>
-            }
+            }`
         </div>
     );
 }

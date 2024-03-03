@@ -1,10 +1,14 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import '../../style/trainingpage/newcardform.css'
 import SwipeStates from "./SwipeStates.json";
 import {motion} from "framer-motion";
 import okaymark from '../../images/okaymark.png'
 import fetchPost from "../../api/fetchPost";
 import BackendUrls from '../../api/BackendUrls.json';
+import dayjs from "dayjs";
+import {ExercisesContext} from "./contexts/ExercisesContext";
+import Calendar from "./Calendar";
+import {CalendarContext} from "./contexts/CalendarContext";
 
 
 const NewCardForm = ({
@@ -12,15 +16,17 @@ const NewCardForm = ({
                          swipedLeftCallback,
                          swipeState,
 
-                         cards,
-                         createNewExerciseFromNameAndUnitsCallback
+                         cards
                      }) => {
+    const exercisesContext = useContext(ExercisesContext)
+    const dateValue = useContext(CalendarContext).dateValue
+
     const [swipedRight, setSwipedRight] = useState(false);
     const [swipedLeft, setSwipedLeft] = useState(false);
     const [dragStartPoint, setDragStartPoint] = useState(0);
     const [animateState, setAnimateState] = useState({zIndex: 3});
-
     const [cardLimitNotExceed, setCardLimitNotExceed] = useState(cards.length < 10 ? true : false);
+
     useEffect(() => {
         if(cards.length < 10) {
             setCardLimitNotExceed(true);
@@ -40,7 +46,7 @@ const NewCardForm = ({
         }
     }, [name]);
 
-    const [chosenUnit, setChosenUnit] = useState("kg");
+    const [units, setUnits] = useState("kg");
 
     const [canSubmit, setCanSubmit] = useState(false);
     useEffect(() => {
@@ -50,6 +56,28 @@ const NewCardForm = ({
     useEffect(() => {
         setAnimateState(getAnimationBasedOnSwipeState(swipeState));
     }, [swipeState]);
+
+    function createNewExerciseCallback() {
+        if(canSubmit) {
+            let pickedDayTimestamp = dayjs(dateValue)
+
+            // timestamp adjusting
+            pickedDayTimestamp = pickedDayTimestamp.set('hour', new Date().getHours())
+            pickedDayTimestamp = pickedDayTimestamp.set('minute', new Date().getMinutes())
+            pickedDayTimestamp = pickedDayTimestamp.set('second', new Date().getSeconds())
+            pickedDayTimestamp = pickedDayTimestamp.set('millisecond', new Date().getMilliseconds())
+
+            exercisesContext.createNewExercise({
+                trainingId: exercisesContext.trainingId,
+                name: name,
+                units: units,
+                timestamp: pickedDayTimestamp
+            })
+
+            setName("")
+            setUnits("kg")
+        }
+    }
 
     const handleDragStart = (info) => {
         setDragStartPoint(info.point.x);
@@ -108,20 +136,20 @@ const NewCardForm = ({
             </div>
 
             <div className={"units-choice-div"} >
-                <motion.div className={`kg option ${chosenUnit === "kg" ? "chosen-unit" : ""}`}
-                    onTap={() => {setChosenUnit("kg")}}
+                <motion.div className={`kg option ${units === "kg" ? "chosen-unit" : ""}`}
+                    onTap={() => {setUnits("kg")}}
                 >
                     <p>kg</p>
                 </motion.div>
 
-                <motion.div className={`sec option ${chosenUnit === "sec" ? "chosen-unit" : ""}`}
-                            onTap={() => {setChosenUnit("sec")}}
+                <motion.div className={`sec option ${units === "sec" ? "chosen-unit" : ""}`}
+                            onTap={() => {setUnits("sec")}}
                 >
                     <p>sec</p>
                 </motion.div>
 
-                <motion.div className={`min option ${chosenUnit === "min" ? "chosen-unit" : ""}`}
-                            onTap={() => {setChosenUnit("min")}}
+                <motion.div className={`min option ${units === "min" ? "chosen-unit" : ""}`}
+                            onTap={() => {setUnits("min")}}
                 >
                     <p>min</p>
                 </motion.div>
@@ -139,14 +167,7 @@ const NewCardForm = ({
                         scale: canSubmit ? 0.9 : 1.0
                     }}
 
-                    onClick={
-                        canSubmit ? () => {
-                                createNewExerciseFromNameAndUnitsCallback(name, chosenUnit);
-                                setName("");
-                                setChosenUnit("kg");
-                            } :
-                            ()=>{}
-                    }
+                    onClick={() => {createNewExerciseCallback()}}
                 >
                     <img src={okaymark} />
                 </motion.button>

@@ -1,7 +1,19 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {motion} from "framer-motion";
+import {ExercisesContext} from "./contexts/ExercisesContext";
 
-const SetElement = ({exerciseId, initialReps, units, initialAmount, index, id, patchSetCallback}) => {
+const SetElement = ({exerciseId, initialReps, units, initialAmount, index, id}) => {
+    const exercisesContext = useContext(ExercisesContext)
+    const [
+        exercises,
+        setExercises,
+        patchSet
+    ] = [
+        exercisesContext.exercises,
+        exercisesContext.setExercises,
+        exercisesContext.patchSet
+    ]
+
     const [amount, setAmount] = useState(initialAmount);
     const [reps, setReps] = useState(initialReps);
 
@@ -17,14 +29,23 @@ const SetElement = ({exerciseId, initialReps, units, initialAmount, index, id, p
     }
 
     useEffect(() => {
-        let setPatch = {
+        let set = {
             id: id,
             exerciseId: exerciseId,
             amount: amount,
             reps: reps
         }
 
-        patchSetCallback(setPatch)
+        patchSet(set)
+
+        let exerciseIndex = exercises.findIndex(ex => ex.id === set.exerciseId);
+
+        let setIndex = (exercises[exerciseIndex]).sets.findIndex(s => s.id === set.id)
+
+        let newExercises = [...exercises]
+        newExercises[exerciseIndex].sets[setIndex] = set;
+        setExercises(newExercises)
+
     }, [amount, reps]);
 
     return(

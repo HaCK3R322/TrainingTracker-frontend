@@ -1,24 +1,31 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {motion} from "framer-motion";
 import '../../style/trainingpage/finishedsetelement.css'
 import '../../style/trainingpage/unfinishedsetelement.css'
 import SwipeStates from "./SwipeStates.json"
 import trashCanIcon from '../../images/trash-can-icon.png'
 import SetElement from "./SetElement";
+import {ExercisesContext} from "./contexts/ExercisesContext";
 
 const ExerciseCard = ({
                           exercise,
-                          createNewSetCallback,
-                          patchSetCallback,
 
                           swipedRightCallback,
                           swipedLeftCallback,
                           swipeState,
                           swapToRightCallback,
                           swapToLeftCallback,
-                          selfDeleteCallback,
-                          deleteLastSetCallback
+                          selfDeleteCallback
 }) => {
+    const exercisesContext = useContext(ExercisesContext)
+    const [
+        exercises,
+        setExercises
+    ] = [
+        exercisesContext.exercises,
+        exercisesContext.setExercises
+    ]
+
     const [swipedRight, setSwipedRight] = useState(false);
     const [swipedLeft, setSwipedLeft] = useState(false);
     const [dragStartPoint, setDragStartPoint] = useState(0);
@@ -33,6 +40,19 @@ const ExerciseCard = ({
     const handleOnDelete = () => {
         if(swipeState === SwipeStates.CENTRAL) { // check if we are central card
             selfDeleteCallback()
+        }
+    }
+
+    function deleteLastSetCallback() {
+        let setIndex = exercise.sets.length - 1;
+        if(setIndex >= 0) {
+            const set = exercise.sets[setIndex]
+            const newExercises = [...exercises]
+
+            newExercises[newExercises.indexOf(exercise)].sets.splice(setIndex, 1)
+
+            setExercises(newExercises)
+            exercisesContext.deleteSet(set);
         }
     }
 
@@ -196,7 +216,6 @@ const ExerciseCard = ({
                         index={index}
                         key={index}
                         id={set.id}
-                        patchSetCallback={patchSetCallback}
                     />
                 )
             }
@@ -222,7 +241,7 @@ const ExerciseCard = ({
                 <motion.div
                     className={"create-new-set-button-hitbox"}
                     onTap={() => {
-                        createNewSetCallback()
+                        exercisesContext.createSet(exercise)
                     }}
                 >
                     <div className={"create-new-set-button-vertical"}/>

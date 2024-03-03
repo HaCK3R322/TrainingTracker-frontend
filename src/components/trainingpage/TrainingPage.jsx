@@ -6,7 +6,7 @@ import '../../style/motion-framer-wrapper.css'
 import '../../style/trainingpage/exercisecard.css'
 import '../../style/trainingpage/exercisecardsswiperpagination.css'
 import TrainingPageHeader from "./TrainingPageHeader";
-import React, {useEffect, useState} from "react";
+import React, {createContext, useContext, useEffect, useState} from "react";
 import {createTheme} from "@mui/material";
 import {useParams} from "react-router";
 import BackendUrls from '../../api/BackendUrls.json';
@@ -15,19 +15,21 @@ import fetchPost from "../../api/fetchPost";
 import 'dayjs/locale/en-gb';
 import fetchDeleteExerciseById from "../../api/fetchDeleteExerciseById";
 import fetchPatchSet from "../../api/fetchPatchSet";
-import fetchDeleteSetById from "../../api/fetchDeleteSetById";
+import fetchDeleteSet from "../../api/fetchDeleteSet";
 import fetchGetAllExercisesWithSetsByTrainingId from "../../api/fetchGetAllExercisesWithSetsByTrainingId";
 import transformFetchedDataToExercises from "../../util/exercises/transformFetchedDataToExercises";
-import createNewExercise from "../../util/exercises/createNewExercise";
+import fetchCreateNewExercise from "../../util/exercises/fetchCreateNewExercise";
 import fetchExercisePut from "../../api/fetchExercisePut";
 import Stats from "./Stats";
 import Calendar from "./Calendar";
+import FramerMotionWrapperDiv from "../FramerMotionWrapperDiv";
+import {ExercisesContext} from "./contexts/ExercisesContext";
+import {CalendarContext} from "./contexts/CalendarContext";
 
 const TrainingPage = () => {
     const {trainingId} = useParams()
     const [exercises, setExercises] = useState([]);
     const [dateCalendarValue, setDateCalendarValue] = useState(dayjs(new Date()))
-    const [cardsCreatedOnPickedDate, setCardsCreatedOnPickedDate] = useState([]);
     const [isCalendarVisible, setCalendarVisible] = useState(false);
     const [isStatsVisible, setStatsVisible] = useState(false)
 
@@ -46,54 +48,37 @@ const TrainingPage = () => {
         cacheExercises(trainingId, exercises)
     }, [exercises]);
 
-    // Re-set cards if changed exercises OR picked day
-    useEffect(() => {
-        const cards = getCardsCreatedOnPickedDate()
-        console.log("Updated cards:", cards)
-        setCardsCreatedOnPickedDate(cards)
-    }, [trainingId, dateCalendarValue, exercises]);
-
-    const createNewExerciseForPickedDayCallback = (name, units) => {
-        let pickedDayTimestamp = dayjs(dateCalendarValue)
-
-        // timestamp adjusting
-        pickedDayTimestamp = pickedDayTimestamp.set('hour', new Date().getHours())
-        pickedDayTimestamp = pickedDayTimestamp.set('minute', new Date().getMinutes())
-        pickedDayTimestamp = pickedDayTimestamp.set('second', new Date().getSeconds())
-        pickedDayTimestamp = pickedDayTimestamp.set('millisecond', new Date().getMilliseconds())
-
-        createNewExercise(trainingId, name, units, pickedDayTimestamp)
+    const createNewExercise = (exercise) => {
+        fetchCreateNewExercise(exercise)
             .then(createdExercise => {
                 console.log("Created exercise fetched from server:", createdExercise)
                 setExercises([...exercises, createdExercise])
             })
     }
 
-    const deleteExerciseByIdCallback = (exerciseId) => {
-        fetchDeleteExerciseById(exerciseId)
-        let newExercises = exercises.filter(e => e.id !== exerciseId)
+    const deleteExercise = (exercise) => {
+        fetchDeleteExerciseById(exercise.id)
+        let newExercises = exercises.filter(e => e.id !== exercise.id)
         console.log("Deleting exercise by id:\nwas: ", exercises, "\nnow: ", newExercises)
         cacheExercises(trainingId, newExercises)
         setExercises(newExercises)
     }
 
-    function swapTwoCardsTimestampsByIdCallback(id1, id2) {
-        let timestamp1 = exercises.find(e => e.id === id1).timestamp
-        let timestamp2 = exercises.find(e => e.id === id2).timestamp
-
-        let exercise1Index = exercises.findIndex(e => e.id === id1)
-        let exercise2Index = exercises.findIndex(e => e.id === id2)
-
+    function swapTimestamps(exercise1, exercise2) {
         const newExercises = [...exercises]
-        newExercises[exercise1Index].timestamp = timestamp2
-        newExercises[exercise2Index].timestamp = timestamp1
 
-        fetchExercisePut(newExercises[exercise1Index])
+        const index1 = newExercises.findIndex(e => e.id === exercise1.id)
+        const index2 = newExercises.findIndex(e => e.id === exercise2.id)
+
+        newExercises[index1].timestamp = exercise2.timestamp
+        newExercises[index2].timestamp = exercise1.timestamp
+
+        fetchExercisePut(newExercises[index1])
             .then(response => response.json())
             .then(updatedExercise =>
                 console.log("Updated exercise! New fields:", updatedExercise)
             )
-        fetchExercisePut(newExercises[exercise2Index])
+        fetchExercisePut(newExercises[index2])
             .then(response => response.json())
             .then(updatedExercise =>
                 console.log("Updated exercise! New fields:", updatedExercise)
@@ -102,15 +87,9 @@ const TrainingPage = () => {
         setExercises(newExercises)
     }
 
-    function getCardsCreatedOnPickedDate() {
-        return exercises.filter(exercise =>
-            exercise.timestamp.isSame(dateCalendarValue, 'day')
-        )
-    }
-
-    function createNewSetForExerciseWithId(exerciseId)  {
+    function createSet(exercise)  {
         let newSet = {
-            exerciseId: exerciseId,
+            exerciseId: exercise.id,
             amount: null,
             reps: null
         }
@@ -119,26 +98,10 @@ const TrainingPage = () => {
             .then(response => response.json())
             .then(createdSet => {
                 let newExercises = [...exercises]
-                newExercises.find(exercise => exercise.id === exerciseId)
+                newExercises.find(e => e.id === exercise.id)
                     .sets.push(createdSet)
                 setExercises(newExercises);
             })
-    }
-
-    const patchSetCallback = (newSet) => {
-        fetchPatchSet(newSet);
-
-        let exerciseIndex = exercises.findIndex(ex => ex.id === newSet.exerciseId);
-
-        let setIndex = (exercises[exerciseIndex]).sets.findIndex(set => set.id === newSet.id)
-
-        let newExercises = [...exercises]
-        newExercises[exerciseIndex].sets[setIndex] = newSet;
-        setExercises(newExercises)
-    }
-
-    const deleteSetByIdCallback = (setId) => {
-        fetchDeleteSetById(setId)
     }
 
     //TODO: uncomment
@@ -168,78 +131,64 @@ const TrainingPage = () => {
         //     })
     }
 
+    const exercisesContextValue = {
+        trainingId: trainingId,
+        exercises: exercises,
+        setExercises: setExercises,
+        swapTimestamps: swapTimestamps,
+        createExercise: createNewExercise,
+        deleteExercise: deleteExercise,
+        createSet: createSet,
+        deleteSet: fetchDeleteSet,
+        patchSet: fetchPatchSet
+    }
+    const calendarContextValue = {
+        dateValue: dateCalendarValue,
+        setDateValue: setDateCalendarValue,
+        isVisible: isCalendarVisible,
+        setVisible: setCalendarVisible
+    }
+
 
     return (
-        <motion.div
-            initial={{x: "100%"}}
-            animate={{x: "0%"}}
-            exit={{x: "100%"}}
-            transition={{duration: 0.3}}
-
-            key={'TrainingPage-content'}
-
-            style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: "100%",
-                height:  "100%"
-            }}
-        >
-            <div className={"motion-framer-wrapper"}   key="TrainingPage-Wrapper">
-                <div className={"training-tracker-theme"}>
-                    <div className={"background-div"}>
-                        <Calendar
-                            exercises={exercises}
-                            dateCalendarValue={dateCalendarValue}
-                            setDateCalendarValue={setDateCalendarValue}
-                            isVisible={isCalendarVisible}
-                            setVisible={setCalendarVisible}
-                        />
-
-                        <motion.div
-                            animate={isCalendarVisible
-                                ? {top: "300px"} :
-                                {top: "0px"}
-                            }
-
-                            style={{
-                                position: "absolute",
-                                width: "100%",
-                                height: "100%"
-                            }}
-                        >
-                            <TrainingPageHeader
-                                dateCalendarValue={dateCalendarValue}
-                                onClickCallback={() => {setCalendarVisible(!isCalendarVisible)}}
-                                onRestoreClickCallback={onRestoreClickCallback}
+        <FramerMotionWrapperDiv keyName={"TRAINING-PAGE-KEY"}>
+            <ExercisesContext.Provider value={exercisesContextValue}>
+                <CalendarContext.Provider value={calendarContextValue}>
+                    <div className={"training-tracker-theme"}>
+                        <div className={"background-div"}>
+                            <Calendar
+                                isVisible={isCalendarVisible}
+                                setVisible={setCalendarVisible}
                             />
 
-                            <div className={"scroller-div"}>
-                                <ExerciseCardsSwiper
-                                    cards={cardsCreatedOnPickedDate}
-                                    setCards={setCardsCreatedOnPickedDate}
-                                    chosenDate={dateCalendarValue}
-
-                                    swapTwoCardsTimestamps={swapTwoCardsTimestampsByIdCallback}
-                                    createNewExerciseFromNameAndUnitsCallback={createNewExerciseForPickedDayCallback}
-                                    deleteExerciseByIdCallback={deleteExerciseByIdCallback}
-                                    createNewSetForExerciseWithId={createNewSetForExerciseWithId}
-                                    patchSetCallback={patchSetCallback}
-                                    deleteSetByIdCallback={deleteSetByIdCallback}
+                            <motion.div
+                                animate={isCalendarVisible ? {top: "300px"} : {top: "0px"}}
+                                style={{
+                                    position: "absolute",
+                                    width: "100%",
+                                    height: "100%"
+                                }}
+                            >
+                                <TrainingPageHeader
+                                    restore={onRestoreClickCallback}
                                 />
-                            </div>
 
-                            <Stats
-                                isVisible={isStatsVisible}
-                                setVisible={setStatsVisible}
-                            />
+                                <div className={"scroller-div"}>
+                                    <ExerciseCardsSwiper/>
+                                </div>
 
-                        </motion.div>
+                                <Stats
+                                    isVisible={isStatsVisible}
+                                    setVisible={setStatsVisible}
+                                    exercises={exercises}
+                                />
+
+                            </motion.div>
+                        </div>
                     </div>
-                </div>
-            </div>
-        </motion.div>
+                </CalendarContext.Provider>
+            </ExercisesContext.Provider>
+        </FramerMotionWrapperDiv>
     );
 };
 

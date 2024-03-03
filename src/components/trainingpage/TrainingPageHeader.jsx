@@ -1,17 +1,26 @@
-import React, {useState} from 'react';
+import React, {useContext} from 'react';
 import '../../style/trainingpage/trainingpageheader.css'
 import {motion} from "framer-motion";
-import {DateCalendar, LocalizationProvider} from "@mui/x-date-pickers";
-import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import calendarIMG from "../../images/calendar.png"
 import restoreIMG from '../../images/restore.png'
 import dayjs from "dayjs";
+import {CalendarContext} from "./contexts/CalendarContext";
 
-const TrainingPageHeader = ({dateCalendarValue, onClickCallback, onRestoreClickCallback}) => {
+const TrainingPageHeader = ({restore}) => {
+    const [
+        calendarValue,
+        calendarVisible,
+        setCalendarVisible
+    ] = [
+        useContext(CalendarContext).dateValue,
+        useContext(CalendarContext).isVisible,
+        useContext(CalendarContext).setVisible
+    ]
+
     return (
         <motion.div className={"header"}>
             <motion.div className={"calendar-div"}
-                        onTap={onClickCallback}
+                        onTap={() => setCalendarVisible(!calendarVisible)}
                         whileTap={{
                             scale: 0.9
                         }}
@@ -20,11 +29,11 @@ const TrainingPageHeader = ({dateCalendarValue, onClickCallback, onRestoreClickC
             </motion.div>
 
             <div className={"current-day"}>
-                {dayjs(dateCalendarValue).format('DD.MM')}
+                {dayjs(calendarValue).format('DD.MM')}
             </div>
 
             <motion.div className={"restore"}
-                        onTap={() => onRestoreClickCallback()}
+                        onTap={() => restore()}
                         whileTap={{
                             scale: 0.9
                         }}

@@ -1,11 +1,19 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {motion} from "framer-motion";
 import {createTheme, ThemeProvider} from "@mui/material";
 import {DateCalendar, LocalizationProvider} from "@mui/x-date-pickers";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
+import {ExercisesContext} from "./contexts/ExercisesContext";
+import {CalendarContext} from "./contexts/CalendarContext";
 
-const Calendar = ({exercises, dateCalendarValue, setDateCalendarValue, isVisible, setVisible}) => {
+const Calendar = ({isVisible, setVisible}) => {
+    const exercisesContext = useContext(ExercisesContext)
+    const calendarContext = useContext(CalendarContext)
+
+    const exercises = exercisesContext.exercises
+    const [calendarValue, setCalendarValue] = [calendarContext.dateValue, calendarContext.setDateValue]
+
     const calendarTheme = createTheme({
         typography: {
             fontFamily: `'Questrial', sans-serif`,
@@ -59,9 +67,9 @@ const Calendar = ({exercises, dateCalendarValue, setDateCalendarValue, isVisible
                                     '& button': { color: 'var(--second-color)' },
                                     '& span': { color: 'var(--second-color)' },
                                 }}
-                                value={dateCalendarValue}
-                                onChange={(newDateCalendarValue) => {
-                                    setDateCalendarValue(newDateCalendarValue);
+                                value={calendarValue}
+                                onChange={(value) => {
+                                    setCalendarValue(value);
                                 }}
                                 slotProps={{
                                     day: (date, dateRangeProps) => {
