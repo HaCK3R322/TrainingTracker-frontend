@@ -64,7 +64,7 @@ const NewCardForm = ({
             pickedDayTimestamp = pickedDayTimestamp.set('second', new Date().getSeconds())
             pickedDayTimestamp = pickedDayTimestamp.set('millisecond', new Date().getMilliseconds())
 
-            exercisesContext.createNewExercise({
+            exercisesContext.createExercise({
                 trainingId: exercisesContext.trainingId,
                 name: name,
                 units: units,

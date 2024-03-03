@@ -47,7 +47,7 @@ const TrainingPage = () => {
         cacheExercises(trainingId, exercises)
     }, [exercises]);
 
-    const createNewExercise = (exercise) => {
+    const createExercise = (exercise) => {
         fetchCreateNewExercise(exercise)
             .then(createdExercise => {
                 console.log("Created exercise fetched from server:", createdExercise)
@@ -135,7 +135,7 @@ const TrainingPage = () => {
         exercises: exercises,
         setExercises: setExercises,
         swapTimestamps: swapTimestamps,
-        createExercise: createNewExercise,
+        createExercise: createExercise,
         deleteExercise: deleteExercise,
         createSet: createSet,
         deleteSet: fetchDeleteSet,
