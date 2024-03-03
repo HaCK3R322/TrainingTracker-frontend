@@ -58,7 +58,7 @@ const SetElement = ({exerciseId, initialReps, units, initialAmount, index, id}) 
                     defaultValue={amount}
                     type={"number"}
                     onTap={(event) => event.target.focus()}
-                    onChange={event => setAmount(event.target.value)}
+                    onChange={event => setAmount(Number(event.target.value))}
                 />
             </motion.div>
 
@@ -71,7 +71,7 @@ const SetElement = ({exerciseId, initialReps, units, initialAmount, index, id}) 
                     defaultValue={reps}
                     type={"number"}
                     onTap={(event) => event.target.focus()}
-                    onChange={event => setReps(event.target.value)}
+                    onChange={event => setReps(Number(event.target.value))}
                 />
             </div>
         </div>
