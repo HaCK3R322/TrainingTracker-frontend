@@ -36,7 +36,8 @@ const SetElement = ({exerciseId, initialReps, units, initialAmount, index, id}) 
             reps: reps
         }
 
-        patchSet(set)
+        // eslint-disable-next-line no-unused-vars
+        const ignored = patchSet(set)
 
         let exerciseIndex = exercises.findIndex(ex => ex.id === set.exerciseId);
 

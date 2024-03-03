@@ -25,7 +25,7 @@ const TrainingPageHeader = ({restore}) => {
                             scale: 0.9
                         }}
             >
-                <img src={calendarIMG}/>
+                <img src={calendarIMG} alt={""}/>
             </motion.div>
 
             <div className={"current-day"}>
@@ -38,7 +38,7 @@ const TrainingPageHeader = ({restore}) => {
                             scale: 0.9
                         }}
             >
-                <img src={restoreIMG}/>
+                <img src={restoreIMG} alt={""}/>
             </motion.div>
         </motion.div>
     );
