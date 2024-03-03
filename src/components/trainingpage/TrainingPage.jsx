@@ -6,8 +6,7 @@ import '../../style/motion-framer-wrapper.css'
 import '../../style/trainingpage/exercisecard.css'
 import '../../style/trainingpage/exercisecardsswiperpagination.css'
 import TrainingPageHeader from "./TrainingPageHeader";
-import React, {createContext, useContext, useEffect, useState} from "react";
-import {createTheme} from "@mui/material";
+import React, {useEffect, useState} from "react";
 import {useParams} from "react-router";
 import BackendUrls from '../../api/BackendUrls.json';
 import dayjs from "dayjs";

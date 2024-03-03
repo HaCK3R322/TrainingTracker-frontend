@@ -5,14 +5,13 @@ import SwipeStates from "./SwipeStates.json"
 import NewCardForm from "./NewCardForm";
 import {ExercisesContext} from "./contexts/ExercisesContext";
 import {CalendarContext} from "./contexts/CalendarContext";
-import dayjs from "dayjs";
 
 
 const ExerciseCardsSwiper = () => {
     const exercisesContext = useContext(ExercisesContext)
     const calendarContext = useContext(CalendarContext)
 
-    const [exercises, setExercises] = [exercisesContext.exercises, exercisesContext.setExercises]
+    const exercises = exercisesContext.exercises
     const calendarValue = calendarContext.dateValue
 
     const [cards, setCards] = useState([])

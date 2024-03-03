@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {motion} from "framer-motion";
 import '../../style/trainingpage/finishedsetelement.css'
 import '../../style/trainingpage/unfinishedsetelement.css'
@@ -169,7 +169,7 @@ const ExerciseCard = ({
             }
         }
     }
-    const handleDragEnd = (info) => {
+    const handleDragEnd = () => {
         if(swipedLeft && !swappedWithLeft) {
             swipedLeftCallback();
         }
@@ -194,7 +194,7 @@ const ExerciseCard = ({
 
                     onDragStart={(event, info) => {handleDragStart(info)}}
                     onDrag={(event, info) => {handleOnDrag(info)}}
-                    onDragEnd={(event, info) => {handleDragEnd(info)}}
+                    onDragEnd={() => {handleDragEnd()}}
 
                     transition={{duration: 0.1}}
                     animate={animateState}

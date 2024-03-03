@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import NewTrainingButton from "./NewTrainingButton";
 import TrainingButton from "./TrainingButton";
 import {motion} from "framer-motion";
@@ -13,7 +13,6 @@ import '../../style/mainpage/newtrainingform.css'
 import fetchGetAllUserTrainings from "../../api/fetchGetAllUserTrainings";
 import fetchPost from "../../api/fetchPost";
 import BackendUrls from "../../api/BackendUrls.json";
-import Logger from "../../util/Logger";
 
 const MainPage = () => {
     let navigate = useNavigate();

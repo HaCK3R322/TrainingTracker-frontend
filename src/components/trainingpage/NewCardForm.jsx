@@ -3,11 +3,8 @@ import '../../style/trainingpage/newcardform.css'
 import SwipeStates from "./SwipeStates.json";
 import {motion} from "framer-motion";
 import okaymark from '../../images/okaymark.png'
-import fetchPost from "../../api/fetchPost";
-import BackendUrls from '../../api/BackendUrls.json';
 import dayjs from "dayjs";
 import {ExercisesContext} from "./contexts/ExercisesContext";
-import Calendar from "./Calendar";
 import {CalendarContext} from "./contexts/CalendarContext";
 
 
@@ -25,7 +22,7 @@ const NewCardForm = ({
     const [swipedLeft, setSwipedLeft] = useState(false);
     const [dragStartPoint, setDragStartPoint] = useState(0);
     const [animateState, setAnimateState] = useState({zIndex: 3});
-    const [cardLimitNotExceed, setCardLimitNotExceed] = useState(cards.length < 10 ? true : false);
+    const [cardLimitNotExceed, setCardLimitNotExceed] = useState(cards.length < 10);
 
     useEffect(() => {
         if(cards.length < 10) {
@@ -98,7 +95,7 @@ const NewCardForm = ({
             setSwipedLeft(false);
         }
     }
-    const handleDragEnd = (info) => {
+    const handleDragEnd = () => {
         if(swipedLeft) {
             swipedLeftCallback();
         }
@@ -117,7 +114,7 @@ const NewCardForm = ({
 
                     onDragStart={(event, info) => {handleDragStart(info)}}
                     onDrag={(event, info) => {handleOnDrag(info)}}
-                    onDragEnd={(event, info) => {handleDragEnd(info)}}
+                    onDragEnd={() => {handleDragEnd()}}
 
                     transition={{duration: 0.1}}
                     animate={animateState}
@@ -169,7 +166,7 @@ const NewCardForm = ({
 
                     onClick={() => {createNewExerciseCallback()}}
                 >
-                    <img src={okaymark} />
+                    <img src={okaymark}  alt={""}/>
                 </motion.button>
             </div>
         </motion.div>
