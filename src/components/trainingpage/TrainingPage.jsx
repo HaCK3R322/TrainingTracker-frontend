@@ -156,10 +156,7 @@ const TrainingPage = () => {
                 <CalendarContext.Provider value={calendarContextValue}>
                     <div className={"training-tracker-theme"}>
                         <div className={"background-div"}>
-                            <Calendar
-                                isVisible={isCalendarVisible}
-                                setVisible={setCalendarVisible}
-                            />
+                            <Calendar/>
 
                             <motion.div
                                 animate={isCalendarVisible ? {top: "300px"} : {top: "0px"}}
@@ -169,9 +166,7 @@ const TrainingPage = () => {
                                     height: "100%"
                                 }}
                             >
-                                <TrainingPageHeader
-                                    restore={onRestoreClickCallback}
-                                />
+                                <TrainingPageHeader restore={onRestoreClickCallback}/>
 
                                 <div className={"scroller-div"}>
                                     <ExerciseCardsSwiper/>
@@ -182,7 +177,6 @@ const TrainingPage = () => {
                                     setVisible={setStatsVisible}
                                     exercises={exercises}
                                 />
-
                             </motion.div>
                         </div>
                     </div>
