@@ -174,7 +174,6 @@ const TrainingPage = () => {
                                 <Stats
                                     isVisible={isStatsVisible}
                                     setVisible={setStatsVisible}
-                                    exercises={exercises}
                                 />
                             </motion.div>
                         </div>

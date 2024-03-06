@@ -7,12 +7,22 @@ import dayjs from "dayjs";
 import {ExercisesContext} from "./contexts/ExercisesContext";
 import {CalendarContext} from "./contexts/CalendarContext";
 
-const Calendar = ({isVisible, setVisible}) => {
+const Calendar = () => {
     const exercisesContext = useContext(ExercisesContext)
     const calendarContext = useContext(CalendarContext)
 
     const exercises = exercisesContext.exercises
-    const [calendarValue, setCalendarValue] = [calendarContext.dateValue, calendarContext.setDateValue]
+    const [
+        calendarValue,
+        setCalendarValue,
+        isVisible,
+        setVisible
+    ] = [
+        calendarContext.dateValue,
+        calendarContext.setDateValue,
+        calendarContext.isVisible,
+        calendarContext.setVisible
+    ]
 
     const calendarTheme = createTheme({
         typography: {

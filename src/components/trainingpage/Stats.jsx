@@ -1,60 +1,38 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {motion} from "framer-motion";
 import '../../style/theme.css'
 import '../../style/trainingpage/trainingpage.css'
 import '../../style/motion-framer-wrapper.css'
+import {ExercisesContext} from "./contexts/ExercisesContext";
 
 
-const Stats = ({isVisible, setVisible, exercises}) => {
-    let [stat1, setStat1] = useState([])
-    let [stat2, setStat2] = useState([])
+const Stats = ({isVisible, setVisible}) => {
+    const exercises = useContext(ExercisesContext).exercises
 
-    useEffect(() => {
-        if(isVisible) {
-            let avg = []
-            exercises
-                .filter(e => {
-                    return e.name === "squats"
-                })
-                .sort((a, b) => {
-                    return a.timestamp.diff(b.timestamp)
-                })
-                .forEach(e => {
-                    let avgSet = 0
-                    e.sets.forEach(set => {
-                        avgSet += set.amount * set.reps
-                    })
-                    avg.push(avgSet)
-                })
-            setStat1(avg)
-        }
-    }, [exercises, isVisible]);
+    const [erm, setErm] = useState([])
 
     useEffect(() => {
         if(isVisible) {
-            let avg = []
+            const newErm = []
             exercises
-                .filter(e => {
-                    return e.name === "squats"
-                })
-                .sort((a, b) => {
-                    return a.timestamp.diff(b.timestamp)
-                })
+                .filter(e => e.timestamp.isSame(Date.now(), 'day'))
+                .sort((a, b) => a.timestamp.diff(b.timestamp))
                 .forEach(e => {
-                    let total_count_reps = 0
-                    e.sets.forEach(set => {
-                        total_count_reps += set.reps
-                    })
+                    let total_reps = 0;
+                    e.sets.forEach(set => total_reps += set.reps)
 
-                    let avgSet = 0
-                    e.sets.forEach(set => {
-                        avgSet += set.amount * (set.reps / total_count_reps)
-                    })
-                    avg.push(avgSet)
+                    let w = 0;
+                    e.sets.forEach(set => w += set.amount * (set.reps / total_reps))
+
+                    let r = total_reps / e.sets.length + (e.sets.length - 1)
+
+                    newErm.push(
+                        `${e.name}: ${w * r * 0.0333 + w}`
+                    )
                 })
-            setStat2(avg)
+            setErm(newErm)
         }
-    }, []);
+    }, [isVisible]);
 
     return (
         <motion.div
@@ -75,17 +53,10 @@ const Stats = ({isVisible, setVisible, exercises}) => {
             onTap={() => setVisible(false)}
         >
             <div className={"training-tracker-theme"}>
-                Mass per exercise:
-                {stat1.map((exercise, index) =>
+                Estimated Rep Max:
+                {erm.map((value, index) =>
                     <div key={index}>
-                        {exercise}
-                    </div>
-                )}
-                <br/>
-                Avg weight:
-                {stat2.map((exercise, index) =>
-                    <div key={index}>
-                        {exercise}
+                        {value}
                     </div>
                 )}
             </div>
