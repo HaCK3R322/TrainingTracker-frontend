@@ -19,7 +19,7 @@ import fetchGetAllExercisesWithSetsByTrainingId from "../../api/fetchGetAllExerc
 import transformFetchedDataToExercises from "../../util/exercises/transformFetchedDataToExercises";
 import fetchCreateNewExercise from "../../util/exercises/fetchCreateNewExercise";
 import fetchExercisePut from "../../api/fetchExercisePut";
-import Stats from "./Stats";
+import Stats from "./stats/Stats";
 import Calendar from "./Calendar";
 import FramerMotionWrapperDiv from "../FramerMotionWrapperDiv";
 import {ExercisesContext} from "./contexts/ExercisesContext";

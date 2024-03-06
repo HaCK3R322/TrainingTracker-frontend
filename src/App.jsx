@@ -4,7 +4,6 @@ import {AnimatePresence} from "framer-motion";
 import {Route, Routes, useLocation} from "react-router-dom";
 import {useState} from "react";
 import LoginPage from "./components/LoginPage";
-import Stats from "./components/trainingpage/Stats";
 
 function App() {
     const location = useLocation();
